@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "40"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"cob-proxy"},"name":"cob-proxy","namespace":"caritas"},"spec":{"replicas":1,"revisionHistoryLimit":1,"selector":{"matchLabels":{"app":"cob-proxy"}},"template":{"metadata":{"labels":{"app":"cob-proxy"}},"spec":{"containers":[{"image":"nginx:alpine","livenessProbe":{"httpGet":{"path":"/health/","port":8089},"initialDelaySeconds":10,"periodSeconds":30},"name":"cob-proxy","ports":[{"containerPort":8089,"protocol":"TCP"}],"readinessProbe":{"httpGet":{"path":"/health/","port":8089},"initialDelaySeconds":5,"periodSeconds":10},"volumeMounts":[{"mountPath":"/etc/nginx/nginx.conf","name":"nginx-config","subPath":"nginx.conf"}]}],"hostNetwork":true,"volumes":[{"configMap":{"name":"oriso-nginx-config"},"name":"nginx-config"}]}}}}
+  creationTimestamp: "2025-10-14T11:05:43Z"
+  generation: 44
+  labels:
+    app: cob-proxy
+  name: cob-proxy
+  namespace: caritas
+  resourceVersion: "1005241"
+  uid: 826be6b3-f957-4d95-9b3a-ff9b0d02d66e
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: cob-proxy
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/restartedAt: "2025-10-31T21:28:28Z"
+      creationTimestamp: null
+      labels:
+        app: cob-proxy
+    spec:
+      containers:
+      - env:
+        - name: NGINX_CONFIG
+          value: nginx-config-v7
+        image: nginx:alpine
+        imagePullPolicy: IfNotPresent
+        name: cob-proxy
+        ports:
+        - containerPort: 8089
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/nginx/nginx.conf
+          name: nginx-config
+          subPath: nginx.conf
+      dnsPolicy: ClusterFirst
+      hostNetwork: true
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: oriso-nginx-config
+        name: nginx-config
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2025-10-31T21:31:54Z"
+    lastUpdateTime: "2025-10-31T21:31:54Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2025-10-26T18:14:40Z"
+    lastUpdateTime: "2025-10-31T21:31:54Z"
+    message: ReplicaSet "cob-proxy-67bfcccdb4" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 44
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

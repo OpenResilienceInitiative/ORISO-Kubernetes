@@ -1,0 +1,625 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "10"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"tenantservice","namespace":"caritas"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"tenantservice"}},"template":{"metadata":{"labels":{"app":"tenantservice"}},"spec":{"containers":[{"args":["-q","spring-boot:run","-Dspring-boot.run.profiles=local","-DskipTests","-Dspring-boot.run.jvmArguments=--enable-preview"],"command":["mvn"],"env":[{"name":"MAVEN_CONFIG","value":"/root/.m2"},{"name":"MAVEN_OPTS","value":"--enable-preview"}],"image":"maven:3.9-eclipse-temurin-17","name":"tenantservice","volumeMounts":[{"mountPath":"/workspace","name":"workspace"},{"mountPath":"/root/.m2","name":"maven-cache"}],"workingDir":"/workspace"}],"hostNetwork":true,"volumes":[{"hostPath":{"path":"/home/caritas/Desktop/online-beratung/caritas-workspace/caritas-rework-onlineBeratung-tenantService"},"name":"workspace"},{"name":"maven-cache","persistentVolumeClaim":{"claimName":"maven-cache-pvc"}}]}}}}
+    creationTimestamp: "2025-10-14T11:12:42Z"
+    generation: 12
+    name: tenantservice
+    namespace: caritas
+    resourceVersion: "984394"
+    uid: a64118d0-de48-4211-9fc3-8ceb09d68699
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: tenantservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2025-10-31T16:09:38Z"
+        creationTimestamp: null
+        labels:
+          app: tenantservice
+      spec:
+        containers:
+        - args:
+          - -q
+          - spring-boot:run
+          - -Dspring-boot.run.profiles=local
+          - -DskipTests
+          - -Dspring-boot.run.jvmArguments=--enable-preview
+          command:
+          - mvn
+          env:
+          - name: MAVEN_CONFIG
+            value: /root/.m2
+          - name: MAVEN_OPTS
+            value: --enable-preview
+          image: maven:3.9-eclipse-temurin-17
+          imagePullPolicy: IfNotPresent
+          name: tenantservice
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /workspace
+            name: workspace
+          - mountPath: /root/.m2
+            name: maven-cache
+          workingDir: /workspace
+        dnsPolicy: ClusterFirst
+        hostNetwork: true
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - hostPath:
+            path: /home/caritas/Desktop/online-beratung/caritas-workspace/ORISO-TenantService
+            type: ""
+          name: workspace
+        - name: maven-cache
+          persistentVolumeClaim:
+            claimName: maven-cache-pvc
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-10-22T00:17:19Z"
+      lastUpdateTime: "2025-10-22T00:17:19Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2025-10-14T11:12:42Z"
+      lastUpdateTime: "2025-10-31T16:09:41Z"
+      message: ReplicaSet "tenantservice-675f5cc8c9" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 12
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "43"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"userservice","namespace":"caritas"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"userservice"}},"template":{"metadata":{"labels":{"app":"userservice"}},"spec":{"containers":[{"args":["-q","spring-boot:run","-Dspring-boot.run.profiles=local","-DskipTests"],"command":["mvn"],"env":[{"name":"MAVEN_CONFIG","value":"/root/.m2"}],"image":"maven:3.9-eclipse-temurin-17","name":"userservice","volumeMounts":[{"mountPath":"/workspace","name":"workspace"},{"mountPath":"/root/.m2","name":"maven-cache"}],"workingDir":"/workspace"}],"hostNetwork":true,"volumes":[{"hostPath":{"path":"/home/caritas/Desktop/online-beratung/caritas-workspace/caritas-rework-onlineBeratung-userService"},"name":"workspace"},{"name":"maven-cache","persistentVolumeClaim":{"claimName":"maven-cache-pvc"}}]}}}}
+    creationTimestamp: "2025-10-23T17:47:47Z"
+    generation: 48
+    name: userservice
+    namespace: caritas
+    resourceVersion: "989742"
+    uid: 9315249d-570b-4612-8d1e-9806cb96e17e
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: userservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2025-10-29T23:43:34Z"
+        creationTimestamp: null
+        labels:
+          app: userservice
+      spec:
+        containers:
+        - args:
+          - -q
+          - spring-boot:run
+          - -Dspring-boot.run.profiles=local
+          - -Dmaven.test.skip=true
+          - -Dspotless.check.skip=true
+          command:
+          - mvn
+          env:
+          - name: MAVEN_CONFIG
+            value: /root/.m2
+          image: maven:3.9-eclipse-temurin-17
+          imagePullPolicy: IfNotPresent
+          name: userservice
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /workspace
+            name: workspace
+          - mountPath: /root/.m2
+            name: maven-cache
+          workingDir: /workspace
+        dnsPolicy: ClusterFirst
+        hostNetwork: true
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - hostPath:
+            path: /home/caritas/Desktop/online-beratung/caritas-workspace/ORISO-UserService
+            type: ""
+          name: workspace
+        - name: maven-cache
+          persistentVolumeClaim:
+            claimName: maven-cache-pvc
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-10-29T13:58:23Z"
+      lastUpdateTime: "2025-10-29T13:58:23Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2025-10-24T17:01:05Z"
+      lastUpdateTime: "2025-10-31T17:22:36Z"
+      message: ReplicaSet "userservice-645679985c" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 48
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "16"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"consultingtypeservice","namespace":"caritas"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"consultingtypeservice"}},"template":{"metadata":{"labels":{"app":"consultingtypeservice"}},"spec":{"containers":[{"args":["-q","spring-boot:run","-Dspring-boot.run.profiles=local","-DskipTests"],"command":["mvn"],"env":[{"name":"MAVEN_CONFIG","value":"/root/.m2"}],"image":"maven:3.9-eclipse-temurin-17","name":"consultingtypeservice","volumeMounts":[{"mountPath":"/workspace","name":"workspace"},{"mountPath":"/root/.m2","name":"maven-cache"}],"workingDir":"/workspace"}],"hostNetwork":true,"volumes":[{"hostPath":{"path":"/home/caritas/Desktop/online-beratung/caritas-workspace/caritas-rework-onlineBeratung-consultingTypeService"},"name":"workspace"},{"name":"maven-cache","persistentVolumeClaim":{"claimName":"maven-cache-pvc"}}]}}}}
+    creationTimestamp: "2025-10-14T11:12:42Z"
+    generation: 18
+    name: consultingtypeservice
+    namespace: caritas
+    resourceVersion: "996270"
+    uid: 253672a8-d82a-49bb-90b3-946ef8d16af1
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: consultingtypeservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2025-10-31T16:23:36Z"
+        creationTimestamp: null
+        labels:
+          app: consultingtypeservice
+      spec:
+        containers:
+        - args:
+          - -q
+          - spring-boot:run
+          - -Dspring-boot.run.profiles=local
+          - -DskipTests
+          command:
+          - mvn
+          env:
+          - name: MAVEN_CONFIG
+            value: /root/.m2
+          image: maven:3.9-eclipse-temurin-17
+          imagePullPolicy: IfNotPresent
+          name: consultingtypeservice
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /workspace
+            name: workspace
+          - mountPath: /root/.m2
+            name: maven-cache
+          workingDir: /workspace
+        dnsPolicy: ClusterFirst
+        hostNetwork: true
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - hostPath:
+            path: /home/caritas/Desktop/online-beratung/caritas-workspace/ORISO-ConsultingTypeService
+            type: ""
+          name: workspace
+        - name: maven-cache
+          persistentVolumeClaim:
+            claimName: maven-cache-pvc
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-10-14T11:12:42Z"
+      lastUpdateTime: "2025-10-31T18:50:43Z"
+      message: ReplicaSet "consultingtypeservice-7974f87cf4" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2025-10-31T18:55:58Z"
+      lastUpdateTime: "2025-10-31T18:55:58Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 18
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "10"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"agencyservice","namespace":"caritas"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"agencyservice"}},"template":{"metadata":{"labels":{"app":"agencyservice"}},"spec":{"containers":[{"args":["-q","spring-boot:run","-Dspring-boot.run.profiles=local","-DskipTests"],"command":["mvn"],"env":[{"name":"MAVEN_CONFIG","value":"/root/.m2"}],"image":"maven:3.9-eclipse-temurin-17","name":"agencyservice","volumeMounts":[{"mountPath":"/workspace","name":"workspace"},{"mountPath":"/root/.m2","name":"maven-cache"}],"workingDir":"/workspace"}],"hostNetwork":true,"volumes":[{"hostPath":{"path":"/home/caritas/Desktop/online-beratung/caritas-workspace/caritas-rework-onlineBeratung-agencyService"},"name":"workspace"},{"name":"maven-cache","persistentVolumeClaim":{"claimName":"maven-cache-pvc"}}]}}}}
+    creationTimestamp: "2025-10-14T11:12:42Z"
+    generation: 12
+    name: agencyservice
+    namespace: caritas
+    resourceVersion: "984349"
+    uid: 087245ff-bd9d-4180-9f65-5d95105f1cc4
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: agencyservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2025-10-31T16:09:38Z"
+        creationTimestamp: null
+        labels:
+          app: agencyservice
+      spec:
+        containers:
+        - args:
+          - -q
+          - spring-boot:run
+          - -Dspring-boot.run.profiles=local
+          - -DskipTests
+          command:
+          - mvn
+          env:
+          - name: MAVEN_CONFIG
+            value: /root/.m2
+          image: maven:3.9-eclipse-temurin-17
+          imagePullPolicy: IfNotPresent
+          name: agencyservice
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /workspace
+            name: workspace
+          - mountPath: /root/.m2
+            name: maven-cache
+          workingDir: /workspace
+        dnsPolicy: ClusterFirst
+        hostNetwork: true
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - hostPath:
+            path: /home/caritas/Desktop/online-beratung/caritas-workspace/ORISO-AgencyService
+            type: ""
+          name: workspace
+        - name: maven-cache
+          persistentVolumeClaim:
+            claimName: maven-cache-pvc
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-10-22T02:40:15Z"
+      lastUpdateTime: "2025-10-22T02:40:15Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2025-10-14T11:12:42Z"
+      lastUpdateTime: "2025-10-31T16:09:40Z"
+      message: ReplicaSet "agencyservice-d5ffc9f69" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 12
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "6"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"uploadservice","namespace":"caritas"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"uploadservice"}},"template":{"metadata":{"labels":{"app":"uploadservice"}},"spec":{"containers":[{"env":[{"name":"SPRING_PROFILES_ACTIVE","value":"prod"},{"name":"MATRIX_API_URL","value":"http://matrix-synapse:8008"},{"name":"MATRIX_SERVER_NAME","value":"localhost"},{"name":"MATRIX_MIGRATION_ENABLED","value":"true"},{"name":"SPRING_DATASOURCE_URL","value":"jdbc:mariadb://mariadb:3306/uploadservice"},{"name":"SPRING_DATASOURCE_USERNAME","value":"caritas"},{"name":"SPRING_DATASOURCE_PASSWORD","value":"caritas"},{"name":"SPRING_LIQUIBASE_USER","value":"caritas"},{"name":"SPRING_LIQUIBASE_PASSWORD","value":"caritas"},{"name":"KEYCLOAK_AUTH_SERVER_URL","value":"http://keycloak:8080"},{"name":"KEYCLOAK_REALM","value":"online-beratung"},{"name":"KEYCLOAK_RESOURCE","value":"app"},{"name":"MONGODB_URI","value":"mongodb://mongodb:27017/rocketchat?retryWrites=false"},{"name":"SPRING_RABBITMQ_HOST","value":"rabbitmq"},{"name":"SPRING_RABBITMQ_PORT","value":"5672"},{"name":"SPRING_RABBITMQ_USERNAME","value":"admin"},{"name":"SPRING_RABBITMQ_PASSWORD","value":"admin"},{"name":"USER_SERVICE_API_URL","value":"http://userservice:8082/users"},{"name":"USER_SERVICE_API_LIVEPROXY_URL","value":"http://liveservice:8086"},{"name":"SERVICE_ENCRYPTION_APPKEY","value":"EncryptionKey123456"},{"name":"ROCKET_SYSTEMUSER_USERNAME","value":"system"},{"name":"ROCKET_SYSTEMUSER_PASSWORD","value":"system"},{"name":"ROCKET_SYSTEMUSER_ID","value":"dummy"},{"name":"ROCKET_TECHNICAL_USERNAME","value":"technical"},{"name":"TENANT_SERVICE_API_URL","value":"http://tenantservice:8081"},{"name":"SPRING_ZIPKIN_BASEURL","value":"http://localhost:9411"}],"image":"uploadservice:latest","imagePullPolicy":"Never","livenessProbe":{"httpGet":{"path":"/actuator/health/liveness","port":8085},"initialDelaySeconds":60,"periodSeconds":30},"name":"uploadservice","ports":[{"containerPort":8085}],"readinessProbe":{"httpGet":{"path":"/actuator/health/readiness","port":8085},"initialDelaySeconds":30,"periodSeconds":10}}]}}}}
+    creationTimestamp: "2025-10-31T00:32:46Z"
+    generation: 6
+    name: uploadservice
+    namespace: caritas
+    resourceVersion: "985064"
+    uid: 892d2add-7ebe-4f84-bc2b-9b31966ae69a
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: uploadservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2025-10-31T16:14:49Z"
+        creationTimestamp: null
+        labels:
+          app: uploadservice
+      spec:
+        containers:
+        - env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: prod
+          - name: MATRIX_API_URL
+            value: http://matrix-synapse:8008
+          - name: MATRIX_SERVER_NAME
+            value: localhost
+          - name: MATRIX_MIGRATION_ENABLED
+            value: "true"
+          - name: SPRING_DATASOURCE_URL
+            value: jdbc:mariadb://mariadb:3306/uploadservice
+          - name: SPRING_DATASOURCE_USERNAME
+            value: caritas
+          - name: SPRING_DATASOURCE_PASSWORD
+            value: caritas
+          - name: SPRING_LIQUIBASE_USER
+            value: caritas
+          - name: SPRING_LIQUIBASE_PASSWORD
+            value: caritas
+          - name: KEYCLOAK_AUTH_SERVER_URL
+            value: http://keycloak:8080
+          - name: KEYCLOAK_REALM
+            value: online-beratung
+          - name: KEYCLOAK_RESOURCE
+            value: app
+          - name: MONGODB_URI
+            value: mongodb://mongodb:27017/rocketchat?retryWrites=false
+          - name: SPRING_RABBITMQ_HOST
+            value: rabbitmq
+          - name: SPRING_RABBITMQ_PORT
+            value: "5672"
+          - name: SPRING_RABBITMQ_USERNAME
+            value: admin
+          - name: SPRING_RABBITMQ_PASSWORD
+            value: admin
+          - name: USER_SERVICE_API_URL
+            value: http://userservice:8082/users
+          - name: USER_SERVICE_API_LIVEPROXY_URL
+            value: http://liveservice:8086
+          - name: SERVICE_ENCRYPTION_APPKEY
+            value: EncryptionKey123456
+          - name: ROCKET_SYSTEMUSER_USERNAME
+            value: system
+          - name: ROCKET_SYSTEMUSER_PASSWORD
+            value: system
+          - name: ROCKET_SYSTEMUSER_ID
+            value: dummy
+          - name: ROCKET_TECHNICAL_USERNAME
+            value: technical
+          - name: TENANT_SERVICE_API_URL
+            value: http://tenantservice:8081
+          - name: SPRING_ZIPKIN_BASEURL
+            value: http://localhost:9411
+          image: uploadservice:latest
+          imagePullPolicy: Never
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8085
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: uploadservice
+          ports:
+          - containerPort: 8085
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8085
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-10-31T00:33:19Z"
+      lastUpdateTime: "2025-10-31T00:33:19Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2025-10-31T00:32:46Z"
+      lastUpdateTime: "2025-10-31T16:16:13Z"
+      message: ReplicaSet "uploadservice-76f95555b9" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 6
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"videoservice"},"name":"videoservice","namespace":"caritas"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"videoservice"}},"template":{"metadata":{"labels":{"app":"videoservice"}},"spec":{"containers":[{"env":[{"name":"SPRING_PROFILES_ACTIVE","value":"prod"},{"name":"SPRING_DATASOURCE_URL","value":"jdbc:mariadb://mariadb.caritas.svc.cluster.local:3306/videoservice"},{"name":"SPRING_DATASOURCE_USERNAME","value":"caritas"},{"name":"SPRING_DATASOURCE_PASSWORD","value":"caritas"},{"name":"SPRING_RABBITMQ_HOST","value":"rabbitmq.caritas.svc.cluster.local"},{"name":"SPRING_RABBITMQ_PORT","value":"5672"},{"name":"SPRING_RABBITMQ_USERNAME","value":"admin"},{"name":"SPRING_RABBITMQ_PASSWORD","value":"admin"},{"name":"APP_BASE_URL","value":"http://91.99.219.182:8089"},{"name":"VIDEO_CALL_SERVER_URL","value":"http://91.99.219.182:30443"},{"name":"VIDEO_CALL_SECURITY_JWT_SECRET","value":"caritas-jitsi-secret-2025-change-me"},{"name":"SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI","value":"http://localhost:8080/realms/online-beratung"},{"name":"SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI","value":"http://keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect/certs"}],"image":"videoservice:latest","imagePullPolicy":"Never","livenessProbe":{"httpGet":{"path":"/actuator/health","port":8080},"initialDelaySeconds":60,"periodSeconds":30},"name":"videoservice","ports":[{"containerPort":8080}],"readinessProbe":{"httpGet":{"path":"/actuator/health","port":8080},"initialDelaySeconds":30,"periodSeconds":10},"resources":{"limits":{"cpu":"500m","memory":"1Gi"},"requests":{"cpu":"250m","memory":"512Mi"}}}]}}}}
+    creationTimestamp: "2025-10-31T00:32:46Z"
+    generation: 1
+    labels:
+      app: videoservice
+    name: videoservice
+    namespace: caritas
+    resourceVersion: "940377"
+    uid: c08f64bc-2a9f-4e64-9025-31174a6c3641
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: videoservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: videoservice
+      spec:
+        containers:
+        - env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: prod
+          - name: SPRING_DATASOURCE_URL
+            value: jdbc:mariadb://mariadb.caritas.svc.cluster.local:3306/videoservice
+          - name: SPRING_DATASOURCE_USERNAME
+            value: caritas
+          - name: SPRING_DATASOURCE_PASSWORD
+            value: caritas
+          - name: SPRING_RABBITMQ_HOST
+            value: rabbitmq.caritas.svc.cluster.local
+          - name: SPRING_RABBITMQ_PORT
+            value: "5672"
+          - name: SPRING_RABBITMQ_USERNAME
+            value: admin
+          - name: SPRING_RABBITMQ_PASSWORD
+            value: admin
+          - name: APP_BASE_URL
+            value: http://91.99.219.182:8089
+          - name: VIDEO_CALL_SERVER_URL
+            value: http://91.99.219.182:30443
+          - name: VIDEO_CALL_SECURITY_JWT_SECRET
+            value: caritas-jitsi-secret-2025-change-me
+          - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+            value: http://localhost:8080/realms/online-beratung
+          - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
+            value: http://keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect/certs
+          image: videoservice:latest
+          imagePullPolicy: Never
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: videoservice
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-10-31T00:33:56Z"
+      lastUpdateTime: "2025-10-31T00:33:56Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2025-10-31T00:32:46Z"
+      lastUpdateTime: "2025-10-31T00:33:56Z"
+      message: ReplicaSet "videoservice-9fbc44fcd" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+kind: List
+metadata:
+  resourceVersion: ""

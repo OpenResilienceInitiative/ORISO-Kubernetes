@@ -1,0 +1,1388 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"admin","namespace":"caritas"},"spec":{"ports":[{"name":"http","port":9000,"protocol":"TCP","targetPort":80}],"selector":{"app":"admin"},"type":"LoadBalancer"}}
+    creationTimestamp: "2025-10-25T22:32:46Z"
+    finalizers:
+    - service.kubernetes.io/load-balancer-cleanup
+    name: admin
+    namespace: caritas
+    resourceVersion: "593180"
+    uid: 12442d13-f883-44b8-8042-cbfd2c8b19b7
+  spec:
+    allocateLoadBalancerNodePorts: true
+    clusterIP: 10.43.126.41
+    clusterIPs:
+    - 10.43.126.41
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      nodePort: 32706
+      port: 9000
+      protocol: TCP
+      targetPort: 80
+    selector:
+      app: admin
+    sessionAffinity: None
+    type: LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: 91.99.219.182
+        ipMode: VIP
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"agencyservice","namespace":"caritas"},"spec":{"ports":[{"port":8084,"targetPort":8084}],"selector":{"app":"agencyservice"}}}
+    creationTimestamp: "2025-10-14T11:12:42Z"
+    name: agencyservice
+    namespace: caritas
+    resourceVersion: "71716"
+    uid: c67860fc-8352-4370-8ba9-ed6b31d359a9
+  spec:
+    clusterIP: 10.43.164.193
+    clusterIPs:
+    - 10.43.164.193
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 8084
+      protocol: TCP
+      targetPort: 8084
+    selector:
+      app: agencyservice
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      clickhouse.altinity.com/ready: "yes"
+      meta.helm.sh/release-name: signoz
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-10-31T20:26:58Z"
+    labels:
+      app.kubernetes.io/component: clickhouse
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: clickhouse
+      app.kubernetes.io/version: 24.1.2
+      clickhouse.altinity.com/Service: host
+      clickhouse.altinity.com/app: chop
+      clickhouse.altinity.com/chi: signoz-clickhouse
+      clickhouse.altinity.com/cluster: cluster
+      clickhouse.altinity.com/namespace: caritas
+      clickhouse.altinity.com/object-version: f3ce64fc3dc6f259619c2e2d8bab1e24bbcf01f3
+      clickhouse.altinity.com/replica: "0"
+      clickhouse.altinity.com/shard: "0"
+      helm.sh/chart: clickhouse-24.1.18
+    name: chi-signoz-clickhouse-cluster-0-0
+    namespace: caritas
+    ownerReferences:
+    - apiVersion: clickhouse.altinity.com/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ClickHouseInstallation
+      name: signoz-clickhouse
+      uid: ca275704-94ea-462f-9d26-9f670658fbc4
+    resourceVersion: "1001859"
+    uid: 83586ffe-6ec2-4aed-ba57-f0cbe1eb31cd
+  spec:
+    clusterIP: None
+    clusterIPs:
+    - None
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: tcp
+      port: 9000
+      protocol: TCP
+      targetPort: 9000
+    - name: http
+      port: 8123
+      protocol: TCP
+      targetPort: 8123
+    - name: interserver
+      port: 9009
+      protocol: TCP
+      targetPort: 9009
+    publishNotReadyAddresses: true
+    selector:
+      clickhouse.altinity.com/app: chop
+      clickhouse.altinity.com/chi: signoz-clickhouse
+      clickhouse.altinity.com/cluster: cluster
+      clickhouse.altinity.com/namespace: caritas
+      clickhouse.altinity.com/replica: "0"
+      clickhouse.altinity.com/shard: "0"
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"cob-proxy"},"name":"cob-proxy","namespace":"caritas"},"spec":{"ports":[{"port":8089,"protocol":"TCP","targetPort":8089}],"selector":{"app":"cob-proxy"},"type":"ClusterIP"}}
+    creationTimestamp: "2025-10-14T11:05:43Z"
+    labels:
+      app: cob-proxy
+    name: cob-proxy
+    namespace: caritas
+    resourceVersion: "1004681"
+    uid: 10186a8e-d2ab-4bc5-94d9-1564eb442a7d
+  spec:
+    clusterIP: 10.43.191.214
+    clusterIPs:
+    - 10.43.191.214
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 8089
+      protocol: TCP
+      targetPort: 8089
+    selector:
+      app: cob-proxy
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"consultingtypeservice","namespace":"caritas"},"spec":{"ports":[{"port":8083,"targetPort":8083}],"selector":{"app":"consultingtypeservice"}}}
+    creationTimestamp: "2025-10-14T11:12:42Z"
+    name: consultingtypeservice
+    namespace: caritas
+    resourceVersion: "71702"
+    uid: 29abd40c-c252-4aba-ae1f-ec75b9f8244f
+  spec:
+    clusterIP: 10.43.152.21
+    clusterIPs:
+    - 10.43.152.21
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 8083
+      protocol: TCP
+      targetPort: 8083
+    selector:
+      app: consultingtypeservice
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"element","namespace":"caritas"},"spec":{"ports":[{"port":8087,"protocol":"TCP","targetPort":8087}],"selector":{"app":"element"},"type":"ClusterIP"}}
+    creationTimestamp: "2025-10-31T20:24:21Z"
+    name: element
+    namespace: caritas
+    resourceVersion: "1001053"
+    uid: 574738ab-74b1-4099-9100-6922f15cd55a
+  spec:
+    clusterIP: 10.43.12.113
+    clusterIPs:
+    - 10.43.12.113
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 8087
+      protocol: TCP
+      targetPort: 8087
+    selector:
+      app: element
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"frontend","namespace":"caritas"},"spec":{"ports":[{"name":"http","port":9001,"protocol":"TCP","targetPort":80}],"selector":{"app":"frontend"},"type":"LoadBalancer"}}
+    creationTimestamp: "2025-10-25T22:32:45Z"
+    finalizers:
+    - service.kubernetes.io/load-balancer-cleanup
+    name: frontend
+    namespace: caritas
+    resourceVersion: "593170"
+    uid: d57cce02-3564-44ee-8694-c234de11c306
+  spec:
+    allocateLoadBalancerNodePorts: true
+    clusterIP: 10.43.175.111
+    clusterIPs:
+    - 10.43.175.111
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      nodePort: 31805
+      port: 9001
+      protocol: TCP
+      targetPort: 80
+    selector:
+      app: frontend
+    sessionAffinity: None
+    type: LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: 91.99.219.182
+        ipMode: VIP
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"health-dashboard","namespace":"caritas"},"spec":{"ports":[{"name":"http","port":9100,"targetPort":9100}],"selector":{"app":"health-dashboard"},"type":"LoadBalancer"}}
+    creationTimestamp: "2025-10-27T00:38:22Z"
+    finalizers:
+    - service.kubernetes.io/load-balancer-cleanup
+    name: health-dashboard
+    namespace: caritas
+    resourceVersion: "668400"
+    uid: 1d98303c-a7da-42d4-a702-22048670741c
+  spec:
+    allocateLoadBalancerNodePorts: true
+    clusterIP: 10.43.97.68
+    clusterIPs:
+    - 10.43.97.68
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      nodePort: 30546
+      port: 9100
+      protocol: TCP
+      targetPort: 9100
+    selector:
+      app: health-dashboard
+    sessionAffinity: None
+    type: LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: 91.99.219.182
+        ipMode: VIP
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"jitsi-jvb","namespace":"caritas"},"spec":{"ports":[{"name":"rtp","nodePort":30100,"port":10000,"protocol":"UDP","targetPort":10000},{"name":"tcp-fallback","nodePort":30445,"port":4443,"protocol":"TCP","targetPort":4443}],"selector":{"app":"jitsi-meet"},"type":"NodePort"}}
+    creationTimestamp: "2025-10-31T00:32:46Z"
+    name: jitsi-jvb
+    namespace: caritas
+    resourceVersion: "940194"
+    uid: 9debe98d-7b9d-4ca5-a171-47fd6e474514
+  spec:
+    clusterIP: 10.43.142.53
+    clusterIPs:
+    - 10.43.142.53
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: rtp
+      nodePort: 30100
+      port: 10000
+      protocol: UDP
+      targetPort: 10000
+    - name: tcp-fallback
+      nodePort: 30445
+      port: 4443
+      protocol: TCP
+      targetPort: 4443
+    selector:
+      app: jitsi-meet
+    sessionAffinity: None
+    type: NodePort
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"jitsi-meet","namespace":"caritas"},"spec":{"ports":[{"name":"http","nodePort":30443,"port":80,"protocol":"TCP","targetPort":80},{"name":"https","nodePort":30444,"port":443,"protocol":"TCP","targetPort":443}],"selector":{"app":"jitsi-meet"},"type":"NodePort"}}
+    creationTimestamp: "2025-10-31T00:32:45Z"
+    name: jitsi-meet
+    namespace: caritas
+    resourceVersion: "940174"
+    uid: b2526087-7d13-4a3d-99a3-4ba6f342ffb4
+  spec:
+    clusterIP: 10.43.250.140
+    clusterIPs:
+    - 10.43.250.140
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      nodePort: 30443
+      port: 80
+      protocol: TCP
+      targetPort: 80
+    - name: https
+      nodePort: 30444
+      port: 443
+      protocol: TCP
+      targetPort: 443
+    selector:
+      app: jitsi-meet
+    sessionAffinity: None
+    type: NodePort
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"jitsi-prosody","namespace":"caritas"},"spec":{"ports":[{"name":"xmpp-client","port":5222,"targetPort":5222},{"name":"bosh","port":5280,"targetPort":5280},{"name":"component","port":5347,"targetPort":5347}],"selector":{"app":"jitsi-meet"},"type":"ClusterIP"}}
+    creationTimestamp: "2025-10-31T00:32:45Z"
+    name: jitsi-prosody
+    namespace: caritas
+    resourceVersion: "940185"
+    uid: 253bdfed-c4c5-45c7-874a-87631cc18cd1
+  spec:
+    clusterIP: 10.43.242.201
+    clusterIPs:
+    - 10.43.242.201
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: xmpp-client
+      port: 5222
+      protocol: TCP
+      targetPort: 5222
+    - name: bosh
+      port: 5280
+      protocol: TCP
+      targetPort: 5280
+    - name: component
+      port: 5347
+      protocol: TCP
+      targetPort: 5347
+    selector:
+      app: jitsi-meet
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"keycloak","namespace":"caritas"},"spec":{"ports":[{"name":"http","port":8080,"targetPort":8080},{"name":"https","port":8443,"targetPort":8443}],"selector":{"app":"keycloak"},"type":"ClusterIP"}}
+    creationTimestamp: "2025-10-14T18:31:33Z"
+    name: keycloak
+    namespace: caritas
+    resourceVersion: "84328"
+    uid: ee73121f-d261-4c75-adff-226257cb3273
+  spec:
+    clusterIP: 10.43.63.186
+    clusterIPs:
+    - 10.43.63.186
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: https
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
+    selector:
+      app: keycloak
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"liveservice","namespace":"caritas"},"spec":{"ports":[{"port":8086,"targetPort":8086}],"selector":{"app":"liveservice"}}}
+    creationTimestamp: "2025-10-14T11:12:42Z"
+    name: liveservice
+    namespace: caritas
+    resourceVersion: "71728"
+    uid: 3a7db221-0ac4-43c9-90f9-b9917bec5c0e
+  spec:
+    clusterIP: 10.43.131.117
+    clusterIPs:
+    - 10.43.131.117
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 8086
+      protocol: TCP
+      targetPort: 8086
+    selector:
+      app: liveservice
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"mariadb","namespace":"caritas"},"spec":{"ports":[{"port":3306,"protocol":"TCP","targetPort":3306}],"selector":{"app":"mariadb"},"type":"ClusterIP"}}
+    creationTimestamp: "2025-10-14T11:05:08Z"
+    name: mariadb
+    namespace: caritas
+    resourceVersion: "71189"
+    uid: 25427e30-f505-44f3-b996-6855e6dcb50c
+  spec:
+    clusterIP: 10.43.123.72
+    clusterIPs:
+    - 10.43.123.72
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 3306
+      protocol: TCP
+      targetPort: 3306
+    selector:
+      app: mariadb
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"matrix-postgres-service","namespace":"caritas"},"spec":{"ports":[{"port":5432,"protocol":"TCP","targetPort":5432}],"selector":{"app":"matrix-postgres"},"type":"ClusterIP"}}
+    creationTimestamp: "2025-10-20T18:13:40Z"
+    name: matrix-postgres-service
+    namespace: caritas
+    resourceVersion: "281942"
+    uid: 0492d9cc-98c0-4d54-8f1d-9a5296715efb
+  spec:
+    clusterIP: 10.43.140.77
+    clusterIPs:
+    - 10.43.140.77
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      app: matrix-postgres
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"matrix-synapse"},"name":"matrix-synapse","namespace":"caritas"},"spec":{"ports":[{"name":"client-api","port":8008,"protocol":"TCP","targetPort":8008},{"name":"federation","port":8009,"protocol":"TCP","targetPort":8009}],"selector":{"app":"matrix-synapse"},"type":"LoadBalancer"}}
+    creationTimestamp: "2025-10-22T20:02:42Z"
+    finalizers:
+    - service.kubernetes.io/load-balancer-cleanup
+    labels:
+      app: matrix-synapse
+    name: matrix-synapse
+    namespace: caritas
+    resourceVersion: "376531"
+    uid: 67e4c07d-838a-421a-9b45-83e0f3780ca9
+  spec:
+    allocateLoadBalancerNodePorts: true
+    clusterIP: 10.43.57.109
+    clusterIPs:
+    - 10.43.57.109
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: client-api
+      nodePort: 30292
+      port: 8008
+      protocol: TCP
+      targetPort: 8008
+    - name: federation
+      nodePort: 32469
+      port: 8009
+      protocol: TCP
+      targetPort: 8009
+    selector:
+      app: matrix-synapse
+    sessionAffinity: None
+    type: LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: 91.99.219.182
+        ipMode: VIP
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"messageservice"},"name":"messageservice","namespace":"caritas"},"spec":{"ports":[{"port":8080,"protocol":"TCP","targetPort":8080}],"selector":{"app":"messageservice"},"type":"ClusterIP"}}
+    creationTimestamp: "2025-10-23T01:24:46Z"
+    labels:
+      app: messageservice
+    name: messageservice
+    namespace: caritas
+    resourceVersion: "390383"
+    uid: 3435fa6e-d77a-43a2-b8da-01d0476c159c
+  spec:
+    clusterIP: 10.43.206.216
+    clusterIPs:
+    - 10.43.206.216
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: messageservice
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"mongodb","namespace":"caritas"},"spec":{"ports":[{"port":27017,"targetPort":27017}],"selector":{"app":"mongodb"}}}
+    creationTimestamp: "2025-10-14T11:05:08Z"
+    name: mongodb
+    namespace: caritas
+    resourceVersion: "71214"
+    uid: 729e84c6-5785-4cb9-9e9f-323c4fc9004d
+  spec:
+    clusterIP: 10.43.61.124
+    clusterIPs:
+    - 10.43.61.124
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 27017
+      protocol: TCP
+      targetPort: 27017
+    selector:
+      app: mongodb
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"rabbitmq","namespace":"caritas"},"spec":{"ports":[{"name":"amqp","port":5672,"targetPort":5672},{"name":"management","port":15672,"targetPort":15672}],"selector":{"app":"rabbitmq"}}}
+    creationTimestamp: "2025-10-14T11:05:08Z"
+    name: rabbitmq
+    namespace: caritas
+    resourceVersion: "71232"
+    uid: ecc356e7-edfe-4409-bda0-944855774bcb
+  spec:
+    clusterIP: 10.43.157.60
+    clusterIPs:
+    - 10.43.157.60
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: amqp
+      port: 5672
+      protocol: TCP
+      targetPort: 5672
+    - name: management
+      port: 15672
+      protocol: TCP
+      targetPort: 15672
+    selector:
+      app: rabbitmq
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"redis"},"name":"redis","namespace":"caritas"},"spec":{"ports":[{"name":"redis","port":6379,"protocol":"TCP","targetPort":6379}],"selector":{"app":"redis"},"type":"ClusterIP"}}
+    creationTimestamp: "2025-10-22T18:15:09Z"
+    labels:
+      app: redis
+    name: redis
+    namespace: caritas
+    resourceVersion: "371405"
+    uid: ba79aa7e-8812-40c2-a179-aa8e7b6f1a49
+  spec:
+    clusterIP: 10.43.113.3
+    clusterIPs:
+    - 10.43.113.3
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: redis
+      port: 6379
+      protocol: TCP
+      targetPort: 6379
+    selector:
+      app: redis
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"redis-commander"},"name":"redis-commander","namespace":"caritas"},"spec":{"ports":[{"name":"web","port":9021,"protocol":"TCP","targetPort":8081}],"selector":{"app":"redis-commander"},"type":"LoadBalancer"}}
+    creationTimestamp: "2025-10-22T19:03:27Z"
+    finalizers:
+    - service.kubernetes.io/load-balancer-cleanup
+    labels:
+      app: redis-commander
+    name: redis-commander
+    namespace: caritas
+    resourceVersion: "373765"
+    uid: 52039ac2-2ff6-464b-821d-14abe5135542
+  spec:
+    allocateLoadBalancerNodePorts: true
+    clusterIP: 10.43.155.175
+    clusterIPs:
+    - 10.43.155.175
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: web
+      nodePort: 30208
+      port: 9021
+      protocol: TCP
+      targetPort: 8081
+    selector:
+      app: redis-commander
+    sessionAffinity: None
+    type: LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: 91.99.219.182
+        ipMode: VIP
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"redis-exporter","namespace":"caritas"},"spec":{"ports":[{"name":"metrics","port":9121,"targetPort":9121}],"selector":{"app":"redis-exporter"}}}
+    creationTimestamp: "2025-10-22T18:25:11Z"
+    name: redis-exporter
+    namespace: caritas
+    resourceVersion: "371888"
+    uid: 866dce0e-4545-4b78-a900-e01342c55fc9
+  spec:
+    clusterIP: 10.43.230.52
+    clusterIPs:
+    - 10.43.230.52
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: metrics
+      port: 9121
+      protocol: TCP
+      targetPort: 9121
+    selector:
+      app: redis-exporter
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"redis-exporter"},"name":"redis-exporter-metrics","namespace":"caritas"},"spec":{"ports":[{"name":"metrics","port":9020,"protocol":"TCP","targetPort":9121}],"selector":{"app":"redis-exporter"},"type":"LoadBalancer"}}
+    creationTimestamp: "2025-10-22T19:03:27Z"
+    finalizers:
+    - service.kubernetes.io/load-balancer-cleanup
+    labels:
+      app: redis-exporter
+    name: redis-exporter-metrics
+    namespace: caritas
+    resourceVersion: "373785"
+    uid: a07dee78-9347-4292-980f-4d43d970a5cc
+  spec:
+    allocateLoadBalancerNodePorts: true
+    clusterIP: 10.43.159.120
+    clusterIPs:
+    - 10.43.159.120
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: metrics
+      nodePort: 30117
+      port: 9020
+      protocol: TCP
+      targetPort: 9121
+    selector:
+      app: redis-exporter
+    sessionAffinity: None
+    type: LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: 91.99.219.182
+        ipMode: VIP
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"redis"},"name":"redis-headless","namespace":"caritas"},"spec":{"clusterIP":"None","ports":[{"name":"redis","port":6379,"protocol":"TCP","targetPort":6379}],"selector":{"app":"redis"},"type":"ClusterIP"}}
+    creationTimestamp: "2025-10-22T18:15:09Z"
+    labels:
+      app: redis
+    name: redis-headless
+    namespace: caritas
+    resourceVersion: "371415"
+    uid: ab113b47-14bd-46a4-ab28-090e9f65ae2d
+  spec:
+    clusterIP: None
+    clusterIPs:
+    - None
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: redis
+      port: 6379
+      protocol: TCP
+      targetPort: 6379
+    selector:
+      app: redis
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"redisinsight"},"name":"redisinsight","namespace":"caritas"},"spec":{"ports":[{"name":"web","nodePort":30801,"port":8001,"protocol":"TCP","targetPort":8001}],"selector":{"app":"redisinsight"},"type":"NodePort"}}
+    creationTimestamp: "2025-10-22T18:44:34Z"
+    labels:
+      app: redisinsight
+    name: redisinsight
+    namespace: caritas
+    resourceVersion: "372736"
+    uid: b4bdd528-44c9-4fd9-8803-da4a1dcb2b03
+  spec:
+    clusterIP: 10.43.51.51
+    clusterIPs:
+    - 10.43.51.51
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: web
+      nodePort: 30801
+      port: 8001
+      protocol: TCP
+      targetPort: 8001
+    selector:
+      app: redisinsight
+    sessionAffinity: None
+    type: NodePort
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"rocketchat","namespace":"caritas"},"spec":{"ports":[{"port":3000,"targetPort":3000}],"selector":{"app":"rocketchat"}}}
+    creationTimestamp: "2025-10-14T11:05:43Z"
+    name: rocketchat
+    namespace: caritas
+    resourceVersion: "71356"
+    uid: 9ab2581c-5ee3-4056-9a68-07d0577fb91d
+  spec:
+    clusterIP: 10.43.135.187
+    clusterIPs:
+    - 10.43.135.187
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 3000
+      protocol: TCP
+      targetPort: 3000
+    selector:
+      app: rocketchat
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: signoz
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-10-31T20:25:55Z"
+    labels:
+      app.kubernetes.io/component: signoz
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: signoz
+      app.kubernetes.io/version: v0.97.1
+      helm.sh/chart: signoz-0.96.0
+    name: signoz
+    namespace: caritas
+    resourceVersion: "1001499"
+    uid: 03e5f35b-ebc1-4c1b-a542-315a30b7ca02
+  spec:
+    clusterIP: 10.43.22.106
+    clusterIPs:
+    - 10.43.22.106
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: http
+    - name: http-internal
+      port: 8085
+      protocol: TCP
+      targetPort: http-internal
+    - name: opamp-internal
+      port: 4320
+      protocol: TCP
+      targetPort: opamp-internal
+    selector:
+      app.kubernetes.io/component: signoz
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/name: signoz
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: signoz
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-10-31T20:27:01Z"
+    labels:
+      app.kubernetes.io/component: clickhouse
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: clickhouse
+      app.kubernetes.io/version: 24.1.2
+      clickhouse.altinity.com/Service: chi
+      clickhouse.altinity.com/app: chop
+      clickhouse.altinity.com/chi: signoz-clickhouse
+      clickhouse.altinity.com/namespace: caritas
+      clickhouse.altinity.com/object-version: dea704f67fbabf6dc9e17fb064e7c5fa9d88fa66
+      helm.sh/chart: clickhouse-24.1.18
+    name: signoz-clickhouse
+    namespace: caritas
+    ownerReferences:
+    - apiVersion: clickhouse.altinity.com/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ClickHouseInstallation
+      name: signoz-clickhouse
+      uid: ca275704-94ea-462f-9d26-9f670658fbc4
+    resourceVersion: "1001867"
+    uid: fb4d3de3-dc5a-4894-9bdb-c8e4e238ae6b
+  spec:
+    clusterIP: 10.43.47.36
+    clusterIPs:
+    - 10.43.47.36
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 8123
+      protocol: TCP
+      targetPort: 8123
+    - name: tcp
+      port: 9000
+      protocol: TCP
+      targetPort: 9000
+    selector:
+      clickhouse.altinity.com/app: chop
+      clickhouse.altinity.com/chi: signoz-clickhouse
+      clickhouse.altinity.com/namespace: caritas
+      clickhouse.altinity.com/ready: "yes"
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: signoz
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-10-31T20:25:55Z"
+    labels:
+      app.kubernetes.io/component: operator
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: clickhouse
+      app.kubernetes.io/version: 24.1.2
+      clickhouse.altinity.com/chop: 0.21.2
+      helm.sh/chart: clickhouse-24.1.18
+    name: signoz-clickhouse-operator-metrics
+    namespace: caritas
+    resourceVersion: "1001501"
+    uid: 0e6677a8-56bd-4126-a166-d4220f8a9b5d
+  spec:
+    clusterIP: 10.43.67.210
+    clusterIPs:
+    - 10.43.67.210
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: signoz-clickhouse-operator-metrics
+      port: 8888
+      protocol: TCP
+      targetPort: 8888
+    selector:
+      app.kubernetes.io/component: operator
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/name: clickhouse
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: signoz
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-10-31T20:25:55Z"
+    labels:
+      app.kubernetes.io/component: otel-collector
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: signoz
+      app.kubernetes.io/version: v0.97.1
+      helm.sh/chart: signoz-0.96.0
+    name: signoz-otel-collector
+    namespace: caritas
+    resourceVersion: "1001525"
+    uid: 2293463b-684b-4979-b1e4-29472bd60b8b
+  spec:
+    clusterIP: 10.43.219.37
+    clusterIPs:
+    - 10.43.219.37
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: jaeger-grpc
+      nodePort: 30710
+      port: 14250
+      protocol: TCP
+      targetPort: jaeger-grpc
+    - name: jaeger-thrift
+      nodePort: 31026
+      port: 14268
+      protocol: TCP
+      targetPort: jaeger-thrift
+    - name: logsheroku
+      nodePort: 31625
+      port: 8081
+      protocol: TCP
+      targetPort: logsheroku
+    - name: logsjson
+      nodePort: 32505
+      port: 8082
+      protocol: TCP
+      targetPort: logsjson
+    - name: metrics
+      nodePort: 32033
+      port: 8888
+      protocol: TCP
+      targetPort: metrics
+    - name: otlp
+      nodePort: 31894
+      port: 4317
+      protocol: TCP
+      targetPort: otlp
+    - name: otlp-http
+      nodePort: 30274
+      port: 4318
+      protocol: TCP
+      targetPort: otlp-http
+    selector:
+      app.kubernetes.io/component: otel-collector
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/name: signoz
+    sessionAffinity: None
+    type: NodePort
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: signoz
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-10-31T20:25:55Z"
+    labels:
+      app.kubernetes.io/component: zookeeper
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: zookeeper
+      helm.sh/chart: zookeeper-0.0.1
+    name: signoz-zookeeper
+    namespace: caritas
+    resourceVersion: "1001508"
+    uid: dfdb0a71-6e53-4481-a6f6-a037850a1f75
+  spec:
+    clusterIP: 10.43.129.156
+    clusterIPs:
+    - 10.43.129.156
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: tcp-client
+      port: 2181
+      protocol: TCP
+      targetPort: client
+    - name: tcp-follower
+      port: 2888
+      protocol: TCP
+      targetPort: follower
+    - name: tcp-election
+      port: 3888
+      protocol: TCP
+      targetPort: election
+    selector:
+      app.kubernetes.io/component: zookeeper
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/name: zookeeper
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: signoz
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-10-31T20:25:55Z"
+    labels:
+      app.kubernetes.io/component: zookeeper
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: zookeeper
+      helm.sh/chart: zookeeper-0.0.1
+    name: signoz-zookeeper-headless
+    namespace: caritas
+    resourceVersion: "1001492"
+    uid: 6aefd41a-9c8c-4f57-92ea-ef8bb53de022
+  spec:
+    clusterIP: None
+    clusterIPs:
+    - None
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: tcp-client
+      port: 2181
+      protocol: TCP
+      targetPort: client
+    - name: tcp-follower
+      port: 2888
+      protocol: TCP
+      targetPort: follower
+    - name: tcp-election
+      port: 3888
+      protocol: TCP
+      targetPort: election
+    publishNotReadyAddresses: true
+    selector:
+      app.kubernetes.io/component: zookeeper
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/name: zookeeper
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: signoz
+      meta.helm.sh/release-namespace: caritas
+      prometheus.io/path: /metrics
+      prometheus.io/port: "9141"
+      prometheus.io/scrape: "true"
+    creationTimestamp: "2025-10-31T20:25:55Z"
+    labels:
+      app.kubernetes.io/component: metrics
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: zookeeper
+      helm.sh/chart: zookeeper-0.0.1
+    name: signoz-zookeeper-metrics
+    namespace: caritas
+    resourceVersion: "1001513"
+    uid: 87a78220-87f0-4f56-8e55-abb43fddfe08
+  spec:
+    clusterIP: 10.43.57.147
+    clusterIPs:
+    - 10.43.57.147
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: tcp-metrics
+      port: 9141
+      protocol: TCP
+      targetPort: metrics
+    selector:
+      app.kubernetes.io/component: zookeeper
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/name: zookeeper
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"tenantservice","namespace":"caritas"},"spec":{"ports":[{"port":8081,"targetPort":8081}],"selector":{"app":"tenantservice"}}}
+    creationTimestamp: "2025-10-14T11:12:42Z"
+    name: tenantservice
+    namespace: caritas
+    resourceVersion: "71666"
+    uid: f4a92e9f-a9a9-4330-938b-ef5e30e01417
+  spec:
+    clusterIP: 10.43.237.247
+    clusterIPs:
+    - 10.43.237.247
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 8081
+      protocol: TCP
+      targetPort: 8081
+    selector:
+      app: tenantservice
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"uploadservice","namespace":"caritas"},"spec":{"ports":[{"nodePort":30085,"port":8085,"protocol":"TCP","targetPort":8085}],"selector":{"app":"uploadservice"},"type":"LoadBalancer"}}
+    creationTimestamp: "2025-10-31T00:32:46Z"
+    finalizers:
+    - service.kubernetes.io/load-balancer-cleanup
+    name: uploadservice
+    namespace: caritas
+    resourceVersion: "940285"
+    uid: 01ffd439-d685-476b-8ecd-eabe5c99cf1b
+  spec:
+    allocateLoadBalancerNodePorts: true
+    clusterIP: 10.43.211.130
+    clusterIPs:
+    - 10.43.211.130
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - nodePort: 30085
+      port: 8085
+      protocol: TCP
+      targetPort: 8085
+    selector:
+      app: uploadservice
+    sessionAffinity: None
+    type: LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: 91.99.219.182
+        ipMode: VIP
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"userservice","namespace":"caritas"},"spec":{"ports":[{"port":8082,"targetPort":8082}],"selector":{"app":"userservice"}}}
+    creationTimestamp: "2025-10-14T11:12:42Z"
+    name: userservice
+    namespace: caritas
+    resourceVersion: "71685"
+    uid: 1471f877-e281-4211-b3e2-682e8852e6a5
+  spec:
+    clusterIP: 10.43.5.111
+    clusterIPs:
+    - 10.43.5.111
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 8082
+      protocol: TCP
+      targetPort: 8082
+    selector:
+      app: userservice
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"videoservice","namespace":"caritas"},"spec":{"ports":[{"name":"http","port":8080,"targetPort":8080}],"selector":{"app":"videoservice"},"type":"NodePort"}}
+    creationTimestamp: "2025-10-31T00:32:46Z"
+    name: videoservice
+    namespace: caritas
+    resourceVersion: "940233"
+    uid: b465dcc8-20f8-4eb5-8f3f-772cacd09f4d
+  spec:
+    clusterIP: 10.43.55.174
+    clusterIPs:
+    - 10.43.55.174
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      nodePort: 32554
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: videoservice
+    sessionAffinity: None
+    type: NodePort
+  status:
+    loadBalancer: {}
+kind: List
+metadata:
+  resourceVersion: ""

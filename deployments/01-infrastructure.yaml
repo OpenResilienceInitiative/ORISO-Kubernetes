@@ -1,0 +1,154 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"mongodb","namespace":"caritas"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"mongodb"}},"template":{"metadata":{"labels":{"app":"mongodb"}},"spec":{"containers":[{"args":["--replSet","rs0"],"image":"mongo:5.0","name":"mongodb","ports":[{"containerPort":27017}],"volumeMounts":[{"mountPath":"/data/db","name":"mongodb-data"}]}],"volumes":[{"hostPath":{"path":"/data/mongodb"},"name":"mongodb-data"}]}}}}
+    creationTimestamp: "2025-10-14T11:05:08Z"
+    generation: 1
+    name: mongodb
+    namespace: caritas
+    resourceVersion: "71256"
+    uid: 9616bb25-6234-41f1-834e-11d7ddeace2e
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: mongodb
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: mongodb
+      spec:
+        containers:
+        - args:
+          - --replSet
+          - rs0
+          image: mongo:5.0
+          imagePullPolicy: IfNotPresent
+          name: mongodb
+          ports:
+          - containerPort: 27017
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /data/db
+            name: mongodb-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - hostPath:
+            path: /data/mongodb
+            type: ""
+          name: mongodb-data
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-10-14T11:05:09Z"
+      lastUpdateTime: "2025-10-14T11:05:09Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2025-10-14T11:05:08Z"
+      lastUpdateTime: "2025-10-14T11:05:09Z"
+      message: ReplicaSet "mongodb-96cfbc7dc" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"rabbitmq","namespace":"caritas"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"rabbitmq"}},"template":{"metadata":{"labels":{"app":"rabbitmq"}},"spec":{"containers":[{"env":[{"name":"RABBITMQ_DEFAULT_USER","value":"admin"},{"name":"RABBITMQ_DEFAULT_PASS","value":"admin"}],"image":"rabbitmq:3-management","name":"rabbitmq","ports":[{"containerPort":5672},{"containerPort":15672}]}]}}}}
+    creationTimestamp: "2025-10-14T11:05:08Z"
+    generation: 1
+    name: rabbitmq
+    namespace: caritas
+    resourceVersion: "71258"
+    uid: 273a750b-efb6-49cf-b6a7-ec8cb2eb37c6
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: rabbitmq
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: rabbitmq
+      spec:
+        containers:
+        - env:
+          - name: RABBITMQ_DEFAULT_USER
+            value: admin
+          - name: RABBITMQ_DEFAULT_PASS
+            value: admin
+          image: rabbitmq:3-management
+          imagePullPolicy: IfNotPresent
+          name: rabbitmq
+          ports:
+          - containerPort: 5672
+            protocol: TCP
+          - containerPort: 15672
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-10-14T11:05:09Z"
+      lastUpdateTime: "2025-10-14T11:05:09Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2025-10-14T11:05:08Z"
+      lastUpdateTime: "2025-10-14T11:05:09Z"
+      message: ReplicaSet "rabbitmq-7cb55464cf" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+kind: List
+metadata:
+  resourceVersion: ""
+Error from server (NotFound): deployments.apps "mariadb" not found

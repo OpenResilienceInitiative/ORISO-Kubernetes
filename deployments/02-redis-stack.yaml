@@ -1,0 +1,302 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"redis"},"name":"redis","namespace":"caritas"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"redis"}},"template":{"metadata":{"labels":{"app":"redis"}},"spec":{"containers":[{"command":["redis-server","/etc/redis/redis.conf"],"env":[{"name":"REDIS_PASSWORD","valueFrom":{"secretKeyRef":{"key":"password","name":"redis-secret"}}}],"image":"redis:7-alpine","livenessProbe":{"exec":{"command":["redis-cli","--no-auth-warning","-a","caritas123","ping"]},"failureThreshold":3,"initialDelaySeconds":30,"periodSeconds":10,"timeoutSeconds":5},"name":"redis","ports":[{"containerPort":6379}],"readinessProbe":{"exec":{"command":["redis-cli","--no-auth-warning","-a","caritas123","ping"]},"failureThreshold":3,"initialDelaySeconds":5,"periodSeconds":5,"timeoutSeconds":3},"resources":{"limits":{"cpu":"500m","memory":"1Gi"},"requests":{"cpu":"250m","memory":"512Mi"}},"volumeMounts":[{"mountPath":"/etc/redis","name":"redis-config"},{"mountPath":"/data","name":"redis-data"}]}],"volumes":[{"configMap":{"name":"redis-config"},"name":"redis-config"},{"name":"redis-data","persistentVolumeClaim":{"claimName":"redis-pvc"}}]}}}}
+    creationTimestamp: "2025-10-22T18:15:09Z"
+    generation: 1
+    labels:
+      app: redis
+    name: redis
+    namespace: caritas
+    resourceVersion: "371463"
+    uid: bf1e3583-c8e9-4d36-8cfd-2a16a7a44c60
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: redis
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: redis
+      spec:
+        containers:
+        - command:
+          - redis-server
+          - /etc/redis/redis.conf
+          env:
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: redis-secret
+          image: redis:7-alpine
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+              - redis-cli
+              - --no-auth-warning
+              - -a
+              - caritas123
+              - ping
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: redis
+          ports:
+          - containerPort: 6379
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - redis-cli
+              - --no-auth-warning
+              - -a
+              - caritas123
+              - ping
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/redis
+            name: redis-config
+          - mountPath: /data
+            name: redis-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: redis-config
+          name: redis-config
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: redis-pvc
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-10-22T18:15:20Z"
+      lastUpdateTime: "2025-10-22T18:15:20Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2025-10-22T18:15:09Z"
+      lastUpdateTime: "2025-10-22T18:15:20Z"
+      message: ReplicaSet "redis-65b67ff6f8" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"redis-commander"},"name":"redis-commander","namespace":"caritas"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"redis-commander"}},"template":{"metadata":{"labels":{"app":"redis-commander"}},"spec":{"containers":[{"env":[{"name":"REDIS_HOSTS","value":"local:redis:6379:0:caritas123"},{"name":"HTTP_USER","value":"admin"},{"name":"HTTP_PASSWORD","value":"caritas123"}],"image":"rediscommander/redis-commander:latest","livenessProbe":{"httpGet":{"path":"/","port":8081},"initialDelaySeconds":15,"periodSeconds":30},"name":"redis-commander","ports":[{"containerPort":8081}],"readinessProbe":{"httpGet":{"path":"/","port":8081},"initialDelaySeconds":5,"periodSeconds":10},"resources":{"limits":{"cpu":"100m","memory":"256Mi"},"requests":{"cpu":"50m","memory":"128Mi"}}}]}}}}
+    creationTimestamp: "2025-10-22T18:47:05Z"
+    generation: 1
+    labels:
+      app: redis-commander
+    name: redis-commander
+    namespace: caritas
+    resourceVersion: "372955"
+    uid: 639a3780-248f-4075-9b06-6f494c13ad6e
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: redis-commander
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: redis-commander
+      spec:
+        containers:
+        - env:
+          - name: REDIS_HOSTS
+            value: local:redis:6379:0:caritas123
+          - name: HTTP_USER
+            value: admin
+          - name: HTTP_PASSWORD
+            value: caritas123
+          image: rediscommander/redis-commander:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8081
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: redis-commander
+          ports:
+          - containerPort: 8081
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8081
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-10-22T18:47:24Z"
+      lastUpdateTime: "2025-10-22T18:47:24Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2025-10-22T18:47:05Z"
+      lastUpdateTime: "2025-10-22T18:47:24Z"
+      message: ReplicaSet "redis-commander-6d6b788d9b" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"redis-exporter","namespace":"caritas"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"redis-exporter"}},"template":{"metadata":{"labels":{"app":"redis-exporter"}},"spec":{"containers":[{"env":[{"name":"REDIS_ADDR","value":"redis:6379"},{"name":"REDIS_PASSWORD","value":"caritas123"}],"image":"oliver006/redis_exporter:latest","name":"redis-exporter","ports":[{"containerPort":9121}],"resources":{"limits":{"cpu":"100m","memory":"128Mi"},"requests":{"cpu":"50m","memory":"64Mi"}}}]}}}}
+    creationTimestamp: "2025-10-22T18:25:11Z"
+    generation: 1
+    name: redis-exporter
+    namespace: caritas
+    resourceVersion: "371904"
+    uid: 1b25bd2e-afd7-4577-a644-d7fa184031bf
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: redis-exporter
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: redis-exporter
+      spec:
+        containers:
+        - env:
+          - name: REDIS_ADDR
+            value: redis:6379
+          - name: REDIS_PASSWORD
+            value: caritas123
+          image: oliver006/redis_exporter:latest
+          imagePullPolicy: Always
+          name: redis-exporter
+          ports:
+          - containerPort: 9121
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-10-22T18:25:15Z"
+      lastUpdateTime: "2025-10-22T18:25:15Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2025-10-22T18:25:11Z"
+      lastUpdateTime: "2025-10-22T18:25:15Z"
+      message: ReplicaSet "redis-exporter-5fbf7557db" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+kind: List
+metadata:
+  resourceVersion: ""
