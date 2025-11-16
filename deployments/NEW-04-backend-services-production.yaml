@@ -1,0 +1,537 @@
+# ORISO Backend Services - Production Deployment
+# This file deploys backend services using pre-built Docker images
+# NO hardcoded paths - uses Docker images only
+# Version: 2.0.0 - Production Ready
+
+---
+# TenantService Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tenantservice
+  namespace: caritas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tenantservice
+  template:
+    metadata:
+      labels:
+        app: tenantservice
+        tier: backend
+    spec:
+      containers:
+      - name: tenantservice
+        image: oriso-tenantservice:latest
+        imagePullPolicy: Never  # Use local image from k3s
+        ports:
+        - containerPort: 8081
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod"
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:mariadb://mariadb:3306/tenantservice"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "caritas"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "caritas"
+        - name: SPRING_LIQUIBASE_USER
+          value: "caritas"
+        - name: SPRING_LIQUIBASE_PASSWORD
+          value: "caritas"
+        - name: KEYCLOAK_AUTH_SERVER_URL
+          value: "http://keycloak:8080"
+        - name: KEYCLOAK_REALM
+          value: "online-beratung"
+        - name: SPRING_RABBITMQ_HOST
+          value: "rabbitmq"
+        - name: SPRING_RABBITMQ_PORT
+          value: "5672"
+        - name: SPRING_RABBITMQ_USERNAME
+          value: "admin"
+        - name: SPRING_RABBITMQ_PASSWORD
+          value: "admin"
+        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+          value: "http://keycloak:8080/realms/online-beratung"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8081
+          initialDelaySeconds: 120
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8081
+          initialDelaySeconds: 60
+          periodSeconds: 10
+
+---
+# TenantService Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: tenantservice
+  namespace: caritas
+spec:
+  ports:
+  - port: 8081
+    targetPort: 8081
+  selector:
+    app: tenantservice
+  type: ClusterIP
+
+---
+# UserService Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userservice
+  namespace: caritas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userservice
+  template:
+    metadata:
+      labels:
+        app: userservice
+        tier: backend
+    spec:
+      containers:
+      - name: userservice
+        image: oriso-userservice:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8082
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod"
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:mariadb://mariadb:3306/userservice"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "caritas"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "caritas"
+        - name: SPRING_LIQUIBASE_USER
+          value: "caritas"
+        - name: SPRING_LIQUIBASE_PASSWORD
+          value: "caritas"
+        - name: KEYCLOAK_AUTH_SERVER_URL
+          value: "http://keycloak:8080"
+        - name: KEYCLOAK_REALM
+          value: "online-beratung"
+        - name: MATRIX_API_URL
+          value: "http://matrix-synapse:8008"
+        - name: MATRIX_SERVER_NAME
+          value: "localhost"
+        - name: MATRIX_MIGRATION_ENABLED
+          value: "true"
+        - name: SPRING_RABBITMQ_HOST
+          value: "rabbitmq"
+        - name: SPRING_RABBITMQ_PORT
+          value: "5672"
+        - name: SPRING_RABBITMQ_USERNAME
+          value: "admin"
+        - name: SPRING_RABBITMQ_PASSWORD
+          value: "admin"
+        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+          value: "http://keycloak:8080/realms/online-beratung"
+        - name: TENANT_SERVICE_API_URL
+          value: "http://tenantservice:8081"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8082
+          initialDelaySeconds: 120
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8082
+          initialDelaySeconds: 60
+          periodSeconds: 10
+
+---
+# UserService Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: userservice
+  namespace: caritas
+spec:
+  ports:
+  - port: 8082
+    targetPort: 8082
+  selector:
+    app: userservice
+  type: ClusterIP
+
+---
+# ConsultingTypeService Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consultingtypeservice
+  namespace: caritas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consultingtypeservice
+  template:
+    metadata:
+      labels:
+        app: consultingtypeservice
+        tier: backend
+    spec:
+      containers:
+      - name: consultingtypeservice
+        image: oriso-consultingtypeservice:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8083
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod"
+        - name: MONGODB_URI
+          value: "mongodb://mongodb:27017/consulting_types?retryWrites=false"
+        - name: KEYCLOAK_AUTH_SERVER_URL
+          value: "http://keycloak:8080"
+        - name: KEYCLOAK_REALM
+          value: "online-beratung"
+        - name: SPRING_RABBITMQ_HOST
+          value: "rabbitmq"
+        - name: SPRING_RABBITMQ_PORT
+          value: "5672"
+        - name: SPRING_RABBITMQ_USERNAME
+          value: "admin"
+        - name: SPRING_RABBITMQ_PASSWORD
+          value: "admin"
+        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+          value: "http://keycloak:8080/realms/online-beratung"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8083
+          initialDelaySeconds: 120
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8083
+          initialDelaySeconds: 60
+          periodSeconds: 10
+
+---
+# ConsultingTypeService Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: consultingtypeservice
+  namespace: caritas
+spec:
+  ports:
+  - port: 8083
+    targetPort: 8083
+  selector:
+    app: consultingtypeservice
+  type: ClusterIP
+
+---
+# AgencyService Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agencyservice
+  namespace: caritas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agencyservice
+  template:
+    metadata:
+      labels:
+        app: agencyservice
+        tier: backend
+    spec:
+      containers:
+      - name: agencyservice
+        image: oriso-agencyservice:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8084
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod"
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:mariadb://mariadb:3306/agencyservice"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "caritas"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "caritas"
+        - name: SPRING_LIQUIBASE_USER
+          value: "caritas"
+        - name: SPRING_LIQUIBASE_PASSWORD
+          value: "caritas"
+        - name: KEYCLOAK_AUTH_SERVER_URL
+          value: "http://keycloak:8080"
+        - name: KEYCLOAK_REALM
+          value: "online-beratung"
+        - name: SPRING_RABBITMQ_HOST
+          value: "rabbitmq"
+        - name: SPRING_RABBITMQ_PORT
+          value: "5672"
+        - name: SPRING_RABBITMQ_USERNAME
+          value: "admin"
+        - name: SPRING_RABBITMQ_PASSWORD
+          value: "admin"
+        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+          value: "http://keycloak:8080/realms/online-beratung"
+        - name: TENANT_SERVICE_API_URL
+          value: "http://tenantservice:8081"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8084
+          initialDelaySeconds: 120
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8084
+          initialDelaySeconds: 60
+          periodSeconds: 10
+
+---
+# AgencyService Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: agencyservice
+  namespace: caritas
+spec:
+  ports:
+  - port: 8084
+    targetPort: 8084
+  selector:
+    app: agencyservice
+  type: ClusterIP
+
+---
+# UploadService Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uploadservice
+  namespace: caritas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uploadservice
+  template:
+    metadata:
+      labels:
+        app: uploadservice
+        tier: backend
+    spec:
+      containers:
+      - name: uploadservice
+        image: oriso-uploadservice:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8085
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod"
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:mariadb://mariadb:3306/uploadservice"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "caritas"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "caritas"
+        - name: SPRING_LIQUIBASE_USER
+          value: "caritas"
+        - name: SPRING_LIQUIBASE_PASSWORD
+          value: "caritas"
+        - name: KEYCLOAK_AUTH_SERVER_URL
+          value: "http://keycloak:8080"
+        - name: KEYCLOAK_REALM
+          value: "online-beratung"
+        - name: MATRIX_API_URL
+          value: "http://matrix-synapse:8008"
+        - name: MATRIX_SERVER_NAME
+          value: "localhost"
+        - name: MATRIX_MIGRATION_ENABLED
+          value: "true"
+        - name: MONGODB_URI
+          value: "mongodb://mongodb:27017/rocketchat?retryWrites=false"
+        - name: SPRING_RABBITMQ_HOST
+          value: "rabbitmq"
+        - name: SPRING_RABBITMQ_PORT
+          value: "5672"
+        - name: SPRING_RABBITMQ_USERNAME
+          value: "admin"
+        - name: SPRING_RABBITMQ_PASSWORD
+          value: "admin"
+        - name: USER_SERVICE_API_URL
+          value: "http://userservice:8082/users"
+        - name: TENANT_SERVICE_API_URL
+          value: "http://tenantservice:8081"
+        - name: SERVICE_ENCRYPTION_APPKEY
+          value: "EncryptionKey123456"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8085
+          initialDelaySeconds: 120
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8085
+          initialDelaySeconds: 60
+          periodSeconds: 10
+
+---
+# UploadService Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: uploadservice
+  namespace: caritas
+spec:
+  ports:
+  - port: 8085
+    targetPort: 8085
+  selector:
+    app: uploadservice
+  type: LoadBalancer
+
+---
+# VideoService Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: videoservice
+  namespace: caritas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: videoservice
+  template:
+    metadata:
+      labels:
+        app: videoservice
+        tier: backend
+    spec:
+      containers:
+      - name: videoservice
+        image: oriso-videoservice:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8086
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod"
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:mariadb://mariadb:3306/videoservice"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "caritas"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "caritas"
+        - name: KEYCLOAK_AUTH_SERVER_URL
+          value: "http://keycloak:8080"
+        - name: KEYCLOAK_REALM
+          value: "online-beratung"
+        - name: SPRING_RABBITMQ_HOST
+          value: "rabbitmq"
+        - name: SPRING_RABBITMQ_PORT
+          value: "5672"
+        - name: SPRING_RABBITMQ_USERNAME
+          value: "admin"
+        - name: SPRING_RABBITMQ_PASSWORD
+          value: "admin"
+        - name: APP_BASE_URL
+          value: "http://91.99.219.182:8089"
+        - name: VIDEO_CALL_SERVER_URL
+          value: "http://91.99.219.182:30443"
+        - name: VIDEO_CALL_SECURITY_JWT_SECRET
+          value: "caritas-jitsi-secret-2025-change-me"
+        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+          value: "http://keycloak:8080/realms/online-beratung"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8086
+          initialDelaySeconds: 120
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8086
+          initialDelaySeconds: 60
+          periodSeconds: 10
+
+---
+# VideoService Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: videoservice
+  namespace: caritas
+spec:
+  ports:
+  - port: 8086
+    targetPort: 8086
+  selector:
+    app: videoservice
+  type: NodePort
+

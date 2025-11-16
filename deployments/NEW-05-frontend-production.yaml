@@ -1,0 +1,138 @@
+# ORISO Frontend & Admin - Production Deployment
+# This file deploys frontend and admin using pre-built Docker images
+# NO hardcoded paths - uses Docker images only
+# Version: 2.0.0 - Production Ready
+
+---
+# Frontend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: caritas
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+        tier: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: oriso-frontend:latest
+        imagePullPolicy: Never  # Use local image from k3s
+        ports:
+        - containerPort: 80
+          name: http
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: PORT
+          value: "80"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
+
+---
+# Frontend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: caritas
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 9001
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: frontend
+
+---
+# Admin Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin
+  namespace: caritas
+  labels:
+    app: admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin
+  template:
+    metadata:
+      labels:
+        app: admin
+        tier: frontend
+    spec:
+      containers:
+      - name: admin
+        image: oriso-admin:latest
+        imagePullPolicy: Never  # Use local image from k3s
+        ports:
+        - containerPort: 80
+          name: http
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "50m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /admin
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /admin
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
+
+---
+# Admin Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin
+  namespace: caritas
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 9000
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: admin
+
