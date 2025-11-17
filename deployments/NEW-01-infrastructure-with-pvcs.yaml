@@ -1,24 +1,13 @@
 # ORISO Infrastructure Layer - MariaDB, MongoDB, RabbitMQ with Persistent Storage
-# This file creates StatefulSets with PVCs for data persistence
-# Version: 2.0.0 - Production Ready
+# This file creates StatefulSets with automatic PVC creation via volumeClaimTemplates
+# Version: 2.1.0 - Production Ready
+# 
+# IMPORTANT: PVCs are automatically created by volumeClaimTemplates in StatefulSets
+# No need to manually create PVCs - they will be named: <volumeClaimTemplate-name>-<statefulset-name>-<ordinal>
+# Example: mariadb-storage-mariadb-0, mongodb-storage-mongodb-0
 
 ---
-# MariaDB PersistentVolumeClaim
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mariadb-pvc
-  namespace: caritas
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
-  storageClassName: local-path
-
----
-# MariaDB StatefulSet
+# MariaDB StatefulSet with automatic PVC creation
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -76,6 +65,8 @@ spec:
             - localhost
           initialDelaySeconds: 10
           periodSeconds: 5
+  # volumeClaimTemplates automatically creates PVCs for each pod
+  # PVC will be named: mariadb-storage-mariadb-0
   volumeClaimTemplates:
   - metadata:
       name: mariadb-storage
@@ -103,22 +94,7 @@ spec:
   type: ClusterIP
 
 ---
-# MongoDB PersistentVolumeClaim
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mongodb-pvc
-  namespace: caritas
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
-  storageClassName: local-path
-
----
-# MongoDB StatefulSet
+# MongoDB StatefulSet with automatic PVC creation
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -170,6 +146,8 @@ spec:
             - "db.adminCommand('ping')"
           initialDelaySeconds: 10
           periodSeconds: 5
+  # volumeClaimTemplates automatically creates PVCs for each pod
+  # PVC will be named: mongodb-storage-mongodb-0
   volumeClaimTemplates:
   - metadata:
       name: mongodb-storage
