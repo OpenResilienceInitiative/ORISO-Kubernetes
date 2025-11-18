@@ -53,17 +53,11 @@ jobs:
       - name: Checkout workflow repository
         uses: actions/checkout@v4
 
-      - name: Checkout ${{ matrix.repo }}
+      - name: Checkout target repository
         uses: actions/checkout@v4
         with:
           repository: ${{ format('{0}/{1}', github.repository_owner, matrix.repo) }}
-          # Use the workflow's triggering ref so the checked-out service
-          # matches the event/PR branch or commit that triggered this run.
-          # For pull requests, `github.head_ref` contains the source branch name;
-          # for pushes/tags `github.ref` is used. This ensures matrix checkouts
-          # build the same commit/branch as the workflow trigger instead of
-          # always using the default branch (e.g. `main`).
-          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           path: ${{ matrix.path }}
 
       - name: Setup Node.js
@@ -83,24 +77,11 @@ jobs:
           cache: maven
           cache-dependency-path: ${{ matrix.path }}/pom.xml
 
-      - name: Maven dependency cache (fallback)
-        if: matrix.runtime == 'maven'
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: maven-${{ runner.os }}-${{ hashFiles(format('{0}/pom.xml', matrix.path)) }}
-          restore-keys: |
-            maven-${{ runner.os }}-
-
       - name: Install & test frontend
         if: matrix.runtime == 'node'
         working-directory: ${{ matrix.path }}
         run: |
           npm ci --legacy-peer-deps
-          # Run frontend tests and fail the job on test failures. If frontend
-          # tests are intentionally non-blocking, document the exception in
-          # the CI/CD runbook and add a clear inline comment here explaining
-          # why they may be skipped instead of failing the build.
           npm run test -- --watch=false
           npm run build
 
