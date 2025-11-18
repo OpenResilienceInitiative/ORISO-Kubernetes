@@ -63,6 +63,7 @@ jobs:
           distribution: temurin
           java-version: 17
           cache: maven
+          cache-dependency-path: ${{ matrix.path }}/pom.xml
 
       - name: Maven dependency cache (fallback)
         if: matrix.runtime == 'maven'
