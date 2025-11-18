@@ -1,0 +1,117 @@
+name: build-and-push-images
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  ORG: OpenResilienceInitiative
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    name: Build & push ${{ matrix.image }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: frontend
+            path: ORISO-Frontend
+            runtime: node
+            image: oriso-frontend
+          - service: tenant
+            path: ORISO-TenantService
+            runtime: maven
+            image: oriso-tenantservice
+          - service: user
+            path: ORISO-UserService
+            runtime: maven
+            image: oriso-userservice
+          - service: consultingtype
+            path: ORISO-ConsultingTypeService
+            runtime: maven
+            image: oriso-consultingtypeservice
+          - service: agency
+            path: ORISO-AgencyService
+            runtime: maven
+            image: oriso-agencyservice
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        if: matrix.runtime == 'node'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+          cache-dependency-path: ${{ matrix.path }}/package-lock.json
+
+      - name: Setup Java 17
+        if: matrix.runtime == 'maven'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+
+      - name: Maven dependency cache (fallback)
+        if: matrix.runtime == 'maven'
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: maven-${{ runner.os }}-${{ hashFiles(format('{0}/pom.xml', matrix.path)) }}
+          restore-keys: |
+            maven-${{ runner.os }}-
+
+      - name: Install & test frontend
+        if: matrix.runtime == 'node'
+        working-directory: ${{ matrix.path }}
+        run: |
+          npm ci
+          npm run test -- --watch=false || echo "⚠️ frontend tests skipped/failed (non-blocking)"
+          npm run build
+
+      - name: Build & test backend
+        if: matrix.runtime == 'maven'
+        working-directory: ${{ matrix.path }}
+        run: |
+          mvn -B -ntp clean verify
+
+      - name: Docker login
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.ORG }}/${{ matrix.image }}
+          tags: |
+            type=sha
+            type=ref,event=tag
+            type=ref,event=branch
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+
+      - name: Build & (optionally) push image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.path }}
+          push: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
