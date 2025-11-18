@@ -57,7 +57,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ${{ format('{0}/{1}', github.repository_owner, matrix.repo) }}
-          ref: main
+          # Use the workflow's triggering ref so the checked-out service
+          # matches the event/PR branch or commit that triggered this run.
+          # For pull requests, `github.head_ref` contains the source branch name;
+          # for pushes/tags `github.ref` is used. This ensures matrix checkouts
+          # build the same commit/branch as the workflow trigger instead of
+          # always using the default branch (e.g. `main`).
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
           path: ${{ matrix.path }}
 
       - name: Setup Node.js
@@ -91,7 +97,11 @@ jobs:
         working-directory: ${{ matrix.path }}
         run: |
           npm ci --legacy-peer-deps
-          npm run test -- --watch=false || echo "⚠️ frontend tests skipped/failed (non-blocking)"
+          # Run frontend tests and fail the job on test failures. If frontend
+          # tests are intentionally non-blocking, document the exception in
+          # the CI/CD runbook and add a clear inline comment here explaining
+          # why they may be skipped instead of failing the build.
+          npm run test -- --watch=false
           npm run build
 
       - name: Build & test backend
