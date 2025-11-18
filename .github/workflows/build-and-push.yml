@@ -24,29 +24,41 @@ jobs:
       matrix:
         include:
           - service: frontend
+            repo: ORISO-Frontend
             path: ORISO-Frontend
             runtime: node
             image: oriso-frontend
           - service: tenant
+            repo: ORISO-TenantService
             path: ORISO-TenantService
             runtime: maven
             image: oriso-tenantservice
           - service: user
+            repo: ORISO-UserService
             path: ORISO-UserService
             runtime: maven
             image: oriso-userservice
           - service: consultingtype
+            repo: ORISO-ConsultingTypeService
             path: ORISO-ConsultingTypeService
             runtime: maven
             image: oriso-consultingtypeservice
           - service: agency
+            repo: ORISO-AgencyService
             path: ORISO-AgencyService
             runtime: maven
             image: oriso-agencyservice
 
     steps:
-      - name: Checkout repository
+      - name: Checkout workflow repository
         uses: actions/checkout@v4
+
+      - name: Checkout ${{ matrix.repo }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ format('{0}/{1}', github.repository_owner, matrix.repo) }}
+          ref: main
+          path: ${{ matrix.path }}
 
       - name: Setup Node.js
         if: matrix.runtime == 'node'
