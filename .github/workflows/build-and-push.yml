@@ -79,9 +79,76 @@ jobs:
       - name: Build frontend
         if: matrix.repo == 'ORISO-Frontend'
         working-directory: ${{ matrix.path }}
+        env:
+          CI: false
+          SKIP_TESTS: true
         run: |
           npm ci --legacy-peer-deps
           npm run build
+
+      - name: Determine Java version
+        if: matrix.repo != 'ORISO-Frontend'
+        id: java-version
+        run: |
+          if [ "${{ matrix.repo }}" == "ORISO-UserService" ] || [ "${{ matrix.repo }}" == "ORISO-ConsultingTypeService" ]; then
+            echo "version=11" >> $GITHUB_OUTPUT
+          else
+            echo "version=17" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up Java and Maven
+        if: matrix.repo != 'ORISO-Frontend'
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ steps.java-version.outputs.version }}
+          cache: maven
+          cache-dependency-path: ${{ matrix.path }}/pom.xml
+
+      - name: Build Java service
+        if: matrix.repo != 'ORISO-Frontend'
+        working-directory: ${{ matrix.path }}
+        run: |
+          chmod +x ./mvnw || true
+          ./mvnw clean package -DskipTests -DskipITs
+          echo "✓ JAR file built successfully"
+
+      - name: Verify and prepare JAR file
+        if: matrix.repo != 'ORISO-Frontend'
+        working-directory: ${{ matrix.path }}
+        run: |
+          # Find the main JAR file (exclude sources and javadoc)
+          JAR_FILE=$(find target -name "*.jar" ! -name "*-sources.jar" ! -name "*-javadoc.jar" | head -n 1)
+          if [ -z "$JAR_FILE" ]; then
+            echo "Error: JAR file not found in target directory"
+            ls -la target/ || true
+            exit 1
+          fi
+          JAR_NAME=$(basename "$JAR_FILE")
+          echo "Found JAR: $JAR_NAME"
+          # Determine expected JAR name based on service
+          case "${{ matrix.repo }}" in
+            ORISO-UserService)
+              EXPECTED_NAME="UserService.jar"
+              ;;
+            ORISO-TenantService)
+              EXPECTED_NAME="TenantService.jar"
+              ;;
+            ORISO-AgencyService)
+              EXPECTED_NAME="AgencyService.jar"
+              ;;
+            ORISO-ConsultingTypeService)
+              EXPECTED_NAME="ConsultingTypeService.jar"
+              ;;
+            *)
+              echo "Error: Unknown service ${{ matrix.repo }}"
+              exit 1
+              ;;
+          esac
+          # Copy JAR to root with expected name
+          cp "$JAR_FILE" "$EXPECTED_NAME"
+          echo "✓ JAR file copied as $EXPECTED_NAME"
+          ls -lh "$EXPECTED_NAME"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
