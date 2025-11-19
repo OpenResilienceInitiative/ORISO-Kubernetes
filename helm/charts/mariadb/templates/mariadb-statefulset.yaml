@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mariadb
+  labels:
+    io.kompose.network/database_network: "true"
+    io.kompose.service: mariadb
+spec:
+  serviceName: mariadb
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mariadb
+  template:
+    metadata:
+      labels:
+        io.kompose.network/database_network: "true"
+        io.kompose.service: mariadb
+    spec:
+      containers:
+        - name: mariadb
+          image: {{ .Values.mariadbImageName }}:{{ .Values.mariadbVersion }}
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret-{{ .Release.Name }}-env
+                  key: MYSQL_ROOT_PASSWORD
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: /docker-entrypoint-initdb.d/
+              name: init-sql
+            - mountPath: /var/lib/mysql
+              name: mariadb-data
+            - mountPath: /etc/mysql/conf.d
+              name: mariadb-config
+      restartPolicy: Always
+      volumes:
+        - name: init-sql
+          configMap:
+            name: init-sql-{{ .Release.Name }}-configmap
+  volumeClaimTemplates:
+    - metadata:
+        name: mariadb-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi
+        storageClassName: block-storage
+    - metadata:
+        name: mariadb-config
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: block-storage

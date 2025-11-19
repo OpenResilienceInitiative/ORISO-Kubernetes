@@ -1,0 +1,482 @@
+apiVersion: v1
+data:
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mariadb-{{ .Release.Name }}-env
+  name: mariadb-{{ .Release.Name }}-env
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-sql-{{ .Release.Name }}-configmap
+data:
+  00init.sql: |  
+    
+    CREATE USER IF NOT EXISTS '{{ .Values.global.userServiceSpringDatasourceUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.userServiceSpringDatasourcePassword }}';
+    CREATE DATABASE IF NOT EXISTS userservice CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    GRANT CREATE, SELECT, INSERT, UPDATE, DELETE, ALTER, TRIGGER, INDEX ON userservice.* TO '{{ .Values.global.userServiceSpringDatasourceUsername }}'@'%';
+    FLUSH PRIVILEGES;
+
+    CREATE USER IF NOT EXISTS '{{ .Values.global.agencyServiceSpringDatasourceUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.agencyServiceSpringDatasourcePassword }}';
+    CREATE DATABASE IF NOT EXISTS agencyservice CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    GRANT SELECT, INSERT, UPDATE, DELETE ON agencyservice.* TO '{{ .Values.global.agencyServiceSpringDatasourceUsername }}'@'%';
+    FLUSH PRIVILEGES;
+ 
+    CREATE USER IF NOT EXISTS '{{ .Values.global.uploadServiceSpringDatasourceUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.uploadServiceSpringDatasourcePassword }}';
+    CREATE DATABASE IF NOT EXISTS uploadservice CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    GRANT SELECT, INSERT, UPDATE, DELETE ON uploadservice.* TO '{{ .Values.global.uploadServiceSpringDatasourceUsername }}'@'%';
+    FLUSH PRIVILEGES;
+
+    CREATE USER IF NOT EXISTS '{{ .Values.global.tenantServiceSpringDatasourceUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.tenantServiceSpringDatasourcePassword }}';
+    CREATE DATABASE IF NOT EXISTS tenantservice CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    GRANT SELECT, INSERT, UPDATE, DELETE ON tenantservice.* TO '{{ .Values.global.tenantServiceSpringDatasourceUsername }}'@'%';
+    FLUSH PRIVILEGES;
+
+    CREATE USER IF NOT EXISTS '{{ .Values.global.consultingTypeServiceSpringDatasourceUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.consultingTypeServiceSpringDatasourcePassword }}';
+    CREATE DATABASE IF NOT EXISTS consultingtypeservice CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    GRANT SELECT, INSERT, UPDATE, DELETE ON consultingtypeservice.* TO '{{ .Values.global.consultingTypeServiceSpringDatasourceUsername }}'@'%';
+    FLUSH PRIVILEGES;
+    
+    CREATE USER IF NOT EXISTS '{{ .Values.global.caritasSpringDatasourceUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.caritasServiceSpringDatasourcePassword }}';
+    CREATE DATABASE IF NOT EXISTS caritas CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    GRANT SELECT, INSERT, UPDATE, DELETE ON caritas.* TO '{{ .Values.global.caritasSpringDatasourceUsername }}'@'%';
+    FLUSH PRIVILEGES;  
+
+  01agencyservice_schema.sql: | 
+
+    DROP SEQUENCE IF EXISTS `agencyservice`.`sequence_agency`;
+    CREATE SEQUENCE `agencyservice`.`sequence_agency`
+        START WITH 0 MINVALUE 0 MAXVALUE 9223372036854775806 INCREMENT BY 1 CACHE 10 NOCYCLE ENGINE=InnoDB;
+    DO SETVAL(`agencyservice`.`sequence_agency`, 40, 0);
+
+    DROP SEQUENCE IF EXISTS `agencyservice`.`sequence_agency_postcode_range`;
+    CREATE SEQUENCE `agencyservice`.`sequence_agency_postcode_range`
+        START WITH 0 MINVALUE 0 MAXVALUE 9223372036854775806 INCREMENT BY 1 CACHE 10 NOCYCLE ENGINE=InnoDB;
+    DO SETVAL(`agencyservice`.`sequence_agency_postcode_range`, 30, 0);
+
+    DROP SEQUENCE IF EXISTS `agencyservice`.`sequence_agency_topic`;
+    CREATE SEQUENCE `agencyservice`.`sequence_agency_topic`
+        START WITH 0 MINVALUE 0 MAXVALUE 9223372036854775806 INCREMENT BY 1 CACHE 10 NOCYCLE ENGINE=InnoDB;
+    DO SETVAL(`agencyservice`.`sequence_agency_topic`, 0, 0);
+
+    DROP SEQUENCE IF EXISTS `agencyservice`.`sequence_diocese`;
+    CREATE SEQUENCE `agencyservice`.`sequence_diocese`
+        START WITH 0 MINVALUE 0 MAXVALUE 9223372036854775806 INCREMENT BY 1 NOCACHE NOCYCLE ENGINE=InnoDB;
+    DO SETVAL(`agencyservice`.`sequence_diocese`, 0, 0);
+
+    DROP TABLE IF EXISTS `agencyservice`.`DATABASECHANGELOG`;
+    CREATE TABLE `agencyservice`.`DATABASECHANGELOG` (
+      `ID` varchar(255) NOT NULL,
+      `AUTHOR` varchar(255) NOT NULL,
+      `FILENAME` varchar(255) NOT NULL,
+      `DATEEXECUTED` datetime NOT NULL,
+      `ORDEREXECUTED` int(11) NOT NULL,
+      `EXECTYPE` varchar(10) NOT NULL,
+      `MD5SUM` varchar(35) DEFAULT NULL,
+      `DESCRIPTION` varchar(255) DEFAULT NULL,
+      `COMMENTS` varchar(255) DEFAULT NULL,
+      `TAG` varchar(255) DEFAULT NULL,
+      `LIQUIBASE` varchar(20) DEFAULT NULL,
+      `CONTEXTS` varchar(255) DEFAULT NULL,
+      `LABELS` varchar(255) DEFAULT NULL,
+      `DEPLOYMENT_ID` varchar(10) DEFAULT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+    DROP TABLE IF EXISTS `agencyservice`.`DATABASECHANGELOGLOCK`;
+    CREATE TABLE `agencyservice`.`DATABASECHANGELOGLOCK` (
+      `ID` int(11) NOT NULL,
+      `LOCKED` bit(1) NOT NULL,
+      `LOCKGRANTED` datetime DEFAULT NULL,
+      `LOCKEDBY` varchar(255) DEFAULT NULL,
+      PRIMARY KEY (`ID`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+    DROP TABLE IF EXISTS `agencyservice`.`agency`;
+    CREATE TABLE `agencyservice`.`agency` (
+      `id` bigint(21) NOT NULL,
+      `tenant_id` bigint(21) DEFAULT NULL,
+      `diocese_id` int(11) DEFAULT NULL,
+      `name` varchar(100) NOT NULL,
+      `description` text DEFAULT NULL,
+      `postcode` varchar(5) DEFAULT NULL,
+      `city` varchar(100) DEFAULT NULL,
+      `is_team_agency` tinyint(4) NOT NULL DEFAULT 0,
+      `consulting_type` int(11) DEFAULT NULL,
+      `is_offline` tinyint(4) NOT NULL DEFAULT 0,
+      `url` varchar(500) DEFAULT NULL,
+      `is_external` tinyint(4) NOT NULL DEFAULT 0,
+      `age_from` smallint(6) DEFAULT NULL,
+      `age_to` smallint(6) DEFAULT NULL,
+      `genders` varchar(50) DEFAULT NULL,
+      `id_old` bigint(21) DEFAULT NULL,
+      `create_date` datetime NOT NULL DEFAULT utc_timestamp(),
+      `update_date` datetime NOT NULL DEFAULT utc_timestamp(),
+      `delete_date` datetime DEFAULT NULL,
+      `counselling_relations` varchar(200) DEFAULT NULL,
+      `data_protection_responsible_entity` varchar(100) DEFAULT NULL,
+      `data_protection_alternative_contact` longtext DEFAULT NULL,
+      `data_protection_officer_contact` longtext DEFAULT NULL,
+      `data_protection_agency_contact` longtext DEFAULT NULL,
+      `agency_logo` longtext DEFAULT NULL,
+      PRIMARY KEY (`id`),
+      KEY `diocese_id` (`diocese_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+    DELIMITER ;;
+    CREATE TRIGGER `agencyservice`.`agency_update`
+      BEFORE UPDATE ON `agencyservice`.`agency`
+      FOR EACH ROW
+    BEGIN
+      set new.update_date=utc_timestamp();
+    END ;;
+    DELIMITER ;
+
+    DROP TABLE IF EXISTS `agencyservice`.`agency_postcode_range`;
+    CREATE TABLE `agencyservice`.`agency_postcode_range` (
+      `id` bigint(21) NOT NULL,
+      `tenant_id` bigint(21) DEFAULT NULL,
+      `agency_id` bigint(21) NOT NULL,
+      `postcode_from` varchar(5) NOT NULL,
+      `postcode_to` varchar(5) NOT NULL,
+      `create_date` datetime NOT NULL DEFAULT utc_timestamp(),
+      `update_date` datetime NOT NULL DEFAULT utc_timestamp(),
+      PRIMARY KEY (`id`),
+      KEY `agency_id` (`agency_id`),
+      CONSTRAINT `agency_postcode_range_ibfk_1` FOREIGN KEY (`agency_id`) REFERENCES `agencyservice`.`agency` (`id`) ON UPDATE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+    DELIMITER ;;
+    CREATE TRIGGER `agencyservice`.`agency_postcode_range_update`
+      BEFORE UPDATE ON `agencyservice`.`agency_postcode_range`
+      FOR EACH ROW
+    BEGIN
+      set new.update_date=utc_timestamp();
+    END ;;
+    DELIMITER ;
+
+    DROP TABLE IF EXISTS `agencyservice`.`agency_topic`;
+    CREATE TABLE `agencyservice`.`agency_topic` (
+      `id` bigint(21) NOT NULL,
+      `agency_id` bigint(21) NOT NULL,
+      `topic_id` bigint(21) NOT NULL,
+      `create_date` datetime NOT NULL DEFAULT utc_timestamp(),
+      `update_date` datetime NOT NULL DEFAULT utc_timestamp(),
+      PRIMARY KEY (`id`),
+      KEY `agency_id` (`agency_id`),
+      CONSTRAINT `agency_topic_ibfk_1` FOREIGN KEY (`agency_id`) REFERENCES `agencyservice`.`agency` (`id`) ON UPDATE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+    DELIMITER ;;
+    CREATE TRIGGER `agencyservice`.`agency_topic_update`
+      BEFORE UPDATE ON `agencyservice`.`agency_topic`
+      FOR EACH ROW
+    BEGIN
+      set new.update_date=utc_timestamp();
+    END ;;
+    DELIMITER ;
+
+    DROP TABLE IF EXISTS `agencyservice`.`diocese`;
+    CREATE TABLE `agencyservice`.`diocese` (
+      `id` bigint(21) NOT NULL,
+      `name` varchar(100) NOT NULL,
+      `id_old` bigint(21) NOT NULL,
+      `create_date` datetime NOT NULL DEFAULT utc_timestamp(),
+      `update_date` datetime NOT NULL DEFAULT utc_timestamp(),
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+    DELIMITER ;;
+    CREATE TRIGGER `agencyservice`.`diocese_update`
+      BEFORE UPDATE ON `agencyservice`.`diocese`
+      FOR EACH ROW
+    BEGIN
+      set new.update_date=utc_timestamp();
+    END ;;
+    DELIMITER ;
+      
+
+  02tenantservice_schema.sql: | 
+    DROP SEQUENCE IF EXISTS tenantservice.sequence_tenant;
+    CREATE SEQUENCE tenantservice.sequence_tenant 
+      START WITH 1 
+      MINVALUE 0 
+      MAXVALUE 9223372036854775806 
+      INCREMENT BY 1 
+      NOCACHE 
+      NOCYCLE 
+      ENGINE=InnoDB;
+    DO SETVAL(tenantservice.sequence_tenant, 1, 0);
+
+    DROP TABLE IF EXISTS tenantservice.DATABASECHANGELOG;
+    CREATE TABLE tenantservice.DATABASECHANGELOG (
+      `ID` varchar(255) NOT NULL,
+      `AUTHOR` varchar(255) NOT NULL,
+      `FILENAME` varchar(255) NOT NULL,
+      `DATEEXECUTED` datetime NOT NULL,
+      `ORDEREXECUTED` int(11) NOT NULL,
+      `EXECTYPE` varchar(10) NOT NULL,
+      `MD5SUM` varchar(35) DEFAULT NULL,
+      `DESCRIPTION` varchar(255) DEFAULT NULL,
+      `COMMENTS` varchar(255) DEFAULT NULL,
+      `TAG` varchar(255) DEFAULT NULL,
+      `LIQUIBASE` varchar(20) DEFAULT NULL,
+      `CONTEXTS` varchar(255) DEFAULT NULL,
+      `LABELS` varchar(255) DEFAULT NULL,
+      `DEPLOYMENT_ID` varchar(10) DEFAULT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+    DROP TABLE IF EXISTS tenantservice.DATABASECHANGELOGLOCK;
+    CREATE TABLE tenantservice.DATABASECHANGELOGLOCK (
+      `ID` int(11) NOT NULL,
+      `LOCKED` bit(1) NOT NULL,
+      `LOCKGRANTED` datetime DEFAULT NULL,
+      `LOCKEDBY` varchar(255) DEFAULT NULL,
+      PRIMARY KEY (`ID`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+    DROP TABLE IF EXISTS tenantservice.tenant;
+    CREATE TABLE tenantservice.tenant (
+      `id` bigint(21) NOT NULL,
+      `name` varchar(40) NOT NULL,
+      `subdomain` varchar(255) NOT NULL,
+      `licensing_allowed_users` int(11) DEFAULT NULL,
+      `theming_logo` longtext DEFAULT NULL,
+      `theming_favicon` longtext DEFAULT NULL,
+      `theming_primary_color` varchar(15) DEFAULT NULL,
+      `theming_secondary_color` varchar(15) DEFAULT NULL,
+      `content_impressum` longtext DEFAULT NULL,
+      `content_claim` varchar(1024) DEFAULT NULL,
+      `settings` varchar(4000) DEFAULT NULL,
+      `content_privacy` longtext DEFAULT NULL,
+      `content_termsandconditions` longtext DEFAULT NULL,
+      `create_date` datetime NOT NULL DEFAULT utc_timestamp(),
+      `update_date` datetime NOT NULL DEFAULT utc_timestamp(),
+      `privacy_activation_date` datetime DEFAULT NULL,
+      `termsandconditions_activation_date` datetime DEFAULT NULL,
+      `theming_association_logo` longtext DEFAULT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;  
+  
+  03set-initial-settings.sql: |
+    update tenantservice.tenant set settings =  '{ 
+      "featureMultitenancyEnabled" : {{ .Values.global.multitenancyEnabled }},
+      "featureStatisticsEnabled" : {{ .Values.global.statisticsEnabled }},
+      "featureTopicsEnabled" : {{ .Values.global.topicsEnabled }},
+      "enableTopicsInRegistration" : false,
+      "featureDemographicsEnabled" : {{ .Values.global.demographicsEnabled }}
+    }'
+    where settings is null
+
+  04consultingtypeservice_schema.sql:
+
+    DROP SEQUENCE IF EXISTS consultingtypeservice.sequence_topic;
+    CREATE SEQUENCE consultingtypeservice.sequence_topic 
+      START WITH 0 
+      MINVALUE 0 
+      MAXVALUE 9223372036854775806 
+      INCREMENT BY 1 
+      NOCACHE 
+      NOCYCLE 
+      ENGINE=InnoDB;
+    DO SETVAL(consultingtypeservice.sequence_topic, 0, 0);
+
+    DROP SEQUENCE IF EXISTS consultingtypeservice.sequence_topic_group;
+    CREATE SEQUENCE consultingtypeservice.sequence_topic_group 
+      START WITH 0 
+      MINVALUE 0 
+      MAXVALUE 9223372036854775806 
+      INCREMENT BY 1 
+      NOCACHE 
+      NOCYCLE 
+      ENGINE=InnoDB;
+    DO SETVAL(consultingtypeservice.sequence_topic_group, 0, 0);
+
+    DROP SEQUENCE IF EXISTS consultingtypeservice.sequence_topic_group_x_topic;
+    CREATE SEQUENCE consultingtypeservice.sequence_topic_group_x_topic 
+      START WITH 0 
+      MINVALUE 0 
+      MAXVALUE 9223372036854775806 
+      INCREMENT BY 1 
+      CACHE 10 
+      NOCYCLE 
+      ENGINE=InnoDB;
+    DO SETVAL(consultingtypeservice.sequence_topic_group_x_topic, 0, 0);
+
+    DROP TABLE IF EXISTS consultingtypeservice.DATABASECHANGELOG;
+    CREATE TABLE consultingtypeservice.DATABASECHANGELOG (
+      `ID` varchar(255) NOT NULL,
+      `AUTHOR` varchar(255) NOT NULL,
+      `FILENAME` varchar(255) NOT NULL,
+      `DATEEXECUTED` datetime NOT NULL,
+      `ORDEREXECUTED` int(11) NOT NULL,
+      `EXECTYPE` varchar(10) NOT NULL,
+      `MD5SUM` varchar(35) DEFAULT NULL,
+      `DESCRIPTION` varchar(255) DEFAULT NULL,
+      `COMMENTS` varchar(255) DEFAULT NULL,
+      `TAG` varchar(255) DEFAULT NULL,
+      `LIQUIBASE` varchar(20) DEFAULT NULL,
+      `CONTEXTS` varchar(255) DEFAULT NULL,
+      `LABELS` varchar(255) DEFAULT NULL,
+      `DEPLOYMENT_ID` varchar(10) DEFAULT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+    DROP TABLE IF EXISTS consultingtypeservice.DATABASECHANGELOGLOCK;
+    CREATE TABLE consultingtypeservice.DATABASECHANGELOGLOCK (
+      `ID` int(11) NOT NULL,
+      `LOCKED` bit(1) NOT NULL,
+      `LOCKGRANTED` datetime DEFAULT NULL,
+      `LOCKEDBY` varchar(255) DEFAULT NULL,
+      PRIMARY KEY (`ID`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+    DROP TABLE IF EXISTS consultingtypeservice.topic;
+    CREATE TABLE consultingtypeservice.topic (
+      `id` bigint(21) NOT NULL,
+      `tenant_id` bigint(21) DEFAULT NULL,
+      `name` varchar(4092) DEFAULT NULL,
+      `description` varchar(4092) DEFAULT NULL,
+      `status` varchar(20) DEFAULT NULL,
+      `create_date` datetime NOT NULL DEFAULT utc_timestamp(),
+      `update_date` datetime NOT NULL DEFAULT utc_timestamp(),
+      `internal_identifier` varchar(255) DEFAULT NULL,
+      `fallback_agency_id` bigint(21) DEFAULT NULL,
+      `fallback_url` varchar(200) DEFAULT NULL,
+      `welcome_message` varchar(200) DEFAULT NULL,
+      `send_next_step_message` tinyint(1) NOT NULL DEFAULT 0,
+      `titles_short` varchar(4092) DEFAULT NULL,
+      `titles_long` varchar(4092) DEFAULT NULL,
+      `titles_welcome` varchar(255) DEFAULT NULL,
+      `titles_dropdown` varchar(255) DEFAULT NULL,
+      `slug` varchar(255) DEFAULT NULL,
+      PRIMARY KEY (`id`),
+      UNIQUE KEY `unique_name` (`name`,`tenant_id`) USING HASH
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+    DROP TABLE IF EXISTS consultingtypeservice.topic_group;
+    CREATE TABLE consultingtypeservice.topic_group (
+      `id` bigint(21) NOT NULL,
+      `name` varchar(4092) DEFAULT NULL,
+      `create_date` datetime NOT NULL DEFAULT utc_timestamp(),
+      `update_date` datetime NOT NULL DEFAULT utc_timestamp(),
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+    DROP TABLE IF EXISTS consultingtypeservice.topic_group_x_topic;
+    CREATE TABLE consultingtypeservice.topic_group_x_topic (
+      `group_id` bigint(21) NOT NULL,
+      `topic_id` bigint(21) NOT NULL,
+      `create_date` datetime NOT NULL DEFAULT utc_timestamp(),
+      `update_date` datetime NOT NULL DEFAULT utc_timestamp(),
+      KEY `group_id` (`group_id`),
+      KEY `topic_id` (`topic_id`),
+      CONSTRAINT `fk_group` FOREIGN KEY (`group_id`) REFERENCES consultingtypeservice.topic_group (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+      CONSTRAINT `fk_topic` FOREIGN KEY (`topic_id`) REFERENCES consultingtypeservice.topic (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  
+  
+  05uploadservice_schema.sql:
+
+    DROP SEQUENCE IF EXISTS uploadservice.sequence_uploadbyuser;
+    CREATE SEQUENCE uploadservice.sequence_uploadbyuser
+      START WITH 0
+      MINVALUE 0
+      MAXVALUE 9223372036854775806
+      INCREMENT BY 1
+      NOCACHE
+      NOCYCLE
+      ENGINE=InnoDB;
+    DO SETVAL(uploadservice.sequence_uploadbyuser, 0, 0);
+
+    DROP TABLE IF EXISTS uploadservice.DATABASECHANGELOG;
+    CREATE TABLE uploadservice.DATABASECHANGELOG (
+      `ID` varchar(255) NOT NULL,
+      `AUTHOR` varchar(255) NOT NULL,
+      `FILENAME` varchar(255) NOT NULL,
+      `DATEEXECUTED` datetime NOT NULL,
+      `ORDEREXECUTED` int(11) NOT NULL,
+      `EXECTYPE` varchar(10) NOT NULL,
+      `MD5SUM` varchar(35) DEFAULT NULL,
+      `DESCRIPTION` varchar(255) DEFAULT NULL,
+      `COMMENTS` varchar(255) DEFAULT NULL,
+      `TAG` varchar(255) DEFAULT NULL,
+      `LIQUIBASE` varchar(20) DEFAULT NULL,
+      `CONTEXTS` varchar(255) DEFAULT NULL,
+      `LABELS` varchar(255) DEFAULT NULL,
+      `DEPLOYMENT_ID` varchar(10) DEFAULT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+    DROP TABLE IF EXISTS uploadservice.DATABASECHANGELOGLOCK;
+    CREATE TABLE uploadservice.DATABASECHANGELOGLOCK (
+      `ID` int(11) NOT NULL,
+      `LOCKED` bit(1) NOT NULL,
+      `LOCKGRANTED` datetime DEFAULT NULL,
+      `LOCKEDBY` varchar(255) DEFAULT NULL,
+      PRIMARY KEY (`ID`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+    DROP TABLE IF EXISTS uploadservice.uploadbyuser;
+    CREATE TABLE uploadservice.uploadbyuser (
+      `id` bigint(21) NOT NULL,
+      `user_id` varchar(36) NOT NULL,
+      `session_id` varchar(36) NOT NULL,
+      `create_date` datetime NOT NULL DEFAULT utc_timestamp(),
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+  06userservice_schema.sql:
+    CREATE DATABASE IF NOT EXISTS userservice;
+    USE userservice;
+
+    DROP SEQUENCE IF EXISTS userservice.sequence_videoroom;
+    CREATE SEQUENCE userservice.sequence_videoroom
+      START WITH 1
+      MINVALUE 0
+      MAXVALUE 9223372036854775806
+      INCREMENT BY 1
+      NOCACHE
+      NOCYCLE
+      ENGINE=InnoDB;
+    DO SETVAL(userservice.sequence_videoroom, 20, 0);
+
+    DROP TABLE IF EXISTS userservice.DATABASECHANGELOG;
+    CREATE TABLE userservice.DATABASECHANGELOG (
+      `ID` varchar(255) NOT NULL,
+      `AUTHOR` varchar(255) NOT NULL,
+      `FILENAME` varchar(255) NOT NULL,
+      `DATEEXECUTED` datetime NOT NULL,
+      `ORDEREXECUTED` int(11) NOT NULL,
+      `EXECTYPE` varchar(10) NOT NULL,
+      `MD5SUM` varchar(35) DEFAULT NULL,
+      `DESCRIPTION` varchar(255) DEFAULT NULL,
+      `COMMENTS` varchar(255) DEFAULT NULL,
+      `TAG` varchar(255) DEFAULT NULL,
+      `LIQUIBASE` varchar(20) DEFAULT NULL,
+      `CONTEXTS` varchar(255) DEFAULT NULL,
+      `LABELS` varchar(255) DEFAULT NULL,
+      `DEPLOYMENT_ID` varchar(10) DEFAULT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+    DROP TABLE IF EXISTS userservice.DATABASECHANGELOGLOCK;
+    CREATE TABLE userservice.DATABASECHANGELOGLOCK (
+      `ID` int(11) NOT NULL,
+      `LOCKED` bit(1) NOT NULL,
+      `LOCKGRANTED` datetime DEFAULT NULL,
+      `LOCKEDBY` varchar(255) DEFAULT NULL,
+      PRIMARY KEY (`ID`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+    DROP TABLE IF EXISTS userservice.videoroom;
+    CREATE TABLE userservice.videoroom (
+      `id` bigint(21) NOT NULL,
+      `session_id` bigint(21) DEFAULT NULL,
+      `group_chat_id` bigint(21) DEFAULT NULL,
+      `jitsi_room_id` varchar(40) NOT NULL,
+      `rocketchat_room_id` varchar(40) DEFAULT NULL,
+      `create_date` datetime NOT NULL DEFAULT utc_timestamp(),
+      `close_date` datetime DEFAULT NULL,
+      PRIMARY KEY (`id`),
+      UNIQUE KEY `unique_jitsi_room_id` (`jitsi_room_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  

@@ -1,0 +1,100 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak-root
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    {{- if .Values.enableCors }}
+    nginx.ingress.kubernetes.io/enable-cors: "{{ .Values.enableCors }}"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "{{ .Values.corsAllowOrigin }}"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "{{ .Values.corsAllowHeaders }}"
+    {{- end }}
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {{ .Values.global.domainName }}
+      http:
+        paths:
+          - backend:
+              service:
+                name: keycloak
+                port:
+                  number: 8080
+            path: /auth
+            pathType: Prefix
+{{- if .Values.global.multitenancyEnabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak-pw-reset
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    nginx.ingress.kubernetes.io/temporal-redirect: "https://{{ .Values.global.domainName }}/resetOldCookies"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "*.{{ .Values.global.domainName }}"
+      http:
+        paths:
+          - backend:
+              service:
+                name: keycloak
+                port:
+                  number: 8080
+            path: /auth/realms/online-beratung/login-actions/reset-credentials
+            pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak-wildcard
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    {{- if .Values.enableCors }}
+    nginx.ingress.kubernetes.io/enable-cors: "{{ .Values.enableCors }}"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "{{ .Values.corsAllowOrigin }}"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "{{ .Values.corsAllowHeaders }}"
+    {{- end }}
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "*.{{ .Values.global.domainName }}"
+      http:
+        paths:
+          - backend:
+              service:
+                name: keycloak
+                port:
+                  number: 8080
+            path: /auth
+            pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak-reset-old-cookies
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    nginx.ingress.kubernetes.io/temporal-redirect: "https://{{ .Values.global.domainName }}/auth/realms/online-beratung/login-actions/reset-credentials?client_id=account"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      add_header Set-Cookie "KEYCLOAK_SESSION=deleted; Expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/auth/realms/online-beratung/; secure; SameSite=None;";
+      add_header Set-Cookie "KEYCLOAK_SESSION_LEGACY=deleted; Expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/auth/realms/online-beratung/;";
+      add_header Set-Cookie "KEYCLOAK_IDENTITY=deleted; Expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/auth/realms/online-beratung/; secure; HttpOnly; SameSite=None;";
+      add_header Set-Cookie "KEYCLOAK_IDENTITY_LEGACY=deleted; Expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/auth/realms/online-beratung/; HttpOnly;";
+      add_header Set-Cookie "AUTH_SESSION_ID=deleted; Expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/auth/realms/online-beratung/; secure; HttpOnly; SameSite=None;";
+      add_header Set-Cookie "AUTH_SESSION_ID_LEGACY=deleted; Expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/auth/realms/online-beratung/; HttpOnly;";
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "{{ .Values.global.domainName }}"
+      http:
+        paths:
+          - backend:
+              service:
+                name: keycloak
+                port:
+                  number: 8080
+            path: /resetOldCookies
+            pathType: Prefix
+  {{- end }}

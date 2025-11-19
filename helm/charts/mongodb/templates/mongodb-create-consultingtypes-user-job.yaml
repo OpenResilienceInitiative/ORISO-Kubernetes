@@ -1,0 +1,50 @@
+{{- if .Values.global.initializeDummyData }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-consultingtypes-user
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "6"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    spec:
+      containers:
+        - name: create-mongo-statistics
+          image: {{ .Values.mongoImageName }}:{{ .Values.mongoVersion }}
+          env:
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MONGO_INITDB_ROOT_PASSWORD
+                  name: mongodb-secret-{{ .Release.Name }}-env
+            - name: MONGODB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: MONGO_INITDB_ROOT_USERNAME
+                  name: mongodb-secret-{{ .Release.Name }}-env
+            - name: MONGODB_CONSULTING_TYPES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: MONGO_CONSULTING_TYPES_USER
+                  name: mongodb-secret-{{ .Release.Name }}-env
+            - name: MONGODB_CONSULTING_TYPES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MONGO_CONSULTING_TYPES_PASSWORD
+                  name: mongodb-secret-{{ .Release.Name }}-env
+          command:
+            - /bin/bash
+            - -c
+            - >
+              mongosh "mongodb://$MONGODB_USERNAME:$MONGODB_PASSWORD@mongodb.{{ .Release.Namespace }}:27017"
+              --eval
+              "db = db.getSiblingDB('consulting_types');
+              db.createUser({
+                user: '$MONGODB_CONSULTING_TYPES_USER',
+                pwd: '$MONGODB_CONSULTING_TYPES_PASSWORD',
+                roles: [{ role: 'readWrite', db: 'consulting_types' }]});"
+      restartPolicy: Never
+  backoffLimit: 1
+{{- end }}

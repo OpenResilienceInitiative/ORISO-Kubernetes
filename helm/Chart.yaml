@@ -1,0 +1,9 @@
+name: online-counseling
+description: Helm chart for the online counseling plattform
+version: 0.0.1
+apiVersion: v1
+keywords:
+  - online-counseling
+sources:
+  - https://github.com/OpenResilienceInitiative
+type: application

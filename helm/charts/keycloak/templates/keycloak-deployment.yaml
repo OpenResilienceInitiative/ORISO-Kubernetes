@@ -1,0 +1,174 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: keycloak
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        io.kompose.network/database_network: "true"
+        io.kompose.network/frontend_network: "true"
+        io.kompose.network/ldap_network: "true"
+        io.kompose.service: keycloak
+    spec:
+      {{- if .Values.global.initializeDummyData }}
+      initContainers:
+        - name: wait-for-ldap-dump
+          image: busybox
+          args:
+            - /bin/sh
+            - -c
+            - |
+              sleep 60;
+              set -x; 
+              while [ ! -f /init/data/ldap-database-initialized.lock ]; do
+                sleep 15;
+              done
+          volumeMounts:
+            - mountPath: /init/data
+              name: plattform-init-data
+      {{- end }}
+      containers:
+        - env:
+            - name: KC_DB
+              value: "mariadb"
+            - name: KC_DB_URL_HOST
+              value: "mariadb.{{ .Release.Namespace }}"
+            - name: KC_DB_URL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_DATABASE
+                  name: keycloak-{{ .Release.Name }}-env
+            - name: KC_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: DB_USER
+                  name: keycloak-secret-{{ .Release.Name }}-env
+            - name: KC_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: DB_PASSWORD
+                  name: keycloak-secret-{{ .Release.Name }}-env
+            - name: KC_HTTP_RELATIVE_PATH
+              value: "/auth"
+            - name: KC_PROXY
+              value: "edge"
+            - name: KC_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: KEYCLOAK_HOSTNAME
+                  name: keycloak-{{ .Release.Name }}-env
+            {{- if not .Values.global.enableTls }}
+            - name: KC_HOSTNAME_STRICT_HTTPS
+              value: "false"
+            {{- end }}
+            - name: KC_LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: ROOT_LOGLEVEL
+                  name: keycloak-{{ .Release.Name }}-env
+          image: {{ .Values.keycloakImageName }}:{{ .Values.keycloakVersion }}
+          command: ["/opt/keycloak/bin/kc.sh"]
+          args:
+            - start
+            - --auto-build
+          {{- if .Values.global.initializeDummyData }}
+          readinessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  if [[ ! -f /init/data/keycloak-initialized.lock ]]; then
+                    /opt/keycloak/bin/kc.sh import --file /data/import/keycloak-full-export.json
+                    touch /init/data/keycloak-initialized.lock
+                  fi;
+            timeoutSeconds: 30
+            initialDelaySeconds: 30
+            failureThreshold: 3
+          {{- end }}
+          imagePullPolicy: IfNotPresent
+          name: keycloak
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - mountPath: /opt/keycloak/themes/custom-theme/login/info.ftl
+              name: keycloak-theme-templates
+              subPath: info.ftl
+            - mountPath: /opt/keycloak/themes/custom-theme/login/login-reset-password.ftl
+              name: keycloak-theme-templates
+              subPath: login-reset-password.ftl
+            - mountPath: /opt/keycloak/themes/custom-theme/login/login-update-password.ftl
+              name: keycloak-theme-templates
+              subPath: login-update-password.ftl
+            - mountPath: /opt/keycloak/themes/custom-theme/login/login.ftl
+              name: keycloak-theme-templates
+              subPath: login.ftl
+            - mountPath: /opt/keycloak/themes/custom-theme/login/theme.properties
+              name: keycloak-theme-templates
+              subPath: theme.properties
+            - mountPath: /opt/keycloak/themes/custom-theme/login/messages/messages_de.properties
+              name: keycloak-theme-templates-messages
+              subPath: messages_de.properties
+            - mountPath: /opt/keycloak/themes/custom-theme/login/resources/css/custom.css
+              name: keycloak-theme-templates-styles
+              subPath: custom.css
+            - mountPath: /opt/keycloak/themes/custom-theme/login/resources/fonts/Nunito/Nunito-Bold.ttf
+              name: keycloak-theme-templates-fonts
+              subPath: Nunito-Bold.ttf
+            - mountPath: /opt/keycloak/themes/custom-theme/login/resources/fonts/Nunito/Nunito-Regular.ttf
+              name: keycloak-theme-templates-fonts
+              subPath: Nunito-Regular.ttf
+            - mountPath: /opt/keycloak/themes/custom-theme/login/resources/fonts/Nunito/Nunito-SemiBold.ttf
+              name: keycloak-theme-templates-fonts
+              subPath: Nunito-SemiBold.ttf
+            - mountPath: /opt/keycloak/themes/custom-theme/email/messages/
+              name: keycloak-theme-email-messages
+            - mountPath: /opt/keycloak/themes/custom-theme/email/html/
+              name: keycloak-theme-email-html
+            - mountPath: /opt/keycloak/themes/custom-theme/email/text/
+              name: keycloak-theme-email-text
+            - mountPath: /opt/keycloak/themes/custom-theme/email/theme.properties
+              name: keycloak-theme-templates
+              subPath: theme.properties
+            - mountPath: data/import
+              name: keycloak-full-dump
+            - mountPath: /init/data
+              name: plattform-init-data
+      imagePullSecrets:
+        - name: registry-secret
+      restartPolicy: Always
+      volumes:
+        - name: keycloak-theme-templates
+          configMap:
+            name: keycloak-theme-templates-{{ .Release.Name }}-configmap
+        - name: keycloak-theme-templates-messages
+          configMap:
+            name: keycloak-theme-templates-messages-{{ .Release.Name }}-configmap
+        - name: keycloak-theme-templates-styles
+          configMap:
+            name: keycloak-theme-templates-styles-{{ .Release.Name }}-configmap
+        - name: keycloak-theme-templates-fonts
+          configMap:
+            name: keycloak-theme-templates-fonts-{{ .Release.Name }}-configmap
+        - name: keycloak-theme-email-html
+          configMap:
+            name: keycloak-theme-email-html-{{ .Release.Name }}-configmap
+        - name: keycloak-theme-email-text
+          configMap:
+            name: keycloak-theme-email-text-{{ .Release.Name }}-configmap
+        - name: keycloak-theme-email-messages
+          configMap:
+            name: keycloak-theme-email-messages-{{ .Release.Name }}-configmap
+        - name: keycloak-full-dump
+          configMap:
+            name: keycloak-dump-{{ .Release.Name }}-configmap
+        - name: plattform-init-data
+          persistentVolumeClaim:
+            claimName: plattform-initialization-data

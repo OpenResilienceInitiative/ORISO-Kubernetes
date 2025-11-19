@@ -1,0 +1,257 @@
+global:
+  domainName: "app.onlineberatung.localhost"
+  dockerHostIp: "192.168.65.2"
+  enableTls: false
+  multitenancyEnabled: false
+  statisticsEnabled: "true"
+  topicsEnabled: "false"
+  demographicsEnabled: "false"
+  elkDisabled: true
+  rabbitStatisticsUser: "statistics"
+  rabbitStatisticsPassword: "statistics"
+  multitenancyWithSingleDomainEnabled: "false"
+  initializeDummyData: true
+
+  # Secrets MariaDB
+  mysqlRootPassword: "root" 
+  
+  
+  # Secrets MongoDB
+  mongoInitDbRootUsername: "admin"
+  mongoInitDbRootPassword: "admin"
+  nosqlclientMongoUsername: "nosqlclient"
+  nosqlclientMongoPassword: "nosqlclient"
+  rocketchatMongoUsername: "rocketchat"
+  rocketchatMongoPassword: "rocketchat"
+  oplogMongoUsername: "oplog"
+  oplogMongoPassword: "oplog"
+  statisticsMongoUser: "statistics"
+  statisticsMongoPass: "statistics"
+  consultingTypeMongoUser: "consulting_types"
+  consultingTypeMongoPass: "consulting_types"
+  keycloakDbUser: "keycloak"
+  keycloakDbPassword: "keycloak"
+  mongoVersion: "5.0"
+
+# CSRF
+csrfCookieProperty: "CSRF-TOKEN"
+csrfHeaderProperty: "X-CSRF-TOKEN"
+# Keycloak
+keycloakRealm: "online-beratung"
+keycloakAuthServerUrl: "http://app.onlineberatung.localhost/auth"
+keycloakPrincipalAttribute: "preferred_username"
+keycloakserviceAdminClientid: "admin-cli"
+keycloakserviceAppClientid: "app"
+keycloakserviceTechuserId:  "8294c392-e1e0-405b-ac2f-ba3043cbad3e"
+identityOpenidConnectUrl: "/realms/online-beratung/protocol/openid-connect"
+identityOtpUrl: "/realms/online-beratung/otp-config"
+
+# Rocketchat
+rocketSystemuserId: "hjvBcfWH5vS3KLv27"
+rocketCredentialschedulerCron: "0 0 0/1 * * ?"
+
+# Agencyservice
+agencyServiceKeycloakResource: "agency-service"
+
+agencyServiceSpringProfilesActive: "dev"
+#keycloakCors: "false" -  helm complains about boolean values, so it's still in *-service-env-configmap
+agencyServiceImageName: "docker.pkg.github.com/virtualidentityag/vi-saas-agencyservice/vi-saas-agencyservice"
+agencyServiceImageVersion: "dockerImage.v.96.develop"
+
+# ConsultingTypeService
+consultingTypesJsonPath : "consulting-type-settings"
+consultingTypeServiceImageName: "docker.pkg.github.com/virtualidentityag/vi-saas-consultingtypeservice/vi-saas-consultingtypeservice"
+consultingTypeServiceImageVersion: "dockerImage.v.59.develop"
+consultingTypeServiceKeycloakResource: "consultingtype-service"
+
+# Frontend
+frontendImageName: "docker.pkg.github.com/virtualidentityag/t-systems-frontend-theme/t-systems-frontend-theme"
+frontendImageVersion: "dockerImage.v.004-develop-for-helm"
+
+# Live service
+liveServiceImageName: "ghcr.io/onlineberatung/onlineberatung-liveservice/liveservice-image"
+liveServiceImageVersion: "dockerImage.v.29.release-2021-06-29"
+liveServiceSpringProfilesActive: "prod"
+liveServiceAppBaseUrl: "*"
+#springMainAllowBeanDefinitionOverriding: "true" -  helm complains about boolean values, so it's still in *-service-env-configmap
+
+# Mail service
+mailServiceSpringProfilesActive: "dev"
+springMailHost: "mail.mail"
+#springMailPort: "587" -  helm complains about empty values, so it's still in *-service-env-configmap
+springMailUsername: "xxx"
+springMailPassword: "xxx"
+springMailProtocol: "smtp"
+springMailDefaultEncoding:  "UTF-8"
+#springMailPropertiesMailSmtpAuth:  "false" -  helm complains about boolean values, so it's still in *-service-env-configmap
+#springMailPropertiesMailSmtpStarttlsEnable: "false" -  helm complains about boolean values, so it's still in *-service-env-configmap
+mailSender:  "noreply@app.onlineberatung.localhost"
+#mailFixRecipient: "" -  helm complains about empty values, so it's still in *-service-env-configmap
+mailErrorRecipients: "eberl@open4business.de"
+appImprintUrl: "http://app.onlineberatung.localhost/impressum"
+appDataprivacyUrl: "http://app.onlineberatung.localhost/datenschutz"
+mailServiceLoggingLevelRoot:  "DEBUG"
+mailServiceImageName: "docker.pkg.github.com/virtualidentityag/vi-saas-mailservice/vi-saas-mailservice"
+mailServiceImageVersion: "dockerImage.v.25.develop"
+
+# Message service
+messageServiceImageName: "docker.pkg.github.com/virtualidentityag/vi-saas-messageservice/vi-saas-messageservice"
+messageServiceImageVersion: "develop_20220824_165556"
+messageServiceSpringProfilesActive: "local"
+messageServiceKeycloakResource: "message-service"
+csrfWhitelistHeaderProperty: "X-U25-CSRF-TOKEN"
+
+# Upload service
+uploadServiceImageName: "docker.pkg.github.com/onlineberatung/onlineberatung-uploadservice/onlineberatung-uploadservice"
+uploadServiceImageVersion: "develop_20220825_164810"
+uploadServiceSpringProfilesActive: "local"
+uploadServiceKeycloakResource:  "upload-service"
+
+# User service
+userServiceImageName: "docker.pkg.github.com/virtualidentityag/vi-saas-userservice/vi-saas-userservice"
+userServiceImageVersion: "develop_20220908_111503"
+consultantImportFilename: "import/consultants.csv"
+consultantImportProtocolFilename: "import/consultants-import.txt"
+askerImportFilename: "import/askers.csv"
+askerImportWithoutsessionFilename: "import/askers-without-session.csv"
+askerImportProtocolFilename: "import/askers-import.txt"
+askerImportWelcomeMessageFilename: "import/welcome_consulting_type_[ConsultingType].txt"
+askerImportWelcomeMessageFilenameReplaceValue: "[ConsultingType]"
+userServiceSpringProfilesActive: "dev"
+userServiceKeycloakResource: "user-service"
+firebaseConfigurationCredentialsFilePath: "/firebase/firebase-credentials.json"
+firebaseConfigurationNotificationMessage: "Du hast eine neue Nachricht erhalten"
+userAnonymousDeleteworkflowCron: "* * * * * ?"
+userAnonymousDeactivateworkflowCron: "* * * * * ?"
+sessionInactiveDeleteworkflowEnabled: "true"
+sessionInactiveDeleteworkflowCron: "0 0 * * * ?"
+sessionInactiveDeleteworkflowCheckDays: "30"
+
+# Video service
+videoServiceImageName: "docker.pkg.github.com/virtualidentityag/vi-saas-videoservice/vi-saas-videoservice"
+videoServiceImageVersion: "dockerImage.v.27.develop"
+videoServiceSpringProfilesActive: "dev"
+videoCallServerUrl: "http://video.onlineberatung.localhost"
+videoCallSecurityJwtAudience: "my_server1"
+videoCallSecurityJwtIssuer: "my_app_client"
+videoCallSecurityJwtSubject: "meet.jitsi"
+videoCallSecurityJwtSecret: "ca464fd202c74dc92139765ac798980204c4c1d3e8b69494ef897313fe58b936"
+videoServiceKeycloakResource: "video-service"
+
+# Statistics Service
+statisticsServiceImageName: "docker.pkg.github.com/onlineberatung/onlineberatung-statisticsservice/onlineberatung-statisticsservice"
+statisticsServiceImageVersion: "develop_20220809_091650"
+
+logstashHost: "http://logstash.default:8080"
+online-counseling-logstash:
+  elasticsearchHosts: "http://elasticsearch-master.default:9200"
+  # reading the value from ELASTICSEARCH_HOST configmap env variable causes logstash to crash, therefore hardcoded host configs here
+  logstashPipeline:
+    logstash.conf: |
+
+      input {
+       http { 
+            port => 8080 # default: 8080, not 9600 
+            codec => "json" 
+          }
+      }
+      
+      filter {
+         if [serviceName] != "frontend" {
+            drop{}
+         }
+         if ![request][correlationId] or ![request][timestamp] {
+           drop{}
+         }
+      }
+      output {
+        elasticsearch
+        {                 
+          hosts => ["http://elasticsearch-master.default:9200"]
+          user => '${ELASTICSEARCH_USERNAME}'
+          password => '${ELASTICSEARCH_PASSWORD}'
+          ecs_compatibility => disabled 
+          index => "http-log-%{+YYYY.MM.dd}" 
+          document_type => "json"
+        }
+      }
+online-counseling-backup:
+  enableBackup: false
+  mysqlRootPassword: ""
+  backupDatabaseUser: ""
+  backupBucketAccessKey: ""
+  backupBucketSecretKey: ""
+  backupMongoDBAdmin: ""
+  backupMongoDBAdminPass: ""
+  backupGsCloudUserUUID: ""
+  backupGsCloudApiToken: ""
+  backupGsCloudClusterId: ""
+
+# Default secrets, for production use please overwrite all values
+# Keycloak
+keycloakserviceAdminUsername: "realmadmin"
+keycloakserviceAdminPassword: "Testtest!12"
+keycloakserviceTechnicalUsername: "technical"
+keycloakserviceTechnicalPassword: "Testtest!12"
+
+# Statistics
+statisticsMongoUser: "statistics"
+statisticsMongoPass: "statistics"
+
+# LDAP
+online-counseling-open-ldap:
+  adminPassword: "admin"
+  configPassword: "config"
+
+rocketTechnicalUsername: "rocket-chat-technical-user"
+rocketTechnicalPassword: "technical"
+rocketSystemuserUsername: "system1"
+rocketSystemuserPassword: "system"
+
+mailExchangeUser: ""
+mailExchangePassword: ''
+
+serviceEncryptionAppkey: "DaS-HiEr-iSt-eIn-bEiSpIeL"
+
+online-counseling-videobackend:
+  jicofoComponentSecret: "9ea69e051020adb6524bbec8d88e670f"
+  jicofoAuthUser: "focus"
+  jicofoAuthPassword: "cb7a95bf9671bff5afffd931e566e2dd"
+  jvbAuthPassword: "6ba13a7ae9fa26809a3705273d568c5e"
+  jvbAuthUser: "jvb"
+  jibriRecorderPassword: "777dc0295b984503ab6e02e105bac80f"
+  jibriRecorderUser: "recorder"
+  jibriXmppPassword: "34167bb5be4998526ee2ae1a82504643"
+  jibriXmppUser: "jibri"
+  jigasiXmppPassword: "53b2b722bce988cf2776198553143bca"
+  jigasiXmppUser: "jigasi"
+  jwtAcceptedAudiences: "my_server1"
+  jwtAcceptedIssuers: "my_app_client"
+  jwtAppId: "meet.jitsi"
+  jwtAppSecret: "ca464fd202c74dc92139765ac798980204c4c1d3e8b69494ef897313fe58b936"
+  turnCredentials: "example"
+  videoCallServerUrl: "video.onlineberatung.localhost"
+  turnHost: "turn.onlineberatung.localhost"
+  turnPort: "443"
+
+online-counseling-rabbitmq:
+  rabbitDefaultPass: "admin"
+  rabbitDefaultUser: "admin"
+
+# Kibana
+online-counseling-kibana:
+  kibanaConfig:
+    kibana.yml: |
+      elasticsearch:
+        hosts:
+         - "http://elasticsearch.develop:9200"
+        serviceAccountToken: "AAEAAWVsYXN0aWMva2liYW5hL2tpYmFuYXRva2VuOnFSZTdJblZaU3JDMVNwTmxFQm40Wnc"
+      xpack:
+        encryptedSavedObjects:
+          encryptionKey: 866cb03e9b2d5c4f23bfb8ae72113d13
+        reporting:
+          encryptionKey: 7fb9e63caffbd78d59bccf0aecca4312
+        security:
+          encryptionKey: e88b4a2a392bde1ee1f59af9f43b5440
+  kibanaEncryptionKey: "9wonFxmvmSeGr0kgrvQKRGjS6LVZhVO_Awkfe0IGaY3NDpaPaj"
+  elasticsearchHosts: "http://elasticsearch-master.default:9200"

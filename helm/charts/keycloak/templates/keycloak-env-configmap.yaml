@@ -1,0 +1,17 @@
+apiVersion: v1
+data:
+    DB_VENDOR: {{ .Values.dbVendor }}
+    DB_ADDR: "mariadb.{{ .Release.Namespace }}"
+    DB_DATABASE: {{ .Values.dbDatabase }}
+    PROXY_ADDRESS_FORWARDING: "true"
+    KEYCLOAK_HOSTNAME: {{ .Values.global.domainName }}
+    # Logging
+    # Supported log levels are ALL, DEBUG, ERROR, FATAL, INFO, OFF, TRACE and WARN.
+    KEYCLOAK_LOGLEVEL: {{ .Values.keycloakLogLevel }}
+    ROOT_LOGLEVEL: {{ .Values.rootLogLevel }}
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: keycloak-{{ .Release.Name }}-env
+  name: keycloak-{{ .Release.Name }}-env

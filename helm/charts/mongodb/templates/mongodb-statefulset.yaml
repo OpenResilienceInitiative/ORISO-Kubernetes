@@ -1,0 +1,130 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: 
+  labels:
+    io.kompose.network/rocket_database_network: "true"
+    io.kompose.service: mongodb
+  name: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mongodb
+  template:
+    metadata: 
+      creationTimestamp: null
+      labels:
+        io.kompose.network/rocket_database_network: "true"
+        io.kompose.service: mongodb
+    spec:
+      initContainers:
+        - name: add-keyfile
+          image: {{ .Values.mongoImageName }}:{{ .Values.mongoVersion }}
+          command: ["bash", "-c"]
+          args:
+            - >
+              cp /data/replica.key.tmp /data/key/replica.key &&
+              chmod 400 /data/key/replica.key &&
+              chown mongodb:mongodb /data/key/replica.key
+          volumeMounts:
+            - mountPath: /data/replica.key.tmp
+              subPath: replica.key.tmp
+              name: replica-key
+            - mountPath: /data/key
+              name: mongodb-data
+      containers:
+        {{- if hasPrefix "4." .Values.mongoVersion }}
+        - args:
+            - --replSet
+            - rs0
+            {{- if eq "4.0.5" .Values.mongoVersion }}
+            - --smallfiles
+            {{- end }}
+            - --oplogSize
+            - "128"
+        {{- else }}
+        - args:
+          - --bind_ip_all
+          - --oplogSize
+          - "128"
+          - --replSet
+          - rs0
+          - --keyFile
+          - /data/key/replica.key
+        {{- end }}
+          {{- if .Values.global.initializeDummyData }}
+          readinessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - -c
+                - >
+                  if [[ ! -f /init/data/mongo-database-initialized.lock ]]; then
+                    mongosh --eval "rs.initiate({_id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }]});"
+                    mongosh --eval "db = db.getSiblingDB('admin'); db.createUser({ user: '$MONGODB_USERNAME', pwd: '$MONGODB_PASSWORD', roles: [{ role: 'root', db: 'admin' }]});"
+                    touch /init/data/mongo-database-initialized.lock
+                  fi;
+            timeoutSeconds: 30
+            initialDelaySeconds: 60
+            failureThreshold: 3
+          {{- end }}
+          env:
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MONGO_INITDB_ROOT_PASSWORD
+                  name: mongodb-secret-{{ .Release.Name }}-env
+            - name: MONGODB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: MONGO_INITDB_ROOT_USERNAME
+                  name: mongodb-secret-{{ .Release.Name }}-env
+          image: {{ .Values.mongoImageName }}:{{ .Values.mongoVersion }}
+          ports:
+            - containerPort: 27017
+          name: mongodb
+          resources: {}
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongodb-data
+            - mountPath: /data/key
+              name: mongodb-data
+            - mountPath: /init/data
+              name: plattform-init-data
+      restartPolicy: Always
+      volumes:
+        - name: mongodb-data
+          persistentVolumeClaim:
+            claimName: mongodb-data
+        - name: replica-key
+          secret:
+            secretName: mongodb-replica-{{ .Release.Name }}-secret
+        - name: plattform-init-data
+          persistentVolumeClaim:
+            claimName: plattform-initialization-data
+  serviceName: mongodb
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: block-storage
+  resources:
+    requests:
+      storage: 8Gi
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: plattform-initialization-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: block-storage
+  resources:
+    requests:
+      storage: 1Gi

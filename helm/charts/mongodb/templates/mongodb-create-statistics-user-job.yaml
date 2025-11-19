@@ -1,0 +1,50 @@
+{{- if .Values.global.initializeDummyData }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-statistics-user
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    spec:
+      containers:
+        - name: create-mongo-statistics
+          image: {{ .Values.mongoImageName }}:{{ .Values.mongoVersion }}
+          env:
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MONGO_INITDB_ROOT_PASSWORD
+                  name: mongodb-secret-{{ .Release.Name }}-env
+            - name: MONGODB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: MONGO_INITDB_ROOT_USERNAME
+                  name: mongodb-secret-{{ .Release.Name }}-env
+            - name: MONGODB_STATISTICS_USER
+              valueFrom:
+                secretKeyRef:
+                  key: MONGO_STATISTICS_USER
+                  name: mongodb-secret-{{ .Release.Name }}-env
+            - name: MONGODB_STATISTICS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MONGO_STATISTICS_PASSWORD
+                  name: mongodb-secret-{{ .Release.Name }}-env
+          command:
+            - /bin/bash
+            - -c
+            - >
+              mongosh "mongodb://$MONGODB_USERNAME:$MONGODB_PASSWORD@mongodb.{{ .Release.Namespace }}:27017"
+              --eval
+              "db = db.getSiblingDB('statistics');
+              db.createUser({
+                user: '$MONGODB_STATISTICS_USER',
+                pwd: '$MONGODB_STATISTICS_PASSWORD',
+                roles: [{ role: 'readWrite', db: 'statistics' }]});"
+      restartPolicy: Never
+  backoffLimit: 1
+{{- end }}
