@@ -58,6 +58,16 @@ jobs:
           fi
           echo "✓ Dockerfile found"
 
+      - name: Fix OpenJDK base image
+        working-directory: ${{ matrix.path }}
+        run: |
+          # Replace deprecated openjdk:17-oracle with eclipse-temurin:17-jdk
+          if grep -q "openjdk:17-oracle" Dockerfile; then
+            echo "Replacing openjdk:17-oracle with eclipse-temurin:17-jdk"
+            sed -i 's|FROM openjdk:17-oracle|FROM eclipse-temurin:17-jdk|g' Dockerfile
+            echo "✓ Base image updated"
+          fi
+
       - name: Setup Node.js
         if: matrix.repo == 'ORISO-Frontend'
         uses: actions/setup-node@v4
@@ -95,6 +105,7 @@ jobs:
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
 
       - name: Build and push Docker image
+        id: build
         uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.path }}
@@ -103,3 +114,20 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Build summary
+        if: always()
+        run: |
+          echo "### Build Summary for ${{ matrix.repo }}" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.build.outcome }}" == "success" ]; then
+            echo "✅ **Status:** Success" >> $GITHUB_STEP_SUMMARY
+            echo "📦 **Image:** \`${{ env.REGISTRY }}/${{ env.ORG }}/${{ matrix.image }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "🏷️ **Tags:**" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "${{ steps.meta.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Status:** Failed" >> $GITHUB_STEP_SUMMARY
+            echo "Please check the build logs for details." >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
