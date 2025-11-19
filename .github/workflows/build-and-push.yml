@@ -105,12 +105,83 @@ jobs:
           cache: maven
           cache-dependency-path: ${{ matrix.path }}/pom.xml
 
+      - name: Setup Maven wrapper
+        if: matrix.repo != 'ORISO-Frontend'
+        working-directory: ${{ matrix.path }}
+        run: |
+          # Ensure Maven wrapper JAR exists
+          if [ -f "./mvnw" ] && [ ! -f ".mvn/wrapper/maven-wrapper.jar" ]; then
+            echo "Maven wrapper JAR missing, downloading..."
+            mkdir -p .mvn/wrapper
+            
+            # Try to get version and URL from properties file
+            WRAPPER_URL=""
+            if [ -f ".mvn/wrapper/maven-wrapper.properties" ]; then
+              WRAPPER_URL=$(grep -E "^wrapperUrl=" .mvn/wrapper/maven-wrapper.properties | cut -d'=' -f2 | tr -d '\r\n' || echo "")
+              MVNW_VERSION=$(grep -E "^wrapperVersion=" .mvn/wrapper/maven-wrapper.properties | cut -d'=' -f2 | tr -d '\r\n' || echo "")
+            fi
+            
+            # If no URL in properties, construct it based on version
+            if [ -z "$WRAPPER_URL" ]; then
+              if [ -z "$MVNW_VERSION" ]; then
+                MVNW_VERSION="3.2.0"
+              fi
+              # Try new format first (org.apache.maven), then old format (io.takari)
+              if [ "$(echo "$MVNW_VERSION" | cut -d'.' -f1)" -ge "3" ] 2>/dev/null; then
+                WRAPPER_URL="https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/$MVNW_VERSION/maven-wrapper-$MVNW_VERSION.jar"
+              else
+                WRAPPER_URL="https://repo.maven.apache.org/maven2/io/takari/maven-wrapper/$MVNW_VERSION/maven-wrapper-$MVNW_VERSION.jar"
+              fi
+            fi
+            
+            echo "Downloading Maven wrapper from: $WRAPPER_URL"
+            # Download wrapper JAR
+            if command -v curl > /dev/null; then
+              curl -L -f -o .mvn/wrapper/maven-wrapper.jar "$WRAPPER_URL" || {
+                echo "Failed with curl, trying alternative URL..."
+                # Try alternative format
+                if [[ "$WRAPPER_URL" == *"org/apache/maven"* ]]; then
+                  ALT_URL="https://repo.maven.apache.org/maven2/io/takari/maven-wrapper/0.4.2/maven-wrapper-0.4.2.jar"
+                else
+                  ALT_URL="https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.2.0/maven-wrapper-3.2.0.jar"
+                fi
+                curl -L -f -o .mvn/wrapper/maven-wrapper.jar "$ALT_URL"
+              }
+            elif command -v wget > /dev/null; then
+              wget -O .mvn/wrapper/maven-wrapper.jar "$WRAPPER_URL" || {
+                echo "Failed with wget, trying alternative URL..."
+                if [[ "$WRAPPER_URL" == *"org/apache/maven"* ]]; then
+                  ALT_URL="https://repo.maven.apache.org/maven2/io/takari/maven-wrapper/0.4.2/maven-wrapper-0.4.2.jar"
+                else
+                  ALT_URL="https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.2.0/maven-wrapper-3.2.0.jar"
+                fi
+                wget -O .mvn/wrapper/maven-wrapper.jar "$ALT_URL"
+              }
+            else
+              echo "Error: Neither curl nor wget available"
+              exit 1
+            fi
+            
+            if [ ! -f ".mvn/wrapper/maven-wrapper.jar" ]; then
+              echo "Error: Failed to download Maven wrapper JAR"
+              exit 1
+            fi
+            echo "✓ Maven wrapper JAR downloaded"
+          elif [ -f "./mvnw" ] && [ -f ".mvn/wrapper/maven-wrapper.jar" ]; then
+            echo "✓ Maven wrapper JAR already exists"
+          fi
+
       - name: Build Java service
         if: matrix.repo != 'ORISO-Frontend'
         working-directory: ${{ matrix.path }}
         run: |
-          chmod +x ./mvnw || true
-          ./mvnw clean package -DskipTests -DskipITs
+          if [ -f "./mvnw" ]; then
+            chmod +x ./mvnw
+            ./mvnw clean package -DskipTests -DskipITs
+          else
+            echo "Error: mvnw not found, cannot build"
+            exit 1
+          fi
           echo "✓ JAR file built successfully"
 
       - name: Verify and prepare JAR file
