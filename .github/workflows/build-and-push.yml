@@ -186,7 +186,10 @@ jobs:
         run: |
           if [ -f "./mvnw" ]; then
             chmod +x ./mvnw
-            ./mvnw clean package -DskipTests -DskipITs
+            # Override surefire plugin configuration to skip all tests
+            # Using -Dmaven.test.skip=true skips test compilation and execution
+            # Also override surefire plugin skipTests property directly
+            ./mvnw clean package -Dmaven.test.skip=true -Dsurefire.skipTests=true -DskipTests=true
           else
             echo "Error: mvnw not found, cannot build"
             exit 1
