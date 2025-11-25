@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agencyservice-configmap-env
+data:
+  CSRF_COOKIE_PROPERTY:  {{ .Values.global.csrfCookieProperty }}
+  CSRF_HEADER_PROPERTY: {{ .Values.global.csrfHeaderProperty }}
+  KEYCLOAK_CORS: "false"
+  KEYCLOAK_AUTH_SERVER_URL: {{ .Values.global.keycloak.authServerUrl }}
+  KEYCLOAK_PRINCIPAL_ATTRIBUTE: {{ .Values.global.keycloak.principalAttribute }}
+  KEYCLOAK_REALM: {{ .Values.global.keycloak.realm }}
+  KEYCLOAK_RESOURCE: {{ .Values.agencyService.keycloakResource }}
+  KEYCLOAKSERVICE_ADMIN_CLIENTID: {{ .Values.global.keycloak.serviceAdminClientId }}
+  KEYCLOAKSERVICE_APP_CLIENTID: {{ .Values.global.keycloak.serviceAppClientId }}
+  SPRING_DATASOURCE_URL: "jdbc:mariadb://mariadb.{{ .Release.Namespace }}:3306/agencyservice"
+  SPRING_PROFILES_ACTIVE: {{ .Values.agencyService.springProfilesActive }}
+  CONSULTING_TYPE_SERVICE_API_URL: "http://consultingtypeservice.{{ .Release.Namespace }}:8080"
+  TENANT_SERVICE_API_URL: "http://tenantservice.{{ .Release.Namespace }}:8080"
+  MULTITENANCY_ENABLED: {{ .Values.global.multitenancyEnabled | quote }}
+  FEATURE_TOPICS_ENABLED: {{ .Values.global.topicsEnabled | quote }}
+  FEATURE_DEMOGRAPHICS_ENABLED: {{ .Values.global.demographicsEnabled | quote }}
+  JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+  USER_ADMIN_SERVICE_API_URL: "http://userservice.{{ .Release.Namespace }}:8080"
+  FEATURE_APPOINTMENT_ENABLED:  "false"
+  APPOINTMENT_SERVICE_API_URL: "http://appointmentservice.{{ .Release.Namespace }}:8080"
+  FEATURE_MULTITENANCY_WITH_SINGLE_DOMAIN_ENABLED: {{ .Values.global.multitenancyWithSingleDomainEnabled | quote }}
+
+  {{- if .Values.global.enableTls }}
+  APP_BASE_URL: "https://{{ .Values.global.domainName }}"
+{{- else }}
+  APP_BASE_URL: "http://{{ .Values.global.domainName }}"
+{{- end }}

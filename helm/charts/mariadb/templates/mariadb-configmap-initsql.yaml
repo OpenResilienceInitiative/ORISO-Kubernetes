@@ -38,7 +38,18 @@ data:
     CREATE USER IF NOT EXISTS '{{ .Values.global.secrets.caritasDbUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.secrets.caritasDbPassword }}';
     CREATE DATABASE IF NOT EXISTS caritas CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
     GRANT SELECT, INSERT, UPDATE, DELETE ON caritas.* TO '{{ .Values.global.secrets.caritasDbUsername }}'@'%';
-    FLUSH PRIVILEGES;  
+    FLUSH PRIVILEGES;
+
+    CREATE USER IF NOT EXISTS '{{ .Values.global.secrets.liquibaseUser }}'@'%' IDENTIFIED BY '{{ .Values.global.secrets.liquibasePassword }}';
+    GRANT ALTER, CREATE, CREATE VIEW, DELETE, DROP, INDEX, INSERT, REFERENCES, SELECT, SHOW VIEW, TRIGGER, UPDATE, ALTER ROUTINE, EXECUTE ON userservice.* TO '{{ .Values.global.secrets.liquibaseUser }}'@'%';
+    GRANT ALTER, CREATE, CREATE VIEW, DELETE, DROP, INDEX, INSERT, REFERENCES, SELECT, SHOW VIEW, TRIGGER, UPDATE, ALTER ROUTINE, EXECUTE ON agencyservice.* TO '{{ .Values.global.secrets.liquibaseUser }}'@'%';
+    GRANT ALTER, CREATE, CREATE VIEW, DELETE, DROP, INDEX, INSERT, REFERENCES, SELECT, SHOW VIEW, TRIGGER, UPDATE, ALTER ROUTINE, EXECUTE ON uploadservice.* TO '{{ .Values.global.secrets.liquibaseUser }}'@'%';
+    GRANT ALTER, CREATE, CREATE VIEW, DELETE, DROP, INDEX, INSERT, REFERENCES, SELECT, SHOW VIEW, TRIGGER, UPDATE, ALTER ROUTINE, EXECUTE ON messageservice.* TO '{{ .Values.global.secrets.liquibaseUser }}'@'%';
+    GRANT ALTER, CREATE, CREATE VIEW, DELETE, DROP, INDEX, INSERT, REFERENCES, SELECT, SHOW VIEW, TRIGGER, UPDATE, ALTER ROUTINE, EXECUTE ON tenantservice.* TO '{{ .Values.global.secrets.liquibaseUser }}'@'%';
+    GRANT ALTER, CREATE, CREATE VIEW, DELETE, DROP, INDEX, INSERT, REFERENCES, SELECT, SHOW VIEW, TRIGGER, UPDATE, ALTER ROUTINE, EXECUTE ON consultingtypeservice.* TO '{{ .Values.global.secrets.liquibaseUser }}'@'%';
+    GRANT ALTER, CREATE, CREATE VIEW, DELETE, DROP, INDEX, INSERT, REFERENCES, SELECT, SHOW VIEW, TRIGGER, UPDATE, ALTER ROUTINE, EXECUTE ON appointmentservice.* TO '{{ .Values.global.secrets.liquibaseUser }}'@'%';
+    FLUSH PRIVILEGES;
+
 
   01agencyservice_schema.sql: | 
 
