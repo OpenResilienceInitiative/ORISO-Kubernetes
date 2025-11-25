@@ -14,7 +14,6 @@ spec:
       labels:
         app: agencyservice
     spec:
-      restartPolicy: Always
       containers:
         - env:
             - name: CSRF_COOKIE_PROPERTY
@@ -146,6 +145,11 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   key: FEATURE_MULTITENANCY_WITH_SINGLE_DOMAIN_ENABLED
+                  name: agencyservice-configmap-env
+            - name: AGENCY_DELETEWORKFLOW_CRON
+              valueFrom:
+                configMapKeyRef:
+                  key: AGENCY_DELETEWORKFLOW_CRON
                   name: agencyservice-configmap-env
           name: agencyservice
           ports:
