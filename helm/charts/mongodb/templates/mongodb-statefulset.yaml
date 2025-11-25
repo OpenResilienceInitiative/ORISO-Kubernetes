@@ -1,25 +1,21 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata: 
-  labels:
-    io.kompose.network/rocket_database_network: "true"
-    io.kompose.service: mongodb
   name: mongodb
 spec:
+  serviceName: mongodb
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: mongodb
+     app: mongodb
   template:
-    metadata: 
-      creationTimestamp: null
+    metadata:
       labels:
-        io.kompose.network/rocket_database_network: "true"
-        io.kompose.service: mongodb
+        app: mongodb
     spec:
       initContainers:
         - name: add-keyfile
-          image: {{ .Values.mongoImageName }}:{{ .Values.mongoVersion }}
+          image: {{ .Values.imageName }}:{{ .Values.imageVersion }}
           command: ["bash", "-c"]
           args:
             - >
@@ -33,17 +29,9 @@ spec:
             - mountPath: /data/key
               name: mongodb-data
       containers:
-        {{- if hasPrefix "4." .Values.mongoVersion }}
-        - args:
-            - --replSet
-            - rs0
-            {{- if eq "4.0.5" .Values.mongoVersion }}
-            - --smallfiles
-            {{- end }}
-            - --oplogSize
-            - "128"
-        {{- else }}
-        - args:
+        - name: mongodb
+          image: {{ .Values.imageName }}:{{ .Values.imageVersion }}
+          args:
           - --bind_ip_all
           - --oplogSize
           - "128"
@@ -51,7 +39,6 @@ spec:
           - rs0
           - --keyFile
           - /data/key/replica.key
-        {{- end }}
           {{- if .Values.global.initializeDummyData }}
           readinessProbe:
             exec:
@@ -69,62 +56,38 @@ spec:
             failureThreshold: 3
           {{- end }}
           env:
-            - name: MONGODB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: MONGO_INITDB_ROOT_PASSWORD
-                  name: mongodb-secret-{{ .Release.Name }}-env
             - name: MONGODB_USERNAME
               valueFrom:
                 secretKeyRef:
                   key: MONGO_INITDB_ROOT_USERNAME
-                  name: mongodb-secret-{{ .Release.Name }}-env
-          image: {{ .Values.mongoImageName }}:{{ .Values.mongoVersion }}
+                  name: mongodb-secret
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MONGO_INITDB_ROOT_PASSWORD
+                  name: mongodb-secret
           ports:
             - containerPort: 27017
-          name: mongodb
-          resources: {}
           volumeMounts:
             - mountPath: /data/db
               name: mongodb-data
             - mountPath: /data/key
               name: mongodb-data
             - mountPath: /init/data
-              name: plattform-init-data
+              name: platform-init-data
       restartPolicy: Always
       volumes:
-        - name: mongodb-data
-          persistentVolumeClaim:
-            claimName: mongodb-data
         - name: replica-key
           secret:
-            secretName: mongodb-replica-{{ .Release.Name }}-secret
-        - name: plattform-init-data
+            secretName: mongodb-secret-replica
+        - name: platform-init-data
           persistentVolumeClaim:
-            claimName: plattform-initialization-data
-  serviceName: mongodb
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mongodb-data
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: block-storage
-  resources:
-    requests:
-      storage: 8Gi
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: plattform-initialization-data
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: block-storage
-  resources:
-    requests:
-      storage: 1Gi
+            claimName: platform-initialization-data
+  volumeClaimTemplates:
+    - metadata:
+        name: mongodb-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 8Gi

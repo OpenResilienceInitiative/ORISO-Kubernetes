@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-configmap-env
+data:
+    DB_VENDOR: {{ .Values.dbVendor | quote }}
+    DB_ADDR: "{{ .Values.dbServer }}.{{ .Release.Namespace }}"
+    DB_DATABASE: "{{ .Values.dbDatabase }}"
+    PROXY_ADDRESS_FORWARDING: "true"
+    KEYCLOAK_HOSTNAME: "{{ .Values.global.domainName }}"
+    # Logging
+    # Supported log levels are ALL, DEBUG, ERROR, FATAL, INFO, OFF, TRACE and WARN.
+    KEYCLOAK_LOGLEVEL: {{ .Values.keycloakLogLevel | quote }}
+    ROOT_LOGLEVEL: {{ .Values.rootLogLevel | quote }}

@@ -1,47 +1,43 @@
 apiVersion: v1
-data:
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
-  labels:
-    io.kompose.service: mariadb-{{ .Release.Name }}-env
-  name: mariadb-{{ .Release.Name }}-env
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: init-sql-{{ .Release.Name }}-configmap
+  name: mariadb-configmap-initsql
 data:
-  00init.sql: |  
-    
-    CREATE USER IF NOT EXISTS '{{ .Values.global.userServiceSpringDatasourceUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.userServiceSpringDatasourcePassword }}';
-    CREATE DATABASE IF NOT EXISTS userservice CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-    GRANT CREATE, SELECT, INSERT, UPDATE, DELETE, ALTER, TRIGGER, INDEX ON userservice.* TO '{{ .Values.global.userServiceSpringDatasourceUsername }}'@'%';
+  00init.sql: |
+
+    CREATE USER IF NOT EXISTS '{{ .Values.global.secrets.keycloakDbUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.secrets.keycloakDbPassword }}';
+    CREATE DATABASE IF NOT EXISTS keycloak CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+    GRANT ALTER, CREATE, CREATE VIEW, DELETE, DROP, INDEX, INSERT, REFERENCES, SELECT, SHOW VIEW, TRIGGER, UPDATE, ALTER ROUTINE, EXECUTE ON keycloak.* TO '{{ .Values.global.secrets.keycloakDbUsername }}'@'%';
     FLUSH PRIVILEGES;
 
-    CREATE USER IF NOT EXISTS '{{ .Values.global.agencyServiceSpringDatasourceUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.agencyServiceSpringDatasourcePassword }}';
+    CREATE USER IF NOT EXISTS '{{ .Values.global.secrets.userServiceDbUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.secrets.userServiceDbPassword }}';
+    CREATE DATABASE IF NOT EXISTS userservice CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    GRANT CREATE, SELECT, INSERT, UPDATE, DELETE, ALTER, TRIGGER, INDEX ON userservice.* TO '{{ .Values.global.secrets.userServiceDbUsername }}'@'%';
+    FLUSH PRIVILEGES;
+
+    CREATE USER IF NOT EXISTS '{{ .Values.global.secrets.agencyServiceDbUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.secrets.agencyServiceDbPassword }}';
     CREATE DATABASE IF NOT EXISTS agencyservice CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-    GRANT SELECT, INSERT, UPDATE, DELETE ON agencyservice.* TO '{{ .Values.global.agencyServiceSpringDatasourceUsername }}'@'%';
+    GRANT SELECT, INSERT, UPDATE, DELETE ON agencyservice.* TO '{{ .Values.global.secrets.agencyServiceDbUsername }}'@'%';
     FLUSH PRIVILEGES;
  
-    CREATE USER IF NOT EXISTS '{{ .Values.global.uploadServiceSpringDatasourceUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.uploadServiceSpringDatasourcePassword }}';
+    CREATE USER IF NOT EXISTS '{{ .Values.global.secrets.uploadServiceDbUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.secrets.uploadServiceDbPassword }}';
     CREATE DATABASE IF NOT EXISTS uploadservice CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-    GRANT SELECT, INSERT, UPDATE, DELETE ON uploadservice.* TO '{{ .Values.global.uploadServiceSpringDatasourceUsername }}'@'%';
+    GRANT SELECT, INSERT, UPDATE, DELETE ON uploadservice.* TO '{{ .Values.global.secrets.uploadServiceDbUsername }}'@'%';
     FLUSH PRIVILEGES;
 
-    CREATE USER IF NOT EXISTS '{{ .Values.global.tenantServiceSpringDatasourceUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.tenantServiceSpringDatasourcePassword }}';
+    CREATE USER IF NOT EXISTS '{{ .Values.global.secrets.tenantServiceDbUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.secrets.tenantServiceDbPassword }}';
     CREATE DATABASE IF NOT EXISTS tenantservice CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-    GRANT SELECT, INSERT, UPDATE, DELETE ON tenantservice.* TO '{{ .Values.global.tenantServiceSpringDatasourceUsername }}'@'%';
+    GRANT SELECT, INSERT, UPDATE, DELETE ON tenantservice.* TO '{{ .Values.global.secrets.tenantServiceDbUsername }}'@'%';
     FLUSH PRIVILEGES;
 
-    CREATE USER IF NOT EXISTS '{{ .Values.global.consultingTypeServiceSpringDatasourceUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.consultingTypeServiceSpringDatasourcePassword }}';
+    CREATE USER IF NOT EXISTS '{{ .Values.global.secrets.consultingTypeServiceDbUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.secrets.consultingTypeServiceDbPassword }}';
     CREATE DATABASE IF NOT EXISTS consultingtypeservice CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-    GRANT SELECT, INSERT, UPDATE, DELETE ON consultingtypeservice.* TO '{{ .Values.global.consultingTypeServiceSpringDatasourceUsername }}'@'%';
+    GRANT SELECT, INSERT, UPDATE, DELETE ON consultingtypeservice.* TO '{{ .Values.global.secrets.consultingTypeServiceDbUsername }}'@'%';
     FLUSH PRIVILEGES;
     
-    CREATE USER IF NOT EXISTS '{{ .Values.global.caritasSpringDatasourceUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.caritasServiceSpringDatasourcePassword }}';
+    CREATE USER IF NOT EXISTS '{{ .Values.global.secrets.caritasDbUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.secrets.caritasDbPassword }}';
     CREATE DATABASE IF NOT EXISTS caritas CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-    GRANT SELECT, INSERT, UPDATE, DELETE ON caritas.* TO '{{ .Values.global.caritasSpringDatasourceUsername }}'@'%';
+    GRANT SELECT, INSERT, UPDATE, DELETE ON caritas.* TO '{{ .Values.global.secrets.caritasDbUsername }}'@'%';
     FLUSH PRIVILEGES;  
 
   01agencyservice_schema.sql: | 
@@ -269,7 +265,7 @@ data:
     }'
     where settings is null
 
-  04consultingtypeservice_schema.sql:
+  04consultingtypeservice_schema.sql: |
 
     DROP SEQUENCE IF EXISTS consultingtypeservice.sequence_topic;
     CREATE SEQUENCE consultingtypeservice.sequence_topic 
@@ -376,7 +372,7 @@ data:
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
   
   
-  05uploadservice_schema.sql:
+  05uploadservice_schema.sql: |
 
     DROP SEQUENCE IF EXISTS uploadservice.sequence_uploadbyuser;
     CREATE SEQUENCE uploadservice.sequence_uploadbyuser
@@ -425,7 +421,7 @@ data:
       PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
-  06userservice_schema.sql:
+  06userservice_schema.sql: |
     CREATE DATABASE IF NOT EXISTS userservice;
     USE userservice;
 

@@ -1,1 +1,1 @@
-helm install caritas ./ --wait-for-jobs
+helm install caritas ./ --namespace caritas --create-namespace --wait-for-jobs
