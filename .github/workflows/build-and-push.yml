@@ -54,6 +54,14 @@ jobs:
             path: ORISO-Nginx
             image: oriso-nginx
             type: nginx
+          - repo: ORISO-Matrix
+            path: ORISO-Matrix
+            image: oriso-matrix
+            type: docker
+          - repo: ORISO-Redis
+            path: ORISO-Redis
+            image: oriso-redis
+            type: docker
 
     steps:
       - name: Checkout workflow repository
