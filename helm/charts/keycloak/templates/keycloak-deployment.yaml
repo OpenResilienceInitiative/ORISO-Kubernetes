@@ -14,23 +14,6 @@ spec:
       labels:
         app: keycloak
     spec:
-{{/*      {{- if .Values.global.initializeDummyData }}*/}}
-{{/*      initContainers:*/}}
-{{/*        - name: wait-for-ldap-dump*/}}
-{{/*          image: busybox*/}}
-{{/*          args:*/}}
-{{/*            - /bin/sh*/}}
-{{/*            - -c*/}}
-{{/*            - |*/}}
-{{/*              sleep 60;*/}}
-{{/*              set -x; */}}
-{{/*              while [ ! -f /init/data/ldap-database-initialized.lock ]; do*/}}
-{{/*                sleep 15;*/}}
-{{/*              done*/}}
-{{/*          volumeMounts:*/}}
-{{/*            - mountPath: /init/data*/}}
-{{/*              name: platform-init-data*/}}
-{{/*      {{- end }}*/}}
       containers:
         - env:
             - name: KC_DB
@@ -88,9 +71,9 @@ spec:
                 - /bin/bash
                 - -c
                 - |
-                  if [[ ! -f /init/data/keycloak-initialized.lock ]]; then
+                  if [[ ! -f /tmp/keycloak-initialized.lock ]]; then
                     /opt/keycloak/bin/kc.sh import --file /data/import/keycloak-full-export.json
-                    touch /init/data/keycloak-initialized.lock
+                    touch /tmp/keycloak-initialized.lock
                   fi;
             timeoutSeconds: 30
             initialDelaySeconds: 30
@@ -142,8 +125,6 @@ spec:
 {{/*              subPath: theme.properties*/}}
             - mountPath: data/import
               name: keycloak-full-dump
-            - mountPath: /init/data
-              name: platform-init-data
       restartPolicy: Always
       volumes:
         - name: keycloak-theme-templates
@@ -170,6 +151,3 @@ spec:
         - name: keycloak-full-dump
           configMap:
             name: keycloak-configmap-data
-        - name: platform-init-data
-          persistentVolumeClaim:
-            claimName: platform-initialization-data

@@ -46,10 +46,10 @@ spec:
                 - /bin/bash
                 - -c
                 - >
-                  if [[ ! -f /init/data/mongo-database-initialized.lock ]]; then
+                  if [[ ! -f /data/db/mongo-database-initialized.lock ]]; then
                     mongosh --eval "rs.initiate({_id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }]});"
                     mongosh --eval "db = db.getSiblingDB('admin'); db.createUser({ user: '$MONGODB_USERNAME', pwd: '$MONGODB_PASSWORD', roles: [{ role: 'root', db: 'admin' }]});"
-                    touch /init/data/mongo-database-initialized.lock
+                    touch /data/db/mongo-database-initialized.lock
                   fi;
             timeoutSeconds: 30
             initialDelaySeconds: 60
@@ -73,16 +73,11 @@ spec:
               name: mongodb-data
             - mountPath: /data/key
               name: mongodb-data
-            - mountPath: /init/data
-              name: platform-init-data
-      restartPolicy: Always
+          restartPolicy: Always
       volumes:
         - name: replica-key
           secret:
             secretName: mongodb-secret-replica
-        - name: platform-init-data
-          persistentVolumeClaim:
-            claimName: platform-initialization-data
   volumeClaimTemplates:
     - metadata:
         name: mongodb-data

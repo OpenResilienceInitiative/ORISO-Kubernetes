@@ -11,19 +11,9 @@ spec:
   template:
     spec:
       initContainers:
-        - name: wait-for-mongo-admin
-          image: {{ .Values.imageName }}:{{ .Values.imageVersion }}
-          args:
-            - /bin/sh
-            - -c
-            - >
-              set -x;
-              while [ ! -f /init/data/mongo-database-initialized.lock ]; do
-                sleep 15;
-              done
-          volumeMounts:
-            - mountPath: /init/data
-              name: platform-init-data
+        - name: wait-for-mongo-ready
+          image: busybox:1.36 # Oder ein Image mit netcat/nc
+          command: ['sh', '-c', 'until nc -z mongodb.{{ .Release.Namespace }} 27017; do echo waiting for mongodb; sleep 2; done']
       containers:
         - name: create-mongo-users
           image: {{ .Values.imageName }}:{{ .Values.imageVersion }}
@@ -79,10 +69,6 @@ spec:
               mongosh "mongodb://$MONGODB_USERNAME:$MONGODB_PASSWORD@mongodb.{{ .Release.Namespace }}:27017" --eval "db=db.getSiblingDB('statistics'); db.createUser({ user: '$MONGO_STATISTICS_USER', pwd: '$MONGO_STATISTICS_PASSWORD', roles: [{ role: 'readWrite', db: 'statistics' }]});" &&
               echo "Creating user: consulting_types";
               mongosh "mongodb://$MONGODB_USERNAME:$MONGODB_PASSWORD@mongodb.{{ .Release.Namespace }}:27017" --eval "db=db.getSiblingDB('consulting_types'); db.createUser({ user: '$MONGO_CONSULTING_TYPES_USER', pwd: '$MONGO_CONSULTING_TYPES_PASSWORD', roles: [{ role: 'readWrite', db: 'consulting_types' }]});"
-      restartPolicy: Never
-      volumes:
-        - name: platform-init-data
-          persistentVolumeClaim:
-            claimName: platform-initialization-data
+          restartPolicy: Never
   backoffLimit: 1
 {{- end }}
