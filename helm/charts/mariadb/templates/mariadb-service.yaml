@@ -3,7 +3,6 @@ kind: Service
 metadata:
   name: mariadb
 spec:
-  type: ClusterIP
   ports:
     - port: 3306
       protocol: TCP

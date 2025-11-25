@@ -125,7 +125,6 @@ spec:
 {{/*              subPath: theme.properties*/}}
             - mountPath: data/import
               name: keycloak-full-dump
-      restartPolicy: Always
       volumes:
         - name: keycloak-theme-templates
           configMap:

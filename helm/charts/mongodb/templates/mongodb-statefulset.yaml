@@ -47,13 +47,12 @@ spec:
                 - -c
                 - >
                   if [[ ! -f /data/db/mongo-database-initialized.lock ]]; then
-                    mongosh --eval "rs.initiate({_id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }]});"
+                    mongosh --eval "rs.initiate({_id: 'rs0', members: [{ _id: 0, host: 'mongodb-0.mongodb.{{ .Release.Namespace }}.svc.cluster.local:27017' }]});"
                     mongosh --eval "db = db.getSiblingDB('admin'); db.createUser({ user: '$MONGODB_USERNAME', pwd: '$MONGODB_PASSWORD', roles: [{ role: 'root', db: 'admin' }]});"
                     touch /data/db/mongo-database-initialized.lock
                   fi;
             timeoutSeconds: 30
             initialDelaySeconds: 60
-            failureThreshold: 3
           {{- end }}
           env:
             - name: MONGODB_USERNAME
@@ -73,7 +72,6 @@ spec:
               name: mongodb-data
             - mountPath: /data/key
               name: mongodb-data
-          restartPolicy: Always
       volumes:
         - name: replica-key
           secret:

@@ -29,7 +29,6 @@ spec:
               name: init-sql
             - mountPath: /var/lib/mysql
               name: mariadb-data
-      restartPolicy: Always
       volumes:
         - name: init-sql
           configMap:
