@@ -1,257 +1,371 @@
 global:
   domainName: "app.onlineberatung.localhost"
-  dockerHostIp: "192.168.65.2"
+
+  # TLS
   enableTls: false
+
+  # CORS
+  enableCors: false
+  corsAllowOrigin:
+  corsAllowHeaders:
+
+  # CSRF
+  csrfCookieProperty: "CSRF-TOKEN"
+  csrfHeaderProperty: "X-CSRF-TOKEN"
+  csrfWhitelistHeaderProperty: "X-U25-CSRF-TOKEN"
+
   multitenancyEnabled: false
-  statisticsEnabled: "true"
-  topicsEnabled: "false"
-  demographicsEnabled: "false"
-  elkDisabled: true
-  rabbitStatisticsUser: "statistics"
-  rabbitStatisticsPassword: "statistics"
   multitenancyWithSingleDomainEnabled: "false"
+
+  topicsEnabled: "false"
+  statisticsEnabled: "true"
+  demographicsEnabled: "false"
+
   initializeDummyData: true
 
-  # Secrets MariaDB
-  mysqlRootPassword: "root" 
-  
-  
-  # Secrets MongoDB
+  logstashHost: "http://logstash.default:8080"
+
+  # Keycloak connection
+  keycloak:
+    realm: "online-beratung"
+    authServerUrl: "http://app.onlineberatung.localhost/auth"
+
+    otpUrl: "/realms/online-beratung/otp-config"
+    openidConnectUrl: "/realms/online-beratung/protocol/openid-connect"
+    loginSuffix: "/token"
+    logoutSuffix: "/logout"
+
+    principalAttribute: "preferred_username"
+    serviceAppClientId: "app"
+    serviceAdminClientId: "admin-cli"
+    serviceTechUserId:  "8294c392-e1e0-405b-ac2f-ba3043cbad3e"
+
+  secrets:
+    # Liquibase
+    liquibaseUser: "liquibase"
+    liquibasePassword: "liquibase"
+
+    # RabbitMQ
+    rabbitmqUsername: "admin"
+    rabbitmqPassword: "admin"
+
+    # Secrets
+    caritasDbUsername: "caritas"
+    caritasDbPassword: "caritas"
+    keycloakDbUsername: "keycloak"
+    keycloakDbPassword: "keycloak"
+    agencyServiceDbUsername: "aservice"
+    agencyServiceDbPassword: "aservice"
+    consultingTypeServiceDbUsername: "ctservice"
+    consultingTypeServiceDbPassword: "ctservice"
+    consultingTypeMongoUser: "consulting_types"
+    consultingTypeMongoPass: "consulting_types"
+    userServiceDbUsername: "uservice"
+    userServiceDbPassword: "uservice"
+    uploadServiceDbUsername: "upservice"
+    uploadServiceDbPassword: "upservice"
+    tenantServiceDbUsername: "tservice"
+    tenantServiceDbPassword: "tservice"
+
+
+
+# ---------- Infrastructure Services ----------------------------------------------------------------------------------
+
+
+# MongoDB
+online-counseling-mongodb:
+  imageName: "mongo"
+  imageVersion: "5.0"
+
+  mongoSharedKey: "default"
+
   mongoInitDbRootUsername: "admin"
   mongoInitDbRootPassword: "admin"
-  nosqlclientMongoUsername: "nosqlclient"
-  nosqlclientMongoPassword: "nosqlclient"
+
+  noSqlClientMongoUsername: "nosqlclient"
+  noSqlClientMongoPassword: "nosqlclient"
+
   rocketchatMongoUsername: "rocketchat"
   rocketchatMongoPassword: "rocketchat"
+
   oplogMongoUsername: "oplog"
   oplogMongoPassword: "oplog"
+
   statisticsMongoUser: "statistics"
   statisticsMongoPass: "statistics"
-  consultingTypeMongoUser: "consulting_types"
-  consultingTypeMongoPass: "consulting_types"
-  keycloakDbUser: "keycloak"
-  keycloakDbPassword: "keycloak"
-  mongoVersion: "5.0"
 
-# CSRF
-csrfCookieProperty: "CSRF-TOKEN"
-csrfHeaderProperty: "X-CSRF-TOKEN"
+
+# MariaDB
+online-counseling-mariadb:
+  imageName: "mariadb"
+  imageVersion: "11.0.6"
+
+  dbRootPassword: "root"
+
+# RabbitMQ
+online-counseling-rabbitmq:
+  imageName: "rabbitmq"
+  imageVersion: "3-management"
+
+
+# Redis
+online-counseling-redis:
+  imageName: "redis"
+  imageVersion: "7-alpine"
+
+  defaultPass: "redis"
+
 # Keycloak
-keycloakRealm: "online-beratung"
-keycloakAuthServerUrl: "http://app.onlineberatung.localhost/auth"
-keycloakPrincipalAttribute: "preferred_username"
-keycloakserviceAdminClientid: "admin-cli"
-keycloakserviceAppClientid: "app"
-keycloakserviceTechuserId:  "8294c392-e1e0-405b-ac2f-ba3043cbad3e"
-identityOpenidConnectUrl: "/realms/online-beratung/protocol/openid-connect"
-identityOtpUrl: "/realms/online-beratung/otp-config"
+online-counseling-keycloak:
+  imageName: "quay.io/keycloak/keycloak"
+  imageVersion: "20.0.5"
 
-# Rocketchat
-rocketSystemuserId: "hjvBcfWH5vS3KLv27"
-rocketCredentialschedulerCron: "0 0 0/1 * * ?"
+  dbVendor: "mariadb"
+  dbServer: "mariadb"
+  dbDatabase: "keycloak"
+  dbUser: "keycloak"
+  dbPassword: "keycloak"
 
-# Agencyservice
-agencyServiceKeycloakResource: "agency-service"
+  # Logging (supported log levels are ALL, DEBUG, ERROR, FATAL, INFO, OFF, TRACE and WARN)
+  keycloakLogLevel: "WARN"
+  rootLogLevel: "WARN"
 
-agencyServiceSpringProfilesActive: "dev"
-#keycloakCors: "false" -  helm complains about boolean values, so it's still in *-service-env-configmap
-agencyServiceImageName: "docker.pkg.github.com/virtualidentityag/vi-saas-agencyservice/vi-saas-agencyservice"
-agencyServiceImageVersion: "dockerImage.v.96.develop"
 
-# ConsultingTypeService
-consultingTypesJsonPath : "consulting-type-settings"
-consultingTypeServiceImageName: "docker.pkg.github.com/virtualidentityag/vi-saas-consultingtypeservice/vi-saas-consultingtypeservice"
-consultingTypeServiceImageVersion: "dockerImage.v.59.develop"
-consultingTypeServiceKeycloakResource: "consultingtype-service"
+# ---------- Backend Services -----------------------------------------------------------------------------------------
 
-# Frontend
-frontendImageName: "docker.pkg.github.com/virtualidentityag/t-systems-frontend-theme/t-systems-frontend-theme"
-frontendImageVersion: "dockerImage.v.004-develop-for-helm"
 
-# Live service
-liveServiceImageName: "ghcr.io/onlineberatung/onlineberatung-liveservice/liveservice-image"
-liveServiceImageVersion: "dockerImage.v.29.release-2021-06-29"
-liveServiceSpringProfilesActive: "prod"
-liveServiceAppBaseUrl: "*"
-#springMainAllowBeanDefinitionOverriding: "true" -  helm complains about boolean values, so it's still in *-service-env-configmap
+# Agency service
+agencyService:
+  imageName: "ghcr.io/openresilienceinitiative/oriso-agencyservice"
+  imageVersion: "latest"
 
-# Mail service
-mailServiceSpringProfilesActive: "dev"
-springMailHost: "mail.mail"
-#springMailPort: "587" -  helm complains about empty values, so it's still in *-service-env-configmap
-springMailUsername: "xxx"
-springMailPassword: "xxx"
-springMailProtocol: "smtp"
-springMailDefaultEncoding:  "UTF-8"
-#springMailPropertiesMailSmtpAuth:  "false" -  helm complains about boolean values, so it's still in *-service-env-configmap
-#springMailPropertiesMailSmtpStarttlsEnable: "false" -  helm complains about boolean values, so it's still in *-service-env-configmap
-mailSender:  "noreply@app.onlineberatung.localhost"
-#mailFixRecipient: "" -  helm complains about empty values, so it's still in *-service-env-configmap
-mailErrorRecipients: "eberl@open4business.de"
-appImprintUrl: "http://app.onlineberatung.localhost/impressum"
-appDataprivacyUrl: "http://app.onlineberatung.localhost/datenschutz"
-mailServiceLoggingLevelRoot:  "DEBUG"
-mailServiceImageName: "docker.pkg.github.com/virtualidentityag/vi-saas-mailservice/vi-saas-mailservice"
-mailServiceImageVersion: "dockerImage.v.25.develop"
+  keycloakResource: "agency-service"
 
-# Message service
-messageServiceImageName: "docker.pkg.github.com/virtualidentityag/vi-saas-messageservice/vi-saas-messageservice"
-messageServiceImageVersion: "develop_20220824_165556"
-messageServiceSpringProfilesActive: "local"
-messageServiceKeycloakResource: "message-service"
-csrfWhitelistHeaderProperty: "X-U25-CSRF-TOKEN"
+  springProfilesActive: "dev"
 
-# Upload service
-uploadServiceImageName: "docker.pkg.github.com/onlineberatung/onlineberatung-uploadservice/onlineberatung-uploadservice"
-uploadServiceImageVersion: "develop_20220825_164810"
-uploadServiceSpringProfilesActive: "local"
-uploadServiceKeycloakResource:  "upload-service"
+  topicEnrichmentEnabled: "true"
+
+  agencyDeleteworkflowCron: "0 20 4 * * *"
+
+
+# ConsultingType service
+consultingTypeService:
+  imageName: "ghcr.io/openresilienceinitiative/oriso-consultingtypeservice"
+  imageVersion: "latest"
+
+  keycloakResource: "consultingtype-service"
+
+  consultingTypesJsonPath : "consulting-type-settings"
+
+
+# Tenant Service
+tenantService:
+  imageName: "ghcr.io/openresilienceinitiative/oriso-tenantservice"
+  imageVersion: "latest"
+
 
 # User service
-userServiceImageName: "docker.pkg.github.com/virtualidentityag/vi-saas-userservice/vi-saas-userservice"
-userServiceImageVersion: "develop_20220908_111503"
-consultantImportFilename: "import/consultants.csv"
-consultantImportProtocolFilename: "import/consultants-import.txt"
-askerImportFilename: "import/askers.csv"
-askerImportWithoutsessionFilename: "import/askers-without-session.csv"
-askerImportProtocolFilename: "import/askers-import.txt"
-askerImportWelcomeMessageFilename: "import/welcome_consulting_type_[ConsultingType].txt"
-askerImportWelcomeMessageFilenameReplaceValue: "[ConsultingType]"
-userServiceSpringProfilesActive: "dev"
-userServiceKeycloakResource: "user-service"
-firebaseConfigurationCredentialsFilePath: "/firebase/firebase-credentials.json"
-firebaseConfigurationNotificationMessage: "Du hast eine neue Nachricht erhalten"
-userAnonymousDeleteworkflowCron: "* * * * * ?"
-userAnonymousDeactivateworkflowCron: "* * * * * ?"
-sessionInactiveDeleteworkflowEnabled: "true"
-sessionInactiveDeleteworkflowCron: "0 0 * * * ?"
-sessionInactiveDeleteworkflowCheckDays: "30"
+userService:
+  imageName: "ghcr.io/openresilienceinitiative/oriso-userservice"
+  imageVersion: "latest"
+
+  keycloakResource: "user-service"
+
+  springProfilesActive: "dev"
+
+  firebaseConfigurationCredentialsFilePath: "/firebase/firebase-credentials.json"
+  firebaseConfigurationNotificationMessage: "Du hast eine neue Nachricht erhalten"
+
+  consultantImportFilename: "import/consultants.csv"
+  consultantImportProtocolFilename: "import/consultants-import.txt"
+  askerImportFilename: "import/askers.csv"
+  askerImportWithoutSessionFilename: "import/askers-without-session.csv"
+  askerImportProtocolFilename: "import/askers-import.txt"
+  askerImportWelcomeMessageFilename: "import/welcome_consulting_type_[ConsultingType].txt"
+  askerImportWelcomeMessageFilenameReplaceValue: "[ConsultingType]"
+
+  sessionInactiveDeleteWorkflowEnabled: "true"
+  sessionInactiveDeleteWorkflowCron: "0 0 * * * ?"
+  sessionInactiveDeleteWorkflowCheckDays: "30"
+
+  serviceEncryptionAppkey: "DaS-HiEr-iSt-e-bEiSpIeL"
+
+  # Keycloak
+  keycloakAdminUsername: "realmadmin"
+  keycloakAdminPassword: "Testtest!12"
+  keycloakTechnicalUsername: "technical"
+  keycloakTechnicalPassword: "Testtest!12"
+
+  # Rocketchat
+  rocketSystemuserId: "hjvBcfWH5vS3KLv27"
+  rocketTechnicalUsername: "rocket-chat-technical-user"
+  rocketTechnicalPassword: "technical"
+  rocketSystemuserUsername: "system1"
+  rocketSystemuserPassword: "system"
+  rocketCredentialschedulerCron: "0 0 0/1 * * ?"
+
+
+# ---------- Frontend Services ----------------------------------------------------------------------------------------
+
+# Frontend
+frontend:
+  imageName: "ghcr.io/openresilienceinitiative/oriso-frontend"
+  imageVersion: "latest"
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Live service
+### liveServiceImageName: "ghcr.io/onlineberatung/onlineberatung-liveservice/liveservice-image"  ### not referenced in templates
+### liveServiceImageVersion: "dockerImage.v.29.release-2021-06-29"  ### not referenced in templates
+### liveServiceSpringProfilesActive: "prod"  ### not referenced in templates
+### liveServiceAppBaseUrl: "*"  ### not referenced in templates
+### #springMainAllowBeanDefinitionOverriding: "true" -  helm complains about boolean values, so it's still in *-service-env-configmap
+
+# Mail service
+### mailServiceSpringProfilesActive: "dev"  ### not referenced in templates
+### springMailHost: "mail.mail"  ### not referenced in templates
+### #springMailPort: "587" -  helm complains about empty values, so it's still in *-service-env-configmap
+### springMailUsername: "xxx"  ### not referenced in templates
+### springMailPassword: "xxx"  ### not referenced in templates
+### springMailProtocol: "smtp"  ### not referenced in templates
+### springMailDefaultEncoding:  "UTF-8"  ### not referenced in templates
+### #springMailPropertiesMailSmtpAuth:  "false" -  helm complains about boolean values, so it's still in *-service-env-configmap
+### #springMailPropertiesMailSmtpStarttlsEnable: "false" -  helm complains about boolean values, so it's still in *-service-env-configmap
+### mailSender:  "noreply@app.onlineberatung.localhost"  ### not referenced in templates
+### #mailFixRecipient: "" -  helm complains about empty values, so it's still in *-service-env-configmap
+### mailErrorRecipients: "eberl@open4business.de"  ### not referenced in templates
+### appImprintUrl: "http://app.onlineberatung.localhost/impressum"  ### not referenced in templates
+### appDataprivacyUrl: "http://app.onlineberatung.localhost/datenschutz"  ### not referenced in templates
+### mailServiceLoggingLevelRoot:  "DEBUG"  ### not referenced in templates
+### mailServiceImageName: "docker.pkg.github.com/virtualidentityag/vi-saas-mailservice/vi-saas-mailservice"  ### not referenced in templates
+### mailServiceImageVersion: "dockerImage.v.25.develop"  ### not referenced in templates
+
+# Message service
+### messageServiceImageName: "docker.pkg.github.com/virtualidentityag/vi-saas-messageservice/vi-saas-messageservice"  ### not referenced in templates
+### messageServiceImageVersion: "develop_20220824_165556"  ### not referenced in templates
+### messageServiceSpringProfilesActive: "local"  ### not referenced in templates
+### messageServiceKeycloakResource: "message-service"  ### not referenced in templates
+
+# Upload service
+### uploadServiceImageName: "docker.pkg.github.com/onlineberatung/onlineberatung-uploadservice/onlineberatung-uploadservice"  ### not referenced in templates
+### uploadServiceImageVersion: "develop_20220825_164810"  ### not referenced in templates
+### uploadServiceSpringProfilesActive: "local"  ### not referenced in templates
+### uploadServiceKeycloakResource:  "upload-service"  ### not referenced in templates
 
 # Video service
-videoServiceImageName: "docker.pkg.github.com/virtualidentityag/vi-saas-videoservice/vi-saas-videoservice"
-videoServiceImageVersion: "dockerImage.v.27.develop"
-videoServiceSpringProfilesActive: "dev"
-videoCallServerUrl: "http://video.onlineberatung.localhost"
-videoCallSecurityJwtAudience: "my_server1"
-videoCallSecurityJwtIssuer: "my_app_client"
-videoCallSecurityJwtSubject: "meet.jitsi"
-videoCallSecurityJwtSecret: "ca464fd202c74dc92139765ac798980204c4c1d3e8b69494ef897313fe58b936"
-videoServiceKeycloakResource: "video-service"
+### videoServiceImageName: "docker.pkg.github.com/virtualidentityag/vi-saas-videoservice/vi-saas-videoservice"  ### not referenced in templates
+### videoServiceImageVersion: "dockerImage.v.27.develop"  ### not referenced in templates
+### videoServiceSpringProfilesActive: "dev"  ### not referenced in templates
+### videoCallServerUrl: "http://video.onlineberatung.localhost"  ### not referenced in templates
+### videoCallSecurityJwtAudience: "my_server1"  ### not referenced in templates
+### videoCallSecurityJwtIssuer: "my_app_client"  ### not referenced in templates
+### videoCallSecurityJwtSubject: "meet.jitsi"  ### not referenced in templates
+### videoCallSecurityJwtSecret: "ca464fd202c74dc92139765ac798980204c4c1d3e8b69494ef897313fe58b936"  ### not referenced in templates
+### videoServiceKeycloakResource: "video-service"  ### not referenced in templates
 
 # Statistics Service
-statisticsServiceImageName: "docker.pkg.github.com/onlineberatung/onlineberatung-statisticsservice/onlineberatung-statisticsservice"
-statisticsServiceImageVersion: "develop_20220809_091650"
+### statisticsServiceImageName: "docker.pkg.github.com/onlineberatung/onlineberatung-statisticsservice/onlineberatung-statisticsservice"  ### not referenced in templates
+### statisticsServiceImageVersion: "develop_20220809_091650"  ### not referenced in templates
 
-logstashHost: "http://logstash.default:8080"
-online-counseling-logstash:
-  elasticsearchHosts: "http://elasticsearch-master.default:9200"
-  # reading the value from ELASTICSEARCH_HOST configmap env variable causes logstash to crash, therefore hardcoded host configs here
-  logstashPipeline:
-    logstash.conf: |
+### online-counseling-logstash:
+###   elasticsearchHosts: "http://elasticsearch-master.default:9200"  ### not referenced in templates
+###   # reading the value from ELASTICSEARCH_HOST configmap env variable causes logstash to crash, therefore hardcoded host configs here
+###   logstashPipeline:
+###     logstash.conf: |
+### 
+###       input {
+###        http { 
+###             port => 8080 # default: 8080, not 9600 
+###             codec => "json" 
+###           }
+###       }
+###       
+###       filter {
+###          if [serviceName] != "frontend" {
+###             drop{}
+###          }
+###          if ![request][correlationId] or ![request][timestamp] {
+###            drop{}
+###          }
+###       }
+###       output {
+###         elasticsearch
+###         {                 
+###           hosts => ["http://elasticsearch-master.default:9200"]
+###           user => '${ELASTICSEARCH_USERNAME}'
+###           password => '${ELASTICSEARCH_PASSWORD}'
+###           ecs_compatibility => disabled 
+###           index => "http-log-%{+YYYY.MM.dd}" 
+###           document_type => "json"
+###         }
+###       }
+### online-counseling-backup:
+###   enableBackup: false  ### not referenced in templates
+###   mysqlRootPassword: ""  ### not referenced in templates
+###   backupDatabaseUser: ""  ### not referenced in templates
+###   backupBucketAccessKey: ""  ### not referenced in templates
+###   backupBucketSecretKey: ""  ### not referenced in templates
+###   backupMongoDBAdmin: ""  ### not referenced in templates
+###   backupMongoDBAdminPass: ""  ### not referenced in templates
+###   backupGsCloudUserUUID: ""  ### not referenced in templates
+###   backupGsCloudApiToken: ""  ### not referenced in templates
+###   backupGsCloudClusterId: ""  ### not referenced in templates
 
-      input {
-       http { 
-            port => 8080 # default: 8080, not 9600 
-            codec => "json" 
-          }
-      }
-      
-      filter {
-         if [serviceName] != "frontend" {
-            drop{}
-         }
-         if ![request][correlationId] or ![request][timestamp] {
-           drop{}
-         }
-      }
-      output {
-        elasticsearch
-        {                 
-          hosts => ["http://elasticsearch-master.default:9200"]
-          user => '${ELASTICSEARCH_USERNAME}'
-          password => '${ELASTICSEARCH_PASSWORD}'
-          ecs_compatibility => disabled 
-          index => "http-log-%{+YYYY.MM.dd}" 
-          document_type => "json"
-        }
-      }
-online-counseling-backup:
-  enableBackup: false
-  mysqlRootPassword: ""
-  backupDatabaseUser: ""
-  backupBucketAccessKey: ""
-  backupBucketSecretKey: ""
-  backupMongoDBAdmin: ""
-  backupMongoDBAdminPass: ""
-  backupGsCloudUserUUID: ""
-  backupGsCloudApiToken: ""
-  backupGsCloudClusterId: ""
 
-# Default secrets, for production use please overwrite all values
-# Keycloak
-keycloakserviceAdminUsername: "realmadmin"
-keycloakserviceAdminPassword: "Testtest!12"
-keycloakserviceTechnicalUsername: "technical"
-keycloakserviceTechnicalPassword: "Testtest!12"
+### # LDAP
+### online-counseling-open-ldap:
+###   adminPassword: "admin"  ### not referenced in templates
+###   configPassword: "config"  ### not referenced in templates
 
-# Statistics
-statisticsMongoUser: "statistics"
-statisticsMongoPass: "statistics"
 
-# LDAP
-online-counseling-open-ldap:
-  adminPassword: "admin"
-  configPassword: "config"
+### mailExchangeUser: ""  ### not referenced in templates
+### mailExchangePassword: ''  ### not referenced in templates
 
-rocketTechnicalUsername: "rocket-chat-technical-user"
-rocketTechnicalPassword: "technical"
-rocketSystemuserUsername: "system1"
-rocketSystemuserPassword: "system"
-
-mailExchangeUser: ""
-mailExchangePassword: ''
-
-serviceEncryptionAppkey: "DaS-HiEr-iSt-eIn-bEiSpIeL"
-
-online-counseling-videobackend:
-  jicofoComponentSecret: "9ea69e051020adb6524bbec8d88e670f"
-  jicofoAuthUser: "focus"
-  jicofoAuthPassword: "cb7a95bf9671bff5afffd931e566e2dd"
-  jvbAuthPassword: "6ba13a7ae9fa26809a3705273d568c5e"
-  jvbAuthUser: "jvb"
-  jibriRecorderPassword: "777dc0295b984503ab6e02e105bac80f"
-  jibriRecorderUser: "recorder"
-  jibriXmppPassword: "34167bb5be4998526ee2ae1a82504643"
-  jibriXmppUser: "jibri"
-  jigasiXmppPassword: "53b2b722bce988cf2776198553143bca"
-  jigasiXmppUser: "jigasi"
-  jwtAcceptedAudiences: "my_server1"
-  jwtAcceptedIssuers: "my_app_client"
-  jwtAppId: "meet.jitsi"
-  jwtAppSecret: "ca464fd202c74dc92139765ac798980204c4c1d3e8b69494ef897313fe58b936"
-  turnCredentials: "example"
-  videoCallServerUrl: "video.onlineberatung.localhost"
-  turnHost: "turn.onlineberatung.localhost"
-  turnPort: "443"
-
-online-counseling-rabbitmq:
-  rabbitDefaultPass: "admin"
-  rabbitDefaultUser: "admin"
+### online-counseling-videobackend:
+###   jicofoComponentSecret: "9ea69e051020adb6524bbec8d88e670f"  ### not referenced in templates
+###   jicofoAuthUser: "focus"  ### not referenced in templates
+###   jicofoAuthPassword: "cb7a95bf9671bff5afffd931e566e2dd"  ### not referenced in templates
+###   jvbAuthPassword: "6ba13a7ae9fa26809a3705273d568c5e"  ### not referenced in templates
+###   jvbAuthUser: "jvb"  ### not referenced in templates
+###   jibriRecorderPassword: "777dc0295b984503ab6e02e105bac80f"  ### not referenced in templates
+###   jibriRecorderUser: "recorder"  ### not referenced in templates
+###   jibriXmppPassword: "34167bb5be4998526ee2ae1a82504643"  ### not referenced in templates
+###   jibriXmppUser: "jibri"  ### not referenced in templates
+###   jigasiXmppPassword: "53b2b722bce988cf2776198553143bca"  ### not referenced in templates
+###   jigasiXmppUser: "jigasi"  ### not referenced in templates
+###   jwtAcceptedAudiences: "my_server1"  ### not referenced in templates
+###   jwtAcceptedIssuers: "my_app_client"  ### not referenced in templates
+###   jwtAppId: "meet.jitsi"  ### not referenced in templates
+###   jwtAppSecret: "ca464fd202c74dc92139765ac798980204c4c1d3e8b69494ef897313fe58b936"  ### not referenced in templates
+###   turnCredentials: "example"  ### not referenced in templates
+###   videoCallServerUrl: "video.onlineberatung.localhost"  ### not referenced in templates
+###   turnHost: "turn.onlineberatung.localhost"  ### not referenced in templates
+###   turnPort: "443"  ### not referenced in templates
 
 # Kibana
-online-counseling-kibana:
-  kibanaConfig:
-    kibana.yml: |
-      elasticsearch:
-        hosts:
-         - "http://elasticsearch.develop:9200"
-        serviceAccountToken: "AAEAAWVsYXN0aWMva2liYW5hL2tpYmFuYXRva2VuOnFSZTdJblZaU3JDMVNwTmxFQm40Wnc"
-      xpack:
-        encryptedSavedObjects:
-          encryptionKey: 866cb03e9b2d5c4f23bfb8ae72113d13
-        reporting:
-          encryptionKey: 7fb9e63caffbd78d59bccf0aecca4312
-        security:
-          encryptionKey: e88b4a2a392bde1ee1f59af9f43b5440
-  kibanaEncryptionKey: "9wonFxmvmSeGr0kgrvQKRGjS6LVZhVO_Awkfe0IGaY3NDpaPaj"
-  elasticsearchHosts: "http://elasticsearch-master.default:9200"
+### online-counseling-kibana:
+###   kibanaConfig:
+###     kibana.yml: |
+###       elasticsearch:
+###         hosts:
+###          - "http://elasticsearch.develop:9200"
+###         serviceAccountToken: "AAEAAWVsYXN0aWMva2liYW5hL2tpYmFuYXRva2VuOnFSZTdJblZaU3JDMVNwTmxFQm40Wnc"
+###       xpack:
+###         encryptedSavedObjects:
+###           encryptionKey: 866cb03e9b2d5c4f23bfb8ae72113d13
+###         reporting:
+###           encryptionKey: 7fb9e63caffbd78d59bccf0aecca4312
+###         security:
+###           encryptionKey: e88b4a2a392bde1ee1f59af9f43b5440
+###   kibanaEncryptionKey: "9wonFxmvmSeGr0kgrvQKRGjS6LVZhVO_Awkfe0IGaY3NDpaPaj"  ### not referenced in templates
+###   elasticsearchHosts: "http://elasticsearch-master.default:9200"  ### not referenced in templates

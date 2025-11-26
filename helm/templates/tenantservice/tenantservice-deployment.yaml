@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: tenantservice
-  namespace: caritas
 spec:
   replicas: 1
   selector:
