@@ -1,0 +1,6 @@
+name: online-counseling-rabbitmq
+description: The chart providing rabbitmq
+version: 0.0.1
+apiVersion: v1
+keywords:
+ - online-counseling-rabbitmq
