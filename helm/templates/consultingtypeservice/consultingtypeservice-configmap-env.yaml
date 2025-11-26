@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: consultingtypeservice-configmap-env
+data:
+  CONSULTING_TYPES_JSON_PATH: {{ .Values.consultingTypeService.consultingTypesJsonPath }}
+  CSRF_COOKIE_PROPERTY:  {{ .Values.global.csrfCookieProperty }}
+  CSRF_HEADER_PROPERTY: {{ .Values.global.csrfHeaderProperty }}
+  TENANT_SERVICE_API_URL: "http://tenantservice.{{ .Release.Namespace }}:8080"
+  JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+  SPRING_DATASOURCE_URL: "jdbc:mariadb://mariadb.{{ .Release.Namespace }}:3306/consultingtypeservice"
+  KEYCLOAK_CORS: "false"
+  KEYCLOAK_AUTH_SERVER_URL: {{ .Values.global.keycloak.authServerUrl }}
+  KEYCLOAK_PRINCIPAL_ATTRIBUTE: {{ .Values.global.keycloak.principalAttribute }}
+  KEYCLOAK_REALM: {{ .Values.global.keycloak.realm }}
+  KEYCLOAK_RESOURCE: {{ .Values.consultingTypeService.keycloakResource }}
+  KEYCLOAKSERVICE_ADMIN_CLIENTID: {{ .Values.global.keycloak.serviceAdminClientId }}
+  KEYCLOAKSERVICE_APP_CLIENTID: {{ .Values.global.keycloak.serviceAppClientId }}
+{{- if .Values.global.multitenancyWithSingleDomainEnabled }}
+  MULTITENANCY_ENABLED: "false"
+{{- else }}
+  MULTITENANCY_ENABLED: {{ .Values.global.multitenancyEnabled | quote }}
+{{- end }}
+{{- if .Values.global.enableTls }}
+  APP_BASE_URL: "https://{{ .Values.global.domainName }}"
+{{- else }}
+  APP_BASE_URL: "http://{{ .Values.global.domainName }}"
+{{- end }}

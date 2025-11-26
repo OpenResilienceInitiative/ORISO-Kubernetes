@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: consultingtypeservice-settings-configmap
+data:
+  {{- $path := printf "%s/**.json" .Values.consultingTypeService.consultingTypesJsonPath }}
+  {{- (.Files.Glob $path).AsConfig | nindent 2 }}
