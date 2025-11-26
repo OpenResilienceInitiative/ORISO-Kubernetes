@@ -1,0 +1,122 @@
+{{/*
+  Helper define: returns true if filename is binary font (extend as needed).
+*/}}
+{{- define "binaryFile" -}}
+{{- $fname := . -}}
+{{- or (hasSuffix $fname ".woff") (hasSuffix $fname ".woff2") (hasSuffix $fname ".ttf") (hasSuffix $fname ".eot") (hasSuffix $fname ".otf") -}}
+{{- end -}}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-theme-templates-saas-configmap
+data:
+{{- $files := .Files.Glob "keycloak-resources/custom-theme/login/*" }}
+{{- range $path, $file := $files }}
+  {{ base $path }}: |-
+{{- if include "binaryFile" $path }}
+    # base64-encoded
+{{ $file | toString | b64enc | indent 4 }}
+{{- else }}
+{{ $file | toString | indent 4 }}
+{{- end }}
+{{- end }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-theme-templates-messages-saas-configmap
+data:
+{{- $files := .Files.Glob "keycloak-resources/custom-theme/login/messages/*" }}
+{{- range $path, $file := $files }}
+  {{ base $path }}: |-
+{{- if include "binaryFile" $path }}
+    # base64-encoded
+{{ $file | toString | b64enc | indent 4 }}
+{{- else }}
+{{ $file | toString | indent 4 }}
+{{- end }}
+{{- end }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-theme-templates-styles-saas-configmap
+data:
+{{- $files := .Files.Glob "keycloak-resources/custom-theme/login/resources/css/*" }}
+{{- range $path, $file := $files }}
+  {{ base $path }}: |-
+{{- if include "binaryFile" $path }}
+    # base64-encoded
+{{ $file | toString | b64enc | indent 4 }}
+{{- else }}
+{{ $file | toString | indent 4 }}
+{{- end }}
+{{- end }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-theme-templates-fonts-saas-configmap
+data:
+{{- $files := .Files.Glob "keycloak-resources/custom-theme/login/resources/fonts/Nunito/*" }}
+{{- range $path, $file := $files }}
+  {{ base $path }}: |-
+    # base64-encoded
+{{ $file | toString | b64enc | indent 4 }}
+{{- end }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-theme-email-html-saas-configmap
+data:
+{{- $files := .Files.Glob "keycloak-resources/custom-theme/email/html/*" }}
+{{- range $path, $file := $files }}
+  {{ base $path }}: |-
+{{- if include "binaryFile" $path }}
+    # base64-encoded
+{{ $file | toString | b64enc | indent 4 }}
+{{- else }}
+{{ $file | toString | indent 4 }}
+{{- end }}
+{{- end }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-theme-email-messages-saas-configmap
+data:
+{{- $files := .Files.Glob "keycloak-resources/custom-theme/email/messages/*" }}
+{{- range $path, $file := $files }}
+  {{ base $path }}: |-
+{{- if include "binaryFile" $path }}
+    # base64-encoded
+{{ $file | toString | b64enc | indent 4 }}
+{{- else }}
+{{ $file | toString | indent 4 }}
+{{- end }}
+{{- end }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-theme-email-text-saas-configmap
+data:
+{{- $files := .Files.Glob "keycloak-resources/custom-theme/email/text/*" }}
+{{- range $path, $file := $files }}
+  {{ base $path }}: |-
+{{- if include "binaryFile" $path }}
+    # base64-encoded
+{{ $file | toString | b64enc | indent 4 }}
+{{- else }}
+{{ $file | toString | indent 4 }}
+{{- end }}
+{{- end }}

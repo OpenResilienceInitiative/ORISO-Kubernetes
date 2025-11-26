@@ -1,0 +1,409 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: userservice
+  name: userservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: userservice
+  strategy:
+    type: Recreate
+  template:
+    metadata:  
+      labels:
+        io.kompose.network/database_network: "true"
+        io.kompose.network/frontend_network: "true"
+        io.kompose.network/service_network: "true"
+        io.kompose.service: userservice
+    spec:
+      hostAliases:
+        - ip: "{{ .Values.global.dockerHostIp }}"
+          hostnames:
+            - "{{ .Values.global.domainName }}"
+      containers:
+        - name: userservice
+          image: "{{ .Values.userService.imageName }}:{{ .Values.userService.imageVersion }}"
+          env:
+            - name: IDENTITY_OPENID_CONNECT_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: IDENTITY_OPENID_CONNECT_URL
+                  name: userservice-{{ .Release.Name }}-env
+            - name: IDENTITY_OTP_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: IDENTITY_OTP_URL
+                  name: userservice-{{ .Release.Name }}-env
+            - name: AGENCY_SERVICE_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: AGENCY_SERVICE_API_URL
+                  name: userservice-{{ .Release.Name }}-env
+            - name: AGENCY_ADMIN_SERVICE_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: AGENCY_ADMIN_SERVICE_API_URL
+                  name: userservice-{{ .Release.Name }}-env
+            - name: APP_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: APP_BASE_URL
+                  name: userservice-{{ .Release.Name }}-env
+            - name: ASKER_IMPORT_FILENAME
+              valueFrom:
+                configMapKeyRef:
+                  key: ASKER_IMPORT_FILENAME
+                  name: userservice-{{ .Release.Name }}-env
+            - name: ASKER_IMPORT_PROTOCOL_FILENAME
+              valueFrom:
+                configMapKeyRef:
+                  key: ASKER_IMPORT_PROTOCOL_FILENAME
+                  name: userservice-{{ .Release.Name }}-env
+            - name: ASKER_IMPORT_WELCOME_MESSAGE_FILENAME
+              valueFrom:
+                configMapKeyRef:
+                  key: ASKER_IMPORT_WELCOME_MESSAGE_FILENAME
+                  name: userservice-{{ .Release.Name }}-env
+            - name: ASKER_IMPORT_WELCOME_MESSAGE_FILENAME_REPLACE_VALUE
+              valueFrom:
+                configMapKeyRef:
+                  key: ASKER_IMPORT_WELCOME_MESSAGE_FILENAME_REPLACE_VALUE
+                  name: userservice-{{ .Release.Name }}-env
+            - name: ASKER_IMPORT_WITHOUTSESSION_FILENAME
+              valueFrom:
+                configMapKeyRef:
+                  key: ASKER_IMPORT_WITHOUTSESSION_FILENAME
+                  name: userservice-{{ .Release.Name }}-env
+            - name: CONSULTANT_IMPORT_FILENAME
+              valueFrom:
+                configMapKeyRef:
+                  key: CONSULTANT_IMPORT_FILENAME
+                  name: userservice-{{ .Release.Name }}-env
+            - name: CONSULTANT_IMPORT_PROTOCOL_FILENAME
+              valueFrom:
+                configMapKeyRef:
+                  key: CONSULTANT_IMPORT_PROTOCOL_FILENAME
+                  name: userservice-{{ .Release.Name }}-env
+            - name: CSRF_COOKIE_PROPERTY
+              valueFrom:
+                configMapKeyRef:
+                  key: CSRF_COOKIE_PROPERTY
+                  name: userservice-{{ .Release.Name }}-env
+            - name: CSRF_HEADER_PROPERTY
+              valueFrom:
+                configMapKeyRef:
+                  key: CSRF_HEADER_PROPERTY
+                  name: userservice-{{ .Release.Name }}-env
+            - name: CSRF_WHITELIST_HEADER_PROPERTY
+              valueFrom:
+                configMapKeyRef:
+                  key: CSRF_WHITELIST_HEADER_PROPERTY
+                  name: userservice-{{ .Release.Name }}-env
+            - name: FIREBASE_CONFIGURATION_CREDENTIALS_FILE_PATH
+              valueFrom:
+                configMapKeyRef:
+                  key: FIREBASE_CONFIGURATION_CREDENTIALS_FILE_PATH
+                  name: userservice-{{ .Release.Name }}-env
+            - name: FIREBASE_CONFIGURATION_NOTIFICATION_MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  key: FIREBASE_CONFIGURATION_NOTIFICATION_MESSAGE
+                  name: userservice-{{ .Release.Name }}-env
+            - name: FIREBASE_CONFIGURATION_PUSH_NOTIFICATIONS_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: FIREBASE_CONFIGURATION_PUSH_NOTIFICATIONS_ENABLED
+                  name: userservice-{{ .Release.Name }}-env
+            - name: KEYCLOAK_CONFIG_ADMIN_CLIENTID
+              valueFrom:
+                configMapKeyRef:
+                  key: KEYCLOAK_CONFIG_ADMIN_CLIENTID
+                  name: userservice-{{ .Release.Name }}-env
+            - name: KEYCLOAK_CONFIG_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: KEYCLOAK_CONFIG_ADMIN_PASSWORD
+                  name: userservice-secret-{{ .Release.Name }}-env
+            - name: KEYCLOAK_CONFIG_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: KEYCLOAK_CONFIG_ADMIN_USERNAME
+                  name: userservice-secret-{{ .Release.Name }}-env
+            - name: KEYCLOAKSERVICE_TECHNICAL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: KEYCLOAKSERVICE_TECHNICAL_PASSWORD
+                  name: userservice-secret-{{ .Release.Name }}-env
+            - name: KEYCLOAKSERVICE_TECHNICAL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: KEYCLOAKSERVICE_TECHNICAL_USERNAME
+                  name: userservice-secret-{{ .Release.Name }}-env
+            - name: KEYCLOAK_CONFIG_APP_CLIENTID
+              valueFrom:
+                configMapKeyRef:
+                  key: KEYCLOAK_CONFIG_APP_CLIENTID
+                  name: userservice-{{ .Release.Name }}-env
+            - name: KEYCLOAK_AUTH_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: KEYCLOAK_AUTH_SERVER_URL
+                  name: userservice-{{ .Release.Name }}-env
+            - name: KEYCLOAK_CORS
+              valueFrom:
+                configMapKeyRef:
+                  key: KEYCLOAK_CORS
+                  name: userservice-{{ .Release.Name }}-env
+            - name: KEYCLOAK_PRINCIPAL_ATTRIBUTE
+              valueFrom:
+                configMapKeyRef:
+                  key: KEYCLOAK_PRINCIPAL_ATTRIBUTE
+                  name: userservice-{{ .Release.Name }}-env
+            - name: KEYCLOAK_REALM
+              valueFrom:
+                configMapKeyRef:
+                  key: KEYCLOAK_REALM
+                  name: userservice-{{ .Release.Name }}-env
+            - name: KEYCLOAK_RESOURCE
+              valueFrom:
+                configMapKeyRef:
+                  key: KEYCLOAK_RESOURCE
+                  name: userservice-{{ .Release.Name }}-env
+            - name: LIVE_SERVICE_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: LIVE_SERVICE_API_URL
+                  name: userservice-{{ .Release.Name }}-env
+            - name: MAIL_SERVICE_API_MAILS_SEND
+              valueFrom:
+                configMapKeyRef:
+                  key: MAIL_SERVICE_API_MAILS_SEND
+                  name: userservice-{{ .Release.Name }}-env
+            - name: MESSAGE_SERVICE_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: MESSAGE_SERVICE_API_URL
+                  name: userservice-{{ .Release.Name }}-env
+            - name: MAIL_SERVICE_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: MAIL_SERVICE_API_URL
+                  name: userservice-{{ .Release.Name }}-env
+            - name: ROCKET_CHAT_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: ROCKET_CHAT_API_URL
+                  name: userservice-{{ .Release.Name }}-env
+            - name: APPOINTMENT_SERVICE_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: APPOINTMENT_SERVICE_API_URL
+                  name: userservice-{{ .Release.Name }}-env
+            - name: ROCKET_CREDENTIALSCHEDULER_CRON
+              valueFrom:
+                configMapKeyRef:
+                  key: ROCKET_CREDENTIALSCHEDULER_CRON
+                  name: userservice-{{ .Release.Name }}-env
+            - name: ROCKET_SYSTEMUSER_ID
+              valueFrom:
+                configMapKeyRef:
+                  key: ROCKET_SYSTEMUSER_ID
+                  name: userservice-{{ .Release.Name }}-env
+            - name: ROCKET_SYSTEMUSER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: ROCKET_SYSTEMUSER_PASSWORD
+                  name: userservice-secret-{{ .Release.Name }}-env
+            - name: ROCKET_SYSTEMUSER_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: ROCKET_SYSTEMUSER_USERNAME
+                  name: userservice-secret-{{ .Release.Name }}-env
+            - name: ROCKET_TECHNICAL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: ROCKET_TECHNICAL_PASSWORD
+                  name: userservice-secret-{{ .Release.Name }}-env
+            - name: ROCKET_TECHNICAL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: ROCKET_TECHNICAL_USERNAME
+                  name: userservice-secret-{{ .Release.Name }}-env
+            - name: SERVICE_ENCRYPTION_APPKEY
+              valueFrom:
+                secretKeyRef:
+                  key: SERVICE_ENCRYPTION_APPKEY
+                  name: messageservice-secret-{{ .Release.Name }}-env
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: USERSERVICE_SPRING_DATASOURCE_PASSWORD
+                  name: userservice-secret-{{ .Release.Name }}-env
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: SPRING_DATASOURCE_URL
+                  name: userservice-{{ .Release.Name }}-env
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: USERSERVICE_SPRING_DATASOURCE_USERNAME
+                  name: userservice-secret-{{ .Release.Name }}-env
+            - name: SPRING_LIQUIBASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: SPRING_LIQUIBASE_PASSWORD
+                  name: userservice-secret-{{ .Release.Name }}-env
+            - name: SPRING_LIQUIBASE_USER
+              valueFrom:
+                secretKeyRef:
+                  key: SPRING_LIQUIBASE_USER
+                  name: userservice-secret-{{ .Release.Name }}-env
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  key: SPRING_PROFILES_ACTIVE
+                  name: userservice-{{ .Release.Name }}-env
+            - name: CONSULTING_TYPE_SERVICE_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: CONSULTING_TYPE_SERVICE_API_URL
+                  name: userservice-{{ .Release.Name }}-env
+            - name: TENANT_SERVICE_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: TENANT_SERVICE_API_URL
+                  name: agencyservice-{{ .Release.Name }}-env
+            - name: MULTITENANCY_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: MULTITENANCY_ENABLED
+                  name: userservice-{{ .Release.Name }}-env
+            - name: FEATURE_TOPICS_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: FEATURE_TOPICS_ENABLED
+                  name: userservice-{{ .Release.Name }}-env
+            - name: TWOFACTORAUTH_USER_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: TWOFACTORAUTH_USER_ENABLED
+                  name: userservice-{{ .Release.Name }}-env
+            - name: TWOFACTORAUTH_CONSULTANT_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: TWOFACTORAUTH_CONSULTANT_ENABLED
+                  name: userservice-{{ .Release.Name }}-env
+            - name: USER_ANONYMOUS_DEACTIVATEWORKFLOW_CRON
+              valueFrom:
+                configMapKeyRef:
+                  key: USER_ANONYMOUS_DEACTIVATEWORKFLOW_CRON
+                  name: userservice-{{ .Release.Name }}-env
+            - name: USER_ANONYMOUS_DEACTIVATEWORKFLOW_PERIODMINUTES
+              valueFrom:
+                configMapKeyRef:
+                  key: USER_ANONYMOUS_DEACTIVATEWORKFLOW_PERIODMINUTES
+                  name: userservice-{{ .Release.Name }}-env
+            - name: USER_ANONYMOUS_DELETEWORKFLOW_CRON
+              valueFrom:
+                configMapKeyRef:
+                  key: USER_ANONYMOUS_DELETEWORKFLOW_CRON
+                  name: userservice-{{ .Release.Name }}-env
+            - name: USER_ANONYMOUS_DELETEWORKFLOW_PERIODMINUTES
+              valueFrom:
+                configMapKeyRef:
+                  key: USER_ANONYMOUS_DELETEWORKFLOW_PERIODMINUTES
+                  name: userservice-{{ .Release.Name }}-env
+            - name: LOGSTASH_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: LOGSTASH_HOST
+                  name: userservice-{{ .Release.Name }}-env
+            - name: USER_REGISTEREDONLY_DELETEWORKFLOW_ENABLED
+              value: "true"
+            - name: USER_REGISTEREDONLY_DELETEWORKFLOW_AFTERSESSIONPURGE_ENABLED
+              value: "true"
+            - name: IDENTITY_OTP_ALLOWED_FOR_USERS
+              valueFrom:
+                configMapKeyRef:
+                  key: IDENTITY_OTP_ALLOWED_FOR_USERS
+                  name: userservice-{{ .Release.Name }}-env
+            - name: IDENTITY_OTP_ALLOWED_FOR_CONSULTANTS
+              valueFrom:
+                configMapKeyRef:
+                  key: IDENTITY_OTP_ALLOWED_FOR_CONSULTANTS
+                  name: userservice-{{ .Release.Name }}-env
+            - name: IDENTITY_OTP_ALLOWED_FOR_SINGLE_TENANT_ADMINS
+              valueFrom:
+                configMapKeyRef:
+                  key: IDENTITY_OTP_ALLOWED_FOR_SINGLE_TENANT_ADMINS
+                  name: userservice-{{ .Release.Name }}-env
+            - name: IDENTITY_OTP_ALLOWED_FOR_TENANT_SUPER_ADMINS
+              valueFrom:
+                configMapKeyRef:
+                  key: IDENTITY_OTP_ALLOWED_FOR_TENANT_SUPER_ADMINS
+                  name: userservice-{{ .Release.Name }}-env
+            - name: STATISTICS_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: STATISTICS_ENABLED
+                  name: messageservice-{{ .Release.Name }}-env
+            - name: SPRING_RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: SPRING_RABBITMQ_USERNAME
+                  name: statisticsservice-secret-{{ .Release.Name }}-env
+            - name: SPRING_RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: SPRING_RABBITMQ_PASSWORD
+                  name: statisticsservice-secret-{{ .Release.Name }}-env
+            - name: FEATURE_APPOINTMENT_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: FEATURE_APPOINTMENT_ENABLED
+                  name: userservice-{{ .Release.Name }}-env
+            - name: SESSION_INACTIVE_DELETEWORKFLOW_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: SESSION_INACTIVE_DELETEWORKFLOW_ENABLED
+                  name: userservice-{{ .Release.Name }}-env
+            - name: SESSION_INACTIVE_DELETEWORKFLOW_CRON
+              valueFrom:
+                configMapKeyRef:
+                  key: SESSION_INACTIVE_DELETEWORKFLOW_CRON
+                  name: userservice-{{ .Release.Name }}-env
+            - name: SESSION_INACTIVE_DELETEWORKFLOW_CHECK_DAYS
+              valueFrom:
+                configMapKeyRef:
+                  key: SESSION_INACTIVE_DELETEWORKFLOW_CHECK_DAYS
+                  name: userservice-{{ .Release.Name }}-env
+            - name: FEATURE_DEMOGRAPHICS_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: FEATURE_DEMOGRAPHICS_ENABLED
+                  name: userservice-{{ .Release.Name }}-env
+            - name: FEATURE_MULTITENANCY_WITH_SINGLE_DOMAIN_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: FEATURE_MULTITENANCY_WITH_SINGLE_DOMAIN_ENABLED
+                  name: userservice-{{ .Release.Name }}-env
+          ports:
+            - containerPort: 8080
+          resources: {}
+          volumeMounts:
+            - mountPath: /import
+              name: userservice-import
+      imagePullSecrets:
+        - name: registry-secret
+      restartPolicy: Always
+      volumes:
+        - name: userservice-import
+          emptyDir: {}
+        - name: plattform-init-data
+          persistentVolumeClaim:
+            claimName: plattform-initialization-data
+status: {}
