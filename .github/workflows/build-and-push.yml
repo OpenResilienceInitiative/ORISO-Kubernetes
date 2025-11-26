@@ -25,18 +25,43 @@ jobs:
           - repo: ORISO-Frontend
             path: ORISO-Frontend
             image: oriso-frontend
+            type: frontend
+          - repo: ORISO-Admin
+            path: ORISO-Admin
+            image: oriso-admin
+            type: frontend
           - repo: ORISO-TenantService
             path: ORISO-TenantService
             image: oriso-tenantservice
+            type: java
           - repo: ORISO-UserService
             path: ORISO-UserService
             image: oriso-userservice
+            type: java
           - repo: ORISO-ConsultingTypeService
             path: ORISO-ConsultingTypeService
             image: oriso-consultingtypeservice
+            type: java
           - repo: ORISO-AgencyService
             path: ORISO-AgencyService
             image: oriso-agencyservice
+            type: java
+          - repo: ORISO-HealthDashboard
+            path: ORISO-HealthDashboard
+            image: oriso-healthdashboard
+            type: node
+          - repo: ORISO-Nginx
+            path: ORISO-Nginx
+            image: oriso-nginx
+            type: nginx
+          - repo: ORISO-Matrix
+            path: ORISO-Matrix
+            image: oriso-matrix
+            type: docker
+          - repo: ORISO-Redis
+            path: ORISO-Redis
+            image: oriso-redis
+            type: docker
 
     steps:
       - name: Checkout workflow repository
@@ -69,15 +94,16 @@ jobs:
           fi
 
       - name: Setup Node.js
-        if: matrix.repo == 'ORISO-Frontend'
+        if: matrix.type == 'frontend' || matrix.type == 'node'
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: npm
           cache-dependency-path: ${{ matrix.path }}/package-lock.json
+        continue-on-error: true
 
       - name: Build frontend
-        if: matrix.repo == 'ORISO-Frontend'
+        if: matrix.type == 'frontend'
         working-directory: ${{ matrix.path }}
         env:
           CI: false
@@ -86,8 +112,15 @@ jobs:
           npm ci --legacy-peer-deps
           npm run build
 
+      - name: Build Node.js service
+        if: matrix.type == 'node'
+        working-directory: ${{ matrix.path }}
+        run: |
+          npm ci --only=production
+          echo "✓ Node.js dependencies installed"
+
       - name: Determine Java version
-        if: matrix.repo != 'ORISO-Frontend'
+        if: matrix.type == 'java'
         id: java-version
         run: |
           if [ "${{ matrix.repo }}" == "ORISO-UserService" ] || [ "${{ matrix.repo }}" == "ORISO-ConsultingTypeService" ]; then
@@ -97,7 +130,7 @@ jobs:
           fi
 
       - name: Set up Java and Maven
-        if: matrix.repo != 'ORISO-Frontend'
+        if: matrix.type == 'java'
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -106,7 +139,7 @@ jobs:
           cache-dependency-path: ${{ matrix.path }}/pom.xml
 
       - name: Setup Maven wrapper
-        if: matrix.repo != 'ORISO-Frontend'
+        if: matrix.type == 'java'
         working-directory: ${{ matrix.path }}
         run: |
           if [ -f "./mvnw" ]; then
@@ -181,7 +214,7 @@ jobs:
           fi
 
       - name: Build Java service
-        if: matrix.repo != 'ORISO-Frontend'
+        if: matrix.type == 'java'
         working-directory: ${{ matrix.path }}
         run: |
           if [ -f "./mvnw" ]; then
@@ -197,7 +230,7 @@ jobs:
           echo "✓ JAR file built successfully"
 
       - name: Verify and prepare JAR file
-        if: matrix.repo != 'ORISO-Frontend'
+        if: matrix.type == 'java'
         working-directory: ${{ matrix.path }}
         run: |
           # Find the main JAR file (exclude sources and javadoc)
