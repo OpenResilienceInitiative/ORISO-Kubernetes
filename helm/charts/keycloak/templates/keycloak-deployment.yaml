@@ -14,8 +14,24 @@ spec:
       labels:
         app: keycloak
     spec:
+      initContainers:
+        - name: wait-for-mariadb
+          image: busybox:1.36
+          command: ['sh', '-c', 'until nc -z {{ .Values.dbServer }}.{{ .Release.Namespace }} 3306; do echo waiting for mariadb; sleep 2; done']
       containers:
-        - env:
+        - name: keycloak
+          image: {{ .Values.imageName }}:{{ .Values.imageVersion }}
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 8080
+
+          command:
+            - /opt/keycloak/bin/kc.sh
+          args:
+            - start
+            - --auto-build
+          env:
             - name: KC_DB
               valueFrom:
                 configMapKeyRef:
@@ -59,11 +75,6 @@ spec:
                 configMapKeyRef:
                   key: ROOT_LOGLEVEL
                   name: keycloak-configmap-env
-          image: {{ .Values.imageName }}:{{ .Values.imageVersion }}
-          command: ["/opt/keycloak/bin/kc.sh"]
-          args:
-            - start
-            - --auto-build
           {{- if .Values.global.initializeDummyData }}
           readinessProbe:
             exec:
@@ -79,74 +90,56 @@ spec:
             initialDelaySeconds: 30
             failureThreshold: 3
           {{- end }}
-          imagePullPolicy: IfNotPresent
-          name: keycloak
-          ports:
-            - containerPort: 8080
           volumeMounts:
-{{/*            - mountPath: /opt/keycloak/themes/custom-theme/login/info.ftl*/}}
-{{/*              name: keycloak-theme-templates*/}}
-{{/*              subPath: info.ftl*/}}
-{{/*            - mountPath: /opt/keycloak/themes/custom-theme/login/login-reset-password.ftl*/}}
-{{/*              name: keycloak-theme-templates*/}}
-{{/*              subPath: login-reset-password.ftl*/}}
-{{/*            - mountPath: /opt/keycloak/themes/custom-theme/login/login-update-password.ftl*/}}
-{{/*              name: keycloak-theme-templates*/}}
-{{/*              subPath: login-update-password.ftl*/}}
-{{/*            - mountPath: /opt/keycloak/themes/custom-theme/login/login.ftl*/}}
-{{/*              name: keycloak-theme-templates*/}}
-{{/*              subPath: login.ftl*/}}
-{{/*            - mountPath: /opt/keycloak/themes/custom-theme/login/theme.properties*/}}
-{{/*              name: keycloak-theme-templates*/}}
-{{/*              subPath: theme.properties*/}}
-{{/*            - mountPath: /opt/keycloak/themes/custom-theme/email/theme.properties*/}}
-{{/*              name: keycloak-theme-templates*/}}
-{{/*            - mountPath: /opt/keycloak/themes/custom-theme/login/messages/messages_de.properties*/}}
-{{/*              name: keycloak-theme-templates-messages*/}}
-{{/*              subPath: messages_de.properties*/}}
-{{/*            - mountPath: /opt/keycloak/themes/custom-theme/login/resources/css/custom.css*/}}
-{{/*              name: keycloak-theme-templates-styles*/}}
-{{/*              subPath: custom.css*/}}
-{{/*            - mountPath: /opt/keycloak/themes/custom-theme/login/resources/fonts/Nunito/Nunito-Bold.ttf*/}}
-{{/*              name: keycloak-theme-templates-fonts*/}}
-{{/*              subPath: Nunito-Bold.ttf*/}}
-{{/*            - mountPath: /opt/keycloak/themes/custom-theme/login/resources/fonts/Nunito/Nunito-Regular.ttf*/}}
-{{/*              name: keycloak-theme-templates-fonts*/}}
-{{/*              subPath: Nunito-Regular.ttf*/}}
-{{/*            - mountPath: /opt/keycloak/themes/custom-theme/login/resources/fonts/Nunito/Nunito-SemiBold.ttf*/}}
-{{/*              name: keycloak-theme-templates-fonts*/}}
-{{/*              subPath: Nunito-SemiBold.ttf*/}}
-{{/*            - mountPath: /opt/keycloak/themes/custom-theme/email/messages/*/}}
-{{/*              name: keycloak-theme-email-messages*/}}
-{{/*            - mountPath: /opt/keycloak/themes/custom-theme/email/html/*/}}
-{{/*              name: keycloak-theme-email-html*/}}
-{{/*            - mountPath: /opt/keycloak/themes/custom-theme/email/text/*/}}
-{{/*              name: keycloak-theme-email-text*/}}
-{{/*              subPath: theme.properties*/}}
-            - mountPath: data/import
+            # --- LOGIN THEME MOUNTS ---
+            # Hauptordner Login (inkl. ftl Dateien & theme.properties)
+            - mountPath: /opt/keycloak/themes/custom-theme/login
+              name: keycloak-theme-templates
+            # Messages
+            - mountPath: /opt/keycloak/themes/custom-theme/login/messages
+              name: keycloak-theme-templates-messages
+            # CSS Styles
+            - mountPath: /opt/keycloak/themes/custom-theme/login/resources/css
+              name: keycloak-theme-templates-styles
+            # Fonts
+            - mountPath: /opt/keycloak/themes/custom-theme/login/resources/fonts/Nunito
+              name: keycloak-theme-templates-fonts
+            # --- EMAIL THEME MOUNTS ---
+            # Messages
+            - mountPath: /opt/keycloak/themes/custom-theme/email/messages
+              name: keycloak-theme-email-messages
+            # HTML Templates
+            - mountPath: /opt/keycloak/themes/custom-theme/email/html
+              name: keycloak-theme-email-html
+            # Text Templates
+            - mountPath: /opt/keycloak/themes/custom-theme/email/text
+              name: keycloak-theme-email-text
+            # --- DATA IMPORT ---
+            - mountPath: /data/import
               name: keycloak-full-dump
+
       volumes:
         - name: keycloak-theme-templates
           configMap:
-            name: keycloak-theme-templates-configmap
+            name: keycloak-configmap-theme-templates
         - name: keycloak-theme-templates-messages
           configMap:
-            name: keycloak-theme-templates-messages-configmap
+            name: keycloak-configmap-theme-templates-messages
         - name: keycloak-theme-templates-styles
           configMap:
-            name: keycloak-theme-templates-styles-configmap
+            name: keycloak-configmap-theme-templates-styles
         - name: keycloak-theme-templates-fonts
           configMap:
-            name: keycloak-theme-templates-fonts-configmap
+            name: keycloak-configmap-theme-templates-fonts
         - name: keycloak-theme-email-html
           configMap:
-            name: keycloak-theme-email-html-configmap
+            name: keycloak-configmap-theme-email-html
         - name: keycloak-theme-email-text
           configMap:
-            name: keycloak-theme-email-text-configmap
+            name: keycloak-configmap-theme-email-text
         - name: keycloak-theme-email-messages
           configMap:
-            name: keycloak-theme-email-messages-configmap
+            name: keycloak-configmap-theme-email-messages
         - name: keycloak-full-dump
           configMap:
             name: keycloak-configmap-data
