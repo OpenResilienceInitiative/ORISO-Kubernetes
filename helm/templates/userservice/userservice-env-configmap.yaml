@@ -1,0 +1,88 @@
+apiVersion: v1
+data:
+  # General
+  {{- if .Values.global.enableTls }}
+  APP_BASE_URL: "https://{{ .Values.global.domainName }}"
+  {{- else }}
+  APP_BASE_URL: "http://{{ .Values.global.domainName }}"
+  {{- end }}
+  CONSULTANT_IMPORT_FILENAME: {{ .Values.consultantImportFilename }}
+  CONSULTANT_IMPORT_PROTOCOL_FILENAME: {{ .Values.consultantImportProtocolFilename }}
+  ASKER_IMPORT_FILENAME: {{ .Values.askerImportFilename }}
+  ASKER_IMPORT_WITHOUTSESSION_FILENAME: {{ .Values.askerImportWithoutsessionFilename }}
+  ASKER_IMPORT_PROTOCOL_FILENAME: {{ .Values.askerImportProtocolFilename }}
+  ASKER_IMPORT_WELCOME_MESSAGE_FILENAME: {{ .Values.askerImportWelcomeMessageFilename }}
+  ASKER_IMPORT_WELCOME_MESSAGE_FILENAME_REPLACE_VALUE: "[ConsultingType]"
+  # Spring/Database
+  SPRING_PROFILES_ACTIVE: {{ .Values.userServiceSpringProfilesActive }}
+  SPRING_DATASOURCE_URL: "jdbc:mariadb://mariadb.{{ .Release.Namespace }}:3306/userservice"
+  # Keycloak
+  IDENTITY_OPENID_CONNECT_URL: {{ .Values.keycloakAuthServerUrl }}{{ .Values.identityOpenidConnectUrl }}
+  KEYCLOAKAPI_LOGIN: {{ .Values.keycloakAuthServerUrl }}{{ .Values.identityOpenidConnectUrl }}{{ .Values.keycloakLoginSuffix }}
+  KEYCLOAKAPI_LOGOUT: {{ .Values.keycloakAuthServerUrl }}{{ .Values.identityOpenidConnectUrl }}{{ .Values.keycloakLogoutSuffix }}
+  IDENTITY_OTP_URL: {{ .Values.keycloakAuthServerUrl }}{{ .Values.identityOtpUrl }}
+  KEYCLOAK_AUTH_SERVER_URL: {{ .Values.keycloakAuthServerUrl}}
+  KEYCLOAK_REALM: {{ .Values.keycloakRealm}}
+  KEYCLOAK_PRINCIPAL_ATTRIBUTE: {{ .Values.keycloakPrincipalAttribute}}
+  KEYCLOAK_RESOURCE: {{ .Values.userServiceKeycloakResource}}
+  KEYCLOAK_CORS: "false"
+  KEYCLOAK_CONFIG_ADMIN_CLIENTID: {{ .Values.keycloakserviceAdminClientid}}
+  KEYCLOAK_CONFIG_APP_CLIENTID: {{ .Values.keycloakserviceAppClientid}}
+  KEYCLOAKSERVICE_TECHUSER_ID: {{ .Values.keycloakserviceTechuserId}}
+  # Rocket.Chat
+  ROCKET_CHAT_API_URL: "http://rocketchat.{{ .Release.Namespace }}:3000/api/v1"
+  ROCKET_SYSTEMUSER_ID: {{ .Values.rocketSystemuserId}}
+  ROCKET_CREDENTIALSCHEDULER_CRON: {{ .Values.rocketCredentialschedulerCron}}
+  # Services
+  AGENCY_SERVICE_API_URL: "http://agencyservice.{{ .Release.Namespace }}:8080"
+  AGENCY_ADMIN_SERVICE_API_URL: "http://agencyservice.{{ .Release.Namespace }}:8080"
+  MESSAGE_SERVICE_API_URL: "http://messageservice.{{ .Release.Namespace }}:8080"
+  MAIL_SERVICE_API_URL: "http://mailservice.{{ .Release.Namespace }}:8080"
+  LIVE_SERVICE_API_URL: "http://liveservice.{{ .Release.Namespace }}:8080"
+  CONSULTING_TYPE_SERVICE_API_URL: "http://consultingtypeservice.{{ .Release.Namespace }}:8080"
+  APPOINTMENT_SERVICE_API_URL: "http://appointmentservice.{{ .Release.Namespace }}:8080"
+  # CSRF
+  CSRF_HEADER_PROPERTY: {{ .Values.csrfHeaderProperty}}
+  CSRF_WHITELIST_HEADER_PROPERTY: {{ .Values.csrfWhitelistHeaderProperty}}
+  CSRF_COOKIE_PROPERTY: {{ .Values.csrfCookieProperty}}
+  # Logging
+  #LOGGING_LEVEL_ROOT: "DEBUG"
+  # Firebase credential configuration file path
+  FIREBASE_CONFIGURATION_PUSH_NOTIFICATIONS_ENABLED: "false"
+  FIREBASE_CONFIGURATION_CREDENTIALS_FILE_PATH: {{ .Values.firebaseConfigurationCredentialsFilePath}}
+  FIREBASE_CONFIGURATION_NOTIFICATION_MESSAGE: {{ .Values.firebaseConfigurationNotificationMessage}}
+  REGISTRATION_CORS_ALLOWED_ORIGINS: ""
+  USER_ANONYMOUS_DELETEWORKFLOW_CRON: "0 0 * * * ?"
+  ## Period of time before anonymous data will be deleted in minutes
+  ## 2820 minutes = 47 hours
+  USER_ANONYMOUS_DELETEWORKFLOW_PERIODMINUTES: "2820"
+  USER_ANONYMOUS_DEACTIVATEWORKFLOW_CRON: "0 0 * * * ?"
+  SESSION_INACTIVE_DELETEWORKFLOW_ENABLED: {{ .Values.sessionInactiveDeleteworkflowEnabled | quote }}
+  SESSION_INACTIVE_DELETEWORKFLOW_CRON: {{ .Values.sessionInactiveDeleteworkflowCron }}
+  SESSION_INACTIVE_DELETEWORKFLOW_CHECK_DAYS: {{ .Values.sessionInactiveDeleteworkflowCheckDays | quote }}
+  ## Period of time before anonymous data will be deleted in minutes
+  ## 360 minutes = 6 hours
+  USER_ANONYMOUS_DEACTIVATEWORKFLOW_PERIODMINUTES: "360"
+  MAIL_SERVICE_API_MAILS_SEND: "http://mailservice.{{ .Release.Namespace }}:8080/mails/send"
+  MULTITENANCY_ENABLED: {{ .Values.global.multitenancyEnabled | quote }}
+  FEATURE_TOPICS_ENABLED: {{ .Values.global.topicsEnabled | quote }}
+  FEATURE_DEMOGRAPHICS_ENABLED: {{ .Values.global.demographicsEnabled | quote }}
+  TENANT_SERVICE_API_URL: "http://tenantservice.{{ .Release.Namespace }}:8080"
+  # 2fa
+  TWOFACTORAUTH_USER_ENABLED: "false"
+  TWOFACTORAUTH_CONSULTANT_ENABLED: "true"
+  IDENTITY_OTP_ALLOWED_FOR_USERS: "true"
+  IDENTITY_OTP_ALLOWED_FOR_CONSULTANTS: "true"
+  IDENTITY_OTP_ALLOWED_FOR_SINGLE_TENANT_ADMINS: "true"
+  IDENTITY_OTP_ALLOWED_FOR_TENANT_SUPER_ADMINS: "true"
+  # logstash
+  LOGSTASH_HOST: {{ .Values.logstashHost }}
+  FEATURE_APPOINTMENT_ENABLED: "false"
+  FEATURE_MULTITENANCY_WITH_SINGLE_DOMAIN_ENABLED: {{ .Values.global.multitenancyWithSingleDomainEnabled | quote }}
+
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: userservice-{{ .Release.Name }}-env
+  name: userservice-{{ .Release.Name }}-env
