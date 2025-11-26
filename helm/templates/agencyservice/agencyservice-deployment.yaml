@@ -15,7 +15,9 @@ spec:
         app: agencyservice
     spec:
       containers:
-        - env:
+        - name: agencyservice
+          image: {{ .Values.agencyService.imageName }}:{{ .Values.agencyService.imageVersion }}
+          env:
             - name: CSRF_COOKIE_PROPERTY
               valueFrom:
                 configMapKeyRef:
@@ -151,8 +153,5 @@ spec:
                 configMapKeyRef:
                   key: AGENCY_DELETEWORKFLOW_CRON
                   name: agencyservice-configmap-env
-          name: agencyservice
           ports:
             - containerPort: 8080
-          image: {{ .Values.agencyService.imageName }}:{{ .Values.agencyService.imageVersion }}
-          resources: { }
