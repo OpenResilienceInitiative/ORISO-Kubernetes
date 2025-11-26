@@ -11,6 +11,7 @@ data:
   KEYCLOAK_REALM: {{ .Values.global.keycloak.realm }}
   KEYCLOAK_RESOURCE: {{ .Values.agencyService.keycloakResource }}
   KEYCLOAKSERVICE_ADMIN_CLIENTID: {{ .Values.global.keycloak.serviceAdminClientId }}
+  TOPIC_ENRICHMENT_ENABLED: {{ .Values.agencyService.topicEnrichmentEnabled | quote }}
   KEYCLOAKSERVICE_APP_CLIENTID: {{ .Values.global.keycloak.serviceAppClientId }}
   SPRING_DATASOURCE_URL: "jdbc:mariadb://mariadb.{{ .Release.Namespace }}:3306/agencyservice"
   SPRING_PROFILES_ACTIVE: {{ .Values.agencyService.springProfilesActive }}

@@ -92,7 +92,12 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   key: SPRING_PROFILES_ACTIVE
-                  name: agencyservice-configmap-env
+                  name: agencyservice-configmap-env                  
+            - name: TOPIC_ENRICHMENT_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: TOPIC_ENRICHMENT_ENABLED
+                  name: agencyservice-configmap-env      
             - name: CONSULTING_TYPE_SERVICE_API_URL
               valueFrom:
                 configMapKeyRef:
