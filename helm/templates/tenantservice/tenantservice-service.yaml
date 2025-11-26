@@ -1,0 +1,15 @@
+# TenantService Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: tenantservice
+  namespace: caritas
+spec:
+  ports:
+  - port: 8081
+    targetPort: 8081
+  selector:
+    app: tenantservice
+  type: ClusterIP
+
+---
