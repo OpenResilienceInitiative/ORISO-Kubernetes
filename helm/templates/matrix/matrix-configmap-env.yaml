@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: 
+  name: matrix-configmap-env
+data:
+  # General   
+  SYNAPSE_SERVER_NAME: "{{ .Values.matrix.synapseServerName }}"
+  SYNAPSE_REPORT_STATS: "{{ .Values.matrix.synapseReportStats }}"
+  SYNAPSE_ENABLE_AUTHENTICATED_MEDIA: "{{ .Values.matrix.synapseEnableAuthenticatedMedia }}"  

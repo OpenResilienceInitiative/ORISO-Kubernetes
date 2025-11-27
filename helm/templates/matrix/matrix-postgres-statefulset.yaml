@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: matrix-postgres
+  namespace: caritas
+spec:
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  podManagementPolicy: OrderedReady
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: matrix-postgres
+  serviceName: matrix-postgres-service
+  template:
+    metadata:
+      labels:
+        app: matrix-postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_USER
+              name: matrix-postgres-secret
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_PASSWORD
+              name: matrix-postgres-secret
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_DB
+              name: matrix-postgres-secret
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        ports:
+        - containerPort: 5432
+          name: postgres
+          protocol: TCP
+        livenessProbe:
+          exec:
+            command:
+              - /bin/sh
+              - -c
+              - pg_isready -U $POSTGRES_USER
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+              - /bin/sh
+              - -c
+              - pg_isready -U $POSTGRES_USER
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          limits:
+            cpu: "1"
+            memory: 2Gi
+          requests:
+            cpu: 250m
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-storage
+        - mountPath: /backup
+          name: postgres-backup
+        - mountPath: /etc/postgresql/postgresql.conf
+          name: postgres-config
+          subPath: postgresql.conf
+      volumes:
+      - name: postgres-storage
+        persistentVolumeClaim:
+          claimName: matrix-postgres-pvc
+      - name: postgres-backup
+        persistentVolumeClaim:
+          claimName: matrix-postgres-backup-pvc
+      - name: postgres-config
+        configMap:
+          name: matrix-postgres-config
+          defaultMode: 420
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      partition: 0

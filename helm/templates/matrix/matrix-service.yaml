@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: matrix-synapse
+  namespace: caritas
+  labels:
+    app: matrix-synapse
+spec:
+  type: LoadBalancer
+  {{- if .Values.matrix.synapseServerName }}
+  loadBalancerIP: {{ .Values.matrix.synapseServerName }}
+  {{- end }}
+  selector:
+    app: matrix-synapse
+  ports:
+  - name: client
+    port: 8008
+    targetPort: 8008
+    protocol: TCP
+  - name: federation
+    port: 8009
+    targetPort: 8009
+    protocol: TCP

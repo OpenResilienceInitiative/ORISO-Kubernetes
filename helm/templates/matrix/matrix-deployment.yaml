@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: matrix-synapse
+  namespace: caritas
+  labels:
+    app: matrix-synapse
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: matrix-synapse
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: matrix-synapse
+    spec:
+      containers:
+      - name: synapse
+        image: matrixdotorg/synapse:latest
+        imagePullPolicy: Always
+        env:
+          - name: SYNAPSE_SERVER_NAME
+            valueFrom:
+              configMapKeyRef:
+                key: SYNAPSE_SERVER_NAME
+                name: matrix-configmap-env             
+          - name: SYNAPSE_REPORT_STATS
+            valueFrom:
+              configMapKeyRef:
+                key: SYNAPSE_REPORT_STATS
+                name: matrix-configmap-env             
+          - name: SYNAPSE_ENABLE_AUTHENTICATED_MEDIA
+            valueFrom:
+              configMapKeyRef:
+                key: SYNAPSE_ENABLE_AUTHENTICATED_MEDIA
+                name: matrix-configmap-env       
+        ports:
+          - containerPort: 8008
+            protocol: TCP
+          - containerPort: 8009
+            protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /_matrix/client/versions
+            port: 8008
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /_matrix/client/versions
+            port: 8008
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1Gi
+          requests:
+            cpu: 250m
+            memory: 512Mi
+        volumeMounts:
+          - mountPath: /data
+            name: synapse-data
+          - mountPath: /data/homeserver.yaml
+            name: homeserver-config
+            subPath: homeserver.yaml
+      volumes:
+        - name: synapse-data
+          persistentVolumeClaim:
+            claimName: matrix-synapse-data
+        - name: homeserver-config
+          configMap:
+            name: matrix-homeserver-oidc 
