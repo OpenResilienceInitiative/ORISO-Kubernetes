@@ -18,10 +18,11 @@ spec:
     spec:
       containers:
         - image:  {{ .Values.frontend.imageName }}:{{ .Values.frontend.imageVersion }}
-          name: frontend
+          name: frontend          
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
-          resources: {}
+          resources: {}          
       imagePullSecrets:
         - name: registry-secret
       restartPolicy: Always

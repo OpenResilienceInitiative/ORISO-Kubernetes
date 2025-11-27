@@ -5,6 +5,7 @@ metadata:
 data:
   CSRF_COOKIE_PROPERTY:  {{ .Values.global.csrfCookieProperty }}
   CSRF_HEADER_PROPERTY: {{ .Values.global.csrfHeaderProperty }}
+  SPRING_LIQUIBASE_ENABLED: {{ .Values.global.enableLiquibase | quote }}
   KEYCLOAK_CORS: "false"
   KEYCLOAK_AUTH_SERVER_URL: {{ .Values.global.keycloak.authServerUrl }}
   KEYCLOAK_PRINCIPAL_ATTRIBUTE: {{ .Values.global.keycloak.principalAttribute }}

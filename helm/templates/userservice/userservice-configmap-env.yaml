@@ -12,6 +12,7 @@ data:
   APP_BASE_URL: "http://{{ .Values.global.domainName }}"
   {{- end }}
   STATISTICS_ENABLED: {{ .Values.global.statisticsEnabled | quote }}
+  SPRING_LIQUIBASE_ENABLED: {{ .Values.global.enableLiquibase | quote }}
   CONSULTANT_IMPORT_FILENAME: {{ .Values.userService.consultantImportFilename }}
   CONSULTANT_IMPORT_PROTOCOL_FILENAME: {{ .Values.userService.consultantImportProtocolFilename }}
   ASKER_IMPORT_FILENAME: {{ .Values.userService.askerImportFilename }}

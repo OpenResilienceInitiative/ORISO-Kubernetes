@@ -1,11 +1,15 @@
+# Frontend Service
 apiVersion: v1
 kind: Service
 metadata:
   name: frontend
+  namespace: caritas
 spec:
+  type: LoadBalancer
   ports:
-    - name: "80"
-      port: 80
-      targetPort: 80
+  - name: http
+    port: 9001
+    targetPort: 80
+    protocol: TCP
   selector:
     app: frontend

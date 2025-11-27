@@ -6,6 +6,7 @@ data:
   CONSULTING_TYPES_JSON_PATH: {{ .Values.consultingTypeService.consultingTypesJsonPath }}
   CSRF_COOKIE_PROPERTY:  {{ .Values.global.csrfCookieProperty }}
   CSRF_HEADER_PROPERTY: {{ .Values.global.csrfHeaderProperty }}
+  SPRING_LIQUIBASE_ENABLED: {{ .Values.global.enableLiquibase | quote }}
   TENANT_SERVICE_API_URL: "http://tenantservice.{{ .Release.Namespace }}:8080"
   JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
   SPRING_DATASOURCE_URL: "jdbc:mariadb://mariadb.{{ .Release.Namespace }}:3306/consultingtypeservice"

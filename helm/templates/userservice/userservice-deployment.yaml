@@ -20,6 +20,7 @@ spec:
       containers:
         - name: userservice
           image: "{{ .Values.userService.imageName }}:{{ .Values.userService.imageVersion }}"
+          imagePullPolicy: Always
           env:
             - name: IDENTITY_OPENID_CONNECT_URL
               valueFrom:

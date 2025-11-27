@@ -16,7 +16,8 @@ spec:
     spec:
       containers:
         - name: agencyservice
-          image: {{ .Values.agencyService.imageName }}:{{ .Values.agencyService.imageVersion }}
+          image: {{ .Values.agencyService.imageName }}:{{ .Values.agencyService.imageVersion }}          
+          imagePullPolicy: Always
           env:
             - name: CSRF_COOKIE_PROPERTY
               valueFrom:
