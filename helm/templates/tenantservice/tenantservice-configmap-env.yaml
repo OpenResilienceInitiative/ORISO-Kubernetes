@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: tenantservice-configmap-env
+  name: tenantservice-configmap-env
+data:
+  # General 
+  
+  SPRING_LIQUIBASE_ENABLED: {{ .Values.global.enableLiquibase | quote }}  
+  SPRING_PROFILES_ACTIVE: {{ .Values.tenantService.springProfilesActive }}  
+  SPRING_DATASOURCE_URL: {{ .Values.tenantService.springDatasourceURL }}  
+  KEYCLOAK_AUTH_SERVER_URL: {{ .Values.tenantService.keycloakAuthServerUrl  }}  
+  KEYCLOAK_REALM: {{ .Values.global.keycloak.realm }}  
+  SPRING_RABBITMQ_HOST: {{ .Values.tenantService.springRabbitmqHost }}  
+  SPRING_RABBITMQ_PORT: "{{ .Values.tenantService.springRabbitmqPort }}"  
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: {{ .Values.tenantService.springSecurityOAuth2ResourceserverJWTIssuerURI }}   
+  

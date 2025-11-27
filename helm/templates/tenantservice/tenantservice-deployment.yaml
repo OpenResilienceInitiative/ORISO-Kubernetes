@@ -17,36 +17,65 @@ spec:
       containers:
       - name: tenantservice
         image:  {{ .Values.tenantService.imageName }}:{{ .Values.tenantService.imageVersion }}
-        imagePullPolicy: IfNotPresent  # Use local image from k3s
+        imagePullPolicy: Always
         ports:
         - containerPort: 8081
         env:
-        - name: SPRING_PROFILES_ACTIVE
-          value: "prod"
-        - name: SPRING_DATASOURCE_URL
-          value: "jdbc:mariadb://mariadb:3306/tenantservice"
-        - name: SPRING_DATASOURCE_USERNAME
-          value: "caritas"
-        - name: SPRING_DATASOURCE_PASSWORD
-          value: "caritas"
-        - name: SPRING_LIQUIBASE_USER
-          value: "caritas"
-        - name: SPRING_LIQUIBASE_PASSWORD
-          value: "caritas"
-        - name: KEYCLOAK_AUTH_SERVER_URL
-          value: "http://keycloak:8080"
-        - name: KEYCLOAK_REALM
-          value: "online-beratung"
-        - name: SPRING_RABBITMQ_HOST
-          value: "rabbitmq"
-        - name: SPRING_RABBITMQ_PORT
-          value: "5672"
-        - name: SPRING_RABBITMQ_USERNAME
-          value: "admin"
-        - name: SPRING_RABBITMQ_PASSWORD
-          value: "admin"
-        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
-          value: "http://keycloak:8080/realms/online-beratung"
+          - name: SPRING_PROFILES_ACTIVE
+            valueFrom:
+              configMapKeyRef:
+                key: SPRING_PROFILES_ACTIVE
+                name: tenantservice-configmap-env          
+          - name: SPRING_DATASOURCE_URL
+            valueFrom:
+              configMapKeyRef:
+                key: SPRING_DATASOURCE_URL
+                name: tenantservice-configmap-env          
+          - name: SPRING_DATASOURCE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: SPRING_DATASOURCE_USERNAME
+                name: tenantservice-secret      
+          - name: SPRING_DATASOURCE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: SPRING_DATASOURCE_PASSWORD
+                name: tenantservice-secret  
+          - name: KEYCLOAK_AUTH_SERVER_URL
+            valueFrom:
+              configMapKeyRef:
+                key: KEYCLOAK_AUTH_SERVER_URL
+                name: tenantservice-configmap-env          
+          - name: KEYCLOAK_REALM
+            valueFrom:
+              configMapKeyRef:
+                key: KEYCLOAK_REALM
+                name: tenantservice-configmap-env          
+          - name: SPRING_RABBITMQ_HOST
+            valueFrom:
+              configMapKeyRef:
+                key: SPRING_RABBITMQ_HOST
+                name: tenantservice-configmap-env          
+          - name: SPRING_RABBITMQ_PORT
+            valueFrom:
+              configMapKeyRef:
+                key: SPRING_RABBITMQ_PORT
+                name: tenantservice-configmap-env          
+          - name: SPRING_RABBITMQ_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: SPRING_RABBITMQ_USERNAME
+                name: tenantservice-secret 
+          - name: SPRING_RABBITMQ_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: SPRING_RABBITMQ_PASSWORD
+                name: tenantservice-secret                       
+          - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+            valueFrom:
+              configMapKeyRef:
+                key: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+                name: tenantservice-configmap-env
         resources:
           requests:
             memory: "512Mi"
