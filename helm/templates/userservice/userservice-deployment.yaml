@@ -17,10 +17,6 @@ spec:
         app: userservice
     spec:
       restartPolicy: Always
-      initContainers:
-        - name: wait-for-mariadb
-          image: busybox:1.36
-          command: ['sh', '-c', 'until nc -z mariadb.{{ .Release.Namespace }} 3306; do echo waiting for mariadb; sleep 2; done']
       containers:
         - name: userservice
           image: "{{ .Values.userService.imageName }}:{{ .Values.userService.imageVersion }}"
