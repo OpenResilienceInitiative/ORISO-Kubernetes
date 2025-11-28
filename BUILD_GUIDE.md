@@ -51,7 +51,7 @@ mvn --version   # Should be 3.8+
 ### 2.1 Frontend
 
 ```bash
-cd /home/caritas/Desktop/online-beratung/caritas-workspace/ORISO-Frontend
+cd ~/workspace/ORISO-Frontend
 
 # Install dependencies
 npm install
@@ -79,7 +79,7 @@ sudo k3s ctr images ls | grep oriso-frontend
 ### 2.2 Admin Panel
 
 ```bash
-cd /home/caritas/Desktop/online-beratung/caritas-workspace/ORISO-Admin
+cd ~/workspace/ORISO-Admin
 
 # Install dependencies
 npm install
@@ -111,7 +111,7 @@ Backend services can be deployed in two modes:
 #### Option A: Pre-built JAR (Production - Recommended)
 
 ```bash
-cd /home/caritas/Desktop/online-beratung/caritas-workspace/ORISO-<ServiceName>
+cd ~/workspace/ORISO-<ServiceName>
 
 # Build JAR
 mvn clean package -DskipTests
@@ -186,7 +186,7 @@ ORISO Platform
 **IMPORTANT**: Deploy in this exact order to ensure dependencies are met.
 
 ```bash
-cd /home/caritas/Desktop/online-beratung/caritas-workspace/ORISO-Kubernetes
+cd ~/workspace/ORISO-Kubernetes
 
 # 1. Create namespace
 kubectl create namespace caritas
@@ -235,7 +235,7 @@ kubectl apply -f services/all-services.yaml
 ### 3.3 Automated Deployment
 
 ```bash
-cd /home/caritas/Desktop/online-beratung/caritas-workspace/ORISO-Kubernetes
+cd ~/workspace/ORISO-Kubernetes
 
 # Run master deployment script
 ./scripts/deploy-all.sh

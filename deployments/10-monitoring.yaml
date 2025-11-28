@@ -2,14 +2,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    deployment.kubernetes.io/revision: "1"
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"health-dashboard","namespace":"caritas"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"health-dashboard"}},"template":{"metadata":{"labels":{"app":"health-dashboard"}},"spec":{"containers":[{"env":[{"name":"PORT","value":"9100"}],"image":"health-dashboard:latest","imagePullPolicy":"Never","name":"health-dashboard","ports":[{"containerPort":9100}]}]}}}}
-  creationTimestamp: "2025-10-27T00:42:18Z"
+    deployment.kubernetes.io/revision: '1'
+    kubectl.kubernetes.io/last-applied-configuration: '{"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"health-dashboard","namespace":"caritas"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"health-dashboard"}},"template":{"metadata":{"labels":{"app":"health-dashboard"}},"spec":{"containers":[{"env":[{"name":"PORT","value":"9100"}],"image":"health-dashboard:latest","imagePullPolicy":"Never","name":"health-dashboard","ports":[{"containerPort":9100}]}]}}}}
+
+      '
+  creationTimestamp: '2025-10-27T00:42:18Z'
   generation: 1
   name: health-dashboard
   namespace: caritas
-  resourceVersion: "999157"
   uid: 47fd803c-283b-4d88-abae-efd328699e12
 spec:
   progressDeadlineSeconds: 600
@@ -32,7 +32,7 @@ spec:
       containers:
       - env:
         - name: PORT
-          value: "9100"
+          value: '9100'
         image: health-dashboard:latest
         imagePullPolicy: Never
         name: health-dashboard
@@ -47,22 +47,3 @@ spec:
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
-status:
-  availableReplicas: 1
-  conditions:
-  - lastTransitionTime: "2025-10-27T00:42:18Z"
-    lastUpdateTime: "2025-10-27T00:42:20Z"
-    message: ReplicaSet "health-dashboard-7566554f7d" has successfully progressed.
-    reason: NewReplicaSetAvailable
-    status: "True"
-    type: Progressing
-  - lastTransitionTime: "2025-10-31T19:44:53Z"
-    lastUpdateTime: "2025-10-31T19:44:53Z"
-    message: Deployment has minimum availability.
-    reason: MinimumReplicasAvailable
-    status: "True"
-    type: Available
-  observedGeneration: 1
-  readyReplicas: 1
-  replicas: 1
-  updatedReplicas: 1

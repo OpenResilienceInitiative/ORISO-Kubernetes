@@ -2,8 +2,8 @@
 
 ## 📊 Current Configuration
 
-**Last Updated**: 2025-10-31  
-**Version**: 1.0.0  
+**Last Updated**: 2025-11-28  
+**Version**: 3.0.0  
 **Namespace**: caritas  
 **Cluster**: k3s
 
@@ -99,7 +99,7 @@ ORISO-Kubernetes/
 
 ### Full Deployment
 ```bash
-cd /home/caritas/Desktop/online-beratung/caritas-workspace/ORISO-Kubernetes
+cd ~/workspace/ORISO-Kubernetes
 ./scripts/deploy-all.sh
 ```
 

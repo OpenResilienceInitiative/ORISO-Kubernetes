@@ -60,9 +60,9 @@ docker --version
 ### Step 1: Clone/Transfer ORISO Repositories
 
 ```bash
-# Create workspace
-mkdir -p ~/online-beratung/caritas-workspace
-cd ~/online-beratung/caritas-workspace
+# Create workspace (use your preferred location)
+mkdir -p ~/workspace
+cd ~/workspace
 
 # Transfer or clone all ORISO-* repositories here
 # You need:
@@ -88,7 +88,7 @@ kubectl create namespace caritas
 ### Step 3: Deploy Infrastructure
 
 ```bash
-cd ~/online-beratung/caritas-workspace/ORISO-Kubernetes
+cd ~/workspace/ORISO-Kubernetes
 
 # Deploy databases (MariaDB, MongoDB, RabbitMQ)
 kubectl apply -f deployments/01-infrastructure.yaml
@@ -104,7 +104,7 @@ kubectl wait --for=condition=ready pod -l app=mongodb -n caritas --timeout=300s
 ### Step 4: Setup Databases
 
 ```bash
-cd ~/online-beratung/caritas-workspace/ORISO-Database
+cd ~/workspace/ORISO-Database
 
 # Run master setup script
 ./scripts/setup/00-master-setup.sh
@@ -118,7 +118,7 @@ cd ~/online-beratung/caritas-workspace/ORISO-Database
 ### Step 5: Apply ConfigMaps and Secrets ⭐ **REQUIRED**
 
 ```bash
-cd ~/online-beratung/caritas-workspace/ORISO-Kubernetes
+cd ~/workspace/ORISO-Kubernetes
 
 # Apply all ConfigMaps and Secrets
 ./scripts/apply-configmaps-secrets.sh
@@ -171,7 +171,7 @@ docker save oriso-admin:latest | sudo k3s ctr images import -
 ### Step 7: Deploy Keycloak
 
 ```bash
-cd ~/online-beratung/caritas-workspace/ORISO-Kubernetes
+cd ~/workspace/ORISO-Kubernetes
 
 # Deploy Keycloak
 kubectl apply -f deployments/03-keycloak.yaml
@@ -191,7 +191,7 @@ kubectl exec -n caritas $KEYCLOAK_POD -- /opt/keycloak/bin/kc.sh import --file /
 ### Step 8: Deploy Backend Services
 
 ```bash
-cd ~/online-beratung/caritas-workspace/ORISO-Kubernetes
+cd ~/workspace/ORISO-Kubernetes
 
 # Deploy backend services (uses ConfigMaps/Secrets)
 kubectl apply -f deployments/04-backend-services-production.yaml
@@ -206,7 +206,7 @@ kubectl get pods -n caritas | grep -E "tenant|user|consulting|agency"
 ### Step 9: Deploy Frontend
 
 ```bash
-cd ~/online-beratung/caritas-workspace/ORISO-Kubernetes
+cd ~/workspace/ORISO-Kubernetes
 
 # Deploy frontend and admin
 kubectl apply -f deployments/05-frontend.yaml
@@ -218,7 +218,7 @@ kubectl wait --for=condition=ready pod -l tier=frontend -n caritas --timeout=300
 ### Step 10: Deploy Matrix Communication
 
 ```bash
-cd ~/online-beratung/caritas-workspace/ORISO-Kubernetes
+cd ~/workspace/ORISO-Kubernetes
 
 # Deploy Matrix Synapse
 kubectl apply -f deployments/06-matrix.yaml
@@ -230,7 +230,7 @@ kubectl wait --for=condition=ready pod -l app=matrix-synapse -n caritas --timeou
 ### Step 11: Deploy Nginx Proxy
 
 ```bash
-cd ~/online-beratung/caritas-workspace/ORISO-Kubernetes
+cd ~/workspace/ORISO-Kubernetes
 
 # Deploy Nginx ConfigMap
 kubectl apply -f configmaps/nginx-config.yaml
@@ -245,7 +245,7 @@ kubectl wait --for=condition=ready pod -l app=cob-proxy -n caritas --timeout=180
 ### Step 12: Deploy Services
 
 ```bash
-cd ~/online-beratung/caritas-workspace/ORISO-Kubernetes
+cd ~/workspace/ORISO-Kubernetes
 
 # Apply all Kubernetes services
 kubectl apply -f services/all-services.yaml

@@ -100,7 +100,7 @@ Before starting deployment, ensure:
 
 ```bash
 # Navigate to ORISO-Kubernetes
-cd /home/caritas/Desktop/online-beratung/caritas-workspace/ORISO-Kubernetes
+cd ~/workspace/ORISO-Kubernetes
 
 # Run master deployment script
 ./scripts/deploy-all.sh

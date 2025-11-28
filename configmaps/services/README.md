@@ -16,8 +16,9 @@ kubectl apply -f configmaps/services/userservice-config.yaml
 
 ## Important Notes
 
-1. **Use DNS Names**: All URLs use Kubernetes DNS names (e.g., `mariadb.caritas.svc.cluster.local:3306`)
+1. **Use Service Names**: All URLs use Kubernetes service names (e.g., `mariadb:3306`) since all services are in the same namespace
 2. **No IPs**: Never use hardcoded IP addresses
+3. **No Full DNS**: Short service names are cleaner and more portable
 3. **Namespace**: All ConfigMaps are created in the `caritas` namespace
 4. **Updates**: After updating a ConfigMap, restart the service: `kubectl rollout restart deployment/SERVICE_NAME -n caritas`
 

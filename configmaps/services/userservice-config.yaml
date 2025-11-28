@@ -4,38 +4,38 @@ metadata:
   name: userservice-config
   namespace: caritas
 data:
-  # Database Configuration - Use DNS names, NOT IPs
-  SPRING_DATASOURCE_URL: "jdbc:mariadb://mariadb.caritas.svc.cluster.local:3306/userservice"
+  # Database Configuration - Use service names (same namespace)
+  SPRING_DATASOURCE_URL: "jdbc:mariadb://mariadb:3306/userservice"
   
-  # Keycloak Configuration - Use DNS names
-  KEYCLOAK_AUTH_SERVER_URL: "http://keycloak.caritas.svc.cluster.local:8080"
+  # Keycloak Configuration - Use service names
+  KEYCLOAK_AUTH_SERVER_URL: "http://keycloak:8080"
   KEYCLOAK_REALM: "online-beratung"
-  IDENTITY_OPENID_CONNECT_URL: "http://keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect"
-  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: "http://keycloak.caritas.svc.cluster.local:8080/realms/online-beratung"
-  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: "http://keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect/certs"
+  IDENTITY_OPENID_CONNECT_URL: "http://keycloak:8080/realms/online-beratung/protocol/openid-connect"
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: "http://keycloak:8080/realms/online-beratung"
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: "http://keycloak:8080/realms/online-beratung/protocol/openid-connect/certs"
   
-  # Service URLs - Use DNS names
-  CONSULTING_TYPE_SERVICE_API_URL: "http://consultingtypeservice.caritas.svc.cluster.local:8083"
-  TENANT_SERVICE_API_URL: "http://tenantservice.caritas.svc.cluster.local:8081"
-  AGENCY_SERVICE_API_URL: "http://agencyservice.caritas.svc.cluster.local:8084"
+  # Service URLs - Use service names
+  CONSULTING_TYPE_SERVICE_API_URL: "http://consultingtypeservice:8083"
+  TENANT_SERVICE_API_URL: "http://tenantservice:8081"
+  AGENCY_SERVICE_API_URL: "http://agencyservice:8084"
   APPOINTMENT_SERVICE_API_URL: ""
   LIVE_SERVICE_API_URL: ""
   
-  # Rocket.Chat Configuration - Use DNS names
-  ROCKET_CHAT_BASE_URL: "http://rocketchat.caritas.svc.cluster.local:3000/api/v1"
-  ROCKET_CHAT_MONGO_URL: "mongodb://mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false"
+  # Rocket.Chat Configuration - Use service names
+  ROCKET_CHAT_BASE_URL: "http://rocketchat:3000/api/v1"
+  ROCKET_CHAT_MONGO_URL: "mongodb://mongodb:27017/rocketchat?retryWrites=false"
   
-  # Matrix Configuration - Use DNS names
-  MATRIX_API_URL: "http://matrix-synapse.caritas.svc.cluster.local:8008"
+  # Matrix Configuration - Use service names
+  MATRIX_API_URL: "http://matrix-synapse:8008"
   MATRIX_SERVER_NAME: "caritas.local"
   
-  # RabbitMQ Configuration - Use DNS names
-  SPRING_RABBITMQ_HOST: "rabbitmq.caritas.svc.cluster.local"
+  # RabbitMQ Configuration - Use service names
+  SPRING_RABBITMQ_HOST: "rabbitmq"
   SPRING_RABBITMQ_PORT: "5672"
   
-  # MongoDB Configuration - Use DNS names
-  SPRING_DATA_MONGODB_URI: "mongodb://mongodb.caritas.svc.cluster.local:27017/userservice"
+  # MongoDB Configuration - Use service names
+  SPRING_DATA_MONGODB_URI: "mongodb://mongodb:27017/userservice"
   
-  # CORS Configuration
-  REGISTRATION_CORS_ALLOWED_ORIGINS: "http://91.99.219.182:9001,https://app.oriso.site"
+  # CORS Configuration - Update with your domain/IP
+  REGISTRATION_CORS_ALLOWED_ORIGINS: "https://app.oriso.site,https://api.oriso.site"
 
