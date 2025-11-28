@@ -1,0 +1,92 @@
+# EXAMPLE: UserService Deployment using ConfigMaps and Secrets
+# This shows how to reference ConfigMaps and Secrets instead of hardcoded values
+# Apply this pattern to all service deployments
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userservice
+  namespace: caritas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userservice
+  template:
+    metadata:
+      labels:
+        app: userservice
+    spec:
+      containers:
+      - name: userservice
+        image: userservice:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8082
+        env:
+        # Reference ConfigMap for non-sensitive configuration
+        - name: SPRING_DATASOURCE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: userservice-config
+              key: SPRING_DATASOURCE_URL
+        - name: KEYCLOAK_AUTH_SERVER_URL
+          valueFrom:
+            configMapKeyRef:
+              name: userservice-config
+              key: KEYCLOAK_AUTH_SERVER_URL
+        - name: KEYCLOAK_REALM
+          valueFrom:
+            configMapKeyRef:
+              name: userservice-config
+              key: KEYCLOAK_REALM
+        - name: CONSULTING_TYPE_SERVICE_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: userservice-config
+              key: CONSULTING_TYPE_SERVICE_API_URL
+        - name: TENANT_SERVICE_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: userservice-config
+              key: TENANT_SERVICE_API_URL
+        - name: MATRIX_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: userservice-config
+              key: MATRIX_API_URL
+        # Reference Secret for sensitive data (passwords, tokens)
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: userservice-secrets
+              key: SPRING_DATASOURCE_USERNAME
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: userservice-secrets
+              key: SPRING_DATASOURCE_PASSWORD
+        - name: MATRIX_REGISTRATION_SHARED_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: userservice-secrets
+              key: MATRIX_REGISTRATION_SHARED_SECRET
+        # You can also load all keys from a ConfigMap/Secret at once:
+        # envFrom:
+        # - configMapRef:
+        #     name: userservice-config
+        # - secretRef:
+        #     name: userservice-secrets
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8082
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8082
+          initialDelaySeconds: 30
+          periodSeconds: 10
+

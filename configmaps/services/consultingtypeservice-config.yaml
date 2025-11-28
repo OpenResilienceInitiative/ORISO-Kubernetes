@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: consultingtypeservice-config
+  namespace: caritas
+data:
+  # Database Configuration - Use DNS names, NOT IPs
+  SPRING_DATASOURCE_URL: "jdbc:mariadb://mariadb.caritas.svc.cluster.local:3306/consultingtypeservice"
+  
+  # Keycloak Configuration - Use DNS names
+  KEYCLOAK_AUTH_SERVER_URL: "http://keycloak.caritas.svc.cluster.local:8080"
+  KEYCLOAK_REALM: "online-beratung"
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: "http://keycloak.caritas.svc.cluster.local:8080/realms/online-beratung"
+  
+  # MongoDB Configuration - Use DNS names
+  SPRING_DATA_MONGODB_URI: "mongodb://mongodb.caritas.svc.cluster.local:27017/consulting_types?retryWrites=false"
+  
+  # Service URLs - Use DNS names
+  TENANT_SERVICE_API_URL: "http://tenantservice.caritas.svc.cluster.local:8081"
+  
+  # App Base URL
+  APP_BASE_URL: "http://localhost:8083"
+
