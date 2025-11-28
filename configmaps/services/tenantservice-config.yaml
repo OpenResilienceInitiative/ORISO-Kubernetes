@@ -16,4 +16,7 @@ data:
   # Service URLs - Use service names
   CONSULTING_TYPE_SERVICE_API_URL: "http://consultingtypeservice:8083"
   USER_SERVICE_API_URL: "http://userservice:8082"
+  
+  # Liquibase - Explicitly disabled (database schemas managed separately in ORISO-Database)
+  SPRING_LIQUIBASE_ENABLED: "false"
 

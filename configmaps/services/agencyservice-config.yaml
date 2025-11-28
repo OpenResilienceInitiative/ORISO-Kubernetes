@@ -33,4 +33,7 @@ data:
   
   # Feature Flags
   FEATURE_TOPICS_ENABLED: "true"
+  
+  # Liquibase - Explicitly disabled (database schemas managed separately in ORISO-Database)
+  SPRING_LIQUIBASE_ENABLED: "false"
 
