@@ -30,4 +30,7 @@ data:
   # Rocket.Chat Configuration - Use service names
   ROCKET_CHAT_BASE_URL: "http://rocketchat:3000/api/v1"
   ROCKET_CHAT_MONGO_URL: "mongodb://mongodb:27017/rocketchat?retryWrites=false"
+  
+  # Feature Flags
+  FEATURE_TOPICS_ENABLED: "true"
 
