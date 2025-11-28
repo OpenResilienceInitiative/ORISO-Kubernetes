@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: uploadservice-config
+  namespace: caritas
+data:
+  # Database Configuration - Use service names (same namespace)
+  SPRING_DATASOURCE_URL: "jdbc:mariadb://mariadb:3306/uploadservice"
+  
+  # Keycloak Configuration - Use service names
+  KEYCLOAK_AUTH_SERVER_URL: "http://keycloak:8080"
+  KEYCLOAK_REALM: "online-beratung"
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: "http://keycloak:8080/realms/online-beratung"
+  
+  # Matrix Configuration - Use service names
+  MATRIX_API_URL: "http://matrix-synapse:8008"
+  MATRIX_SERVER_NAME: "caritas.local"
+  
+  # Service URLs - Use service names
+  USER_SERVICE_API_URL: "http://userservice:8082/users"
+  TENANT_SERVICE_API_URL: "http://tenantservice:8081"
+  
+  # MongoDB Configuration - Use service names
+  MONGODB_URI: "mongodb://mongodb:27017/rocketchat?retryWrites=false"
+

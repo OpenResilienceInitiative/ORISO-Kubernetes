@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: videoservice-config
+  namespace: caritas
+data:
+  # Database Configuration - Use service names (same namespace)
+  SPRING_DATASOURCE_URL: "jdbc:mariadb://mariadb:3306/videoservice"
+  
+  # Keycloak Configuration - Use service names
+  KEYCLOAK_AUTH_SERVER_URL: "http://keycloak:8080"
+  KEYCLOAK_REALM: "online-beratung"
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: "http://keycloak:8080/realms/online-beratung"
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: "http://keycloak:8080/realms/online-beratung/protocol/openid-connect/certs"
+

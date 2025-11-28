@@ -78,9 +78,15 @@ items:
         containers:
         - env:
           - name: RABBITMQ_DEFAULT_USER
-            value: admin
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq-secrets
+                key: RABBITMQ_DEFAULT_USER
           - name: RABBITMQ_DEFAULT_PASS
-            value: admin
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq-secrets
+                key: RABBITMQ_DEFAULT_PASS
           image: rabbitmq:3-management
           imagePullPolicy: IfNotPresent
           name: rabbitmq

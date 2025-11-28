@@ -40,11 +40,9 @@ items:
           livenessProbe:
             exec:
               command:
-              - redis-cli
-              - --no-auth-warning
-              - -a
-              - caritas123
-              - ping
+              - sh
+              - -c
+              - redis-cli --no-auth-warning -a $REDIS_PASSWORD ping
             failureThreshold: 3
             initialDelaySeconds: 30
             periodSeconds: 10
@@ -57,11 +55,9 @@ items:
           readinessProbe:
             exec:
               command:
-              - redis-cli
-              - --no-auth-warning
-              - -a
-              - caritas123
-              - ping
+              - sh
+              - -c
+              - redis-cli --no-auth-warning -a $REDIS_PASSWORD ping
             failureThreshold: 3
             initialDelaySeconds: 5
             periodSeconds: 5
@@ -121,12 +117,23 @@ items:
       spec:
         containers:
         - env:
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: redis-secret
+                key: password
           - name: REDIS_HOSTS
-            value: local:redis:6379:0:caritas123
+            value: local:redis:6379:0:$(REDIS_PASSWORD)
           - name: HTTP_USER
-            value: admin
+            valueFrom:
+              secretKeyRef:
+                name: redis-secret
+                key: HTTP_USER
           - name: HTTP_PASSWORD
-            value: caritas123
+            valueFrom:
+              secretKeyRef:
+                name: redis-secret
+                key: HTTP_PASSWORD
           image: rediscommander/redis-commander:latest
           imagePullPolicy: Always
           livenessProbe:
@@ -195,7 +202,10 @@ items:
           - name: REDIS_ADDR
             value: redis:6379
           - name: REDIS_PASSWORD
-            value: caritas123
+            valueFrom:
+              secretKeyRef:
+                name: redis-secret
+                key: password
           image: oliver006/redis_exporter:latest
           imagePullPolicy: Always
           name: redis-exporter

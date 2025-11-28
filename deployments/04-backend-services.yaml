@@ -293,21 +293,15 @@ spec:
         imagePullPolicy: Never
         ports:
         - containerPort: 8085
+        # Load all configuration from ConfigMaps and Secrets
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "prod"
-        - name: SPRING_DATASOURCE_URL
-          value: "jdbc:mariadb://mariadb.caritas.svc.cluster.local:3306/uploadservice"
-        - name: SPRING_DATASOURCE_USERNAME
-          value: "uploadservice"
-        - name: SPRING_DATASOURCE_PASSWORD
-          value: "uploadservice"
-        - name: KEYCLOAK_AUTH_SERVER_URL
-          value: "http://keycloak.caritas.svc.cluster.local:8080"
-        - name: KEYCLOAK_REALM
-          value: "online-beratung"
-        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
-          value: "http://keycloak.caritas.svc.cluster.local:8080/realms/online-beratung"
+        envFrom:
+        - configMapRef:
+            name: uploadservice-config
+        - secretRef:
+            name: uploadservice-secrets
         resources:
           requests:
             memory: "256Mi"
@@ -367,21 +361,15 @@ spec:
         imagePullPolicy: Never
         ports:
         - containerPort: 8086
+        # Load all configuration from ConfigMaps and Secrets
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "prod"
-        - name: SPRING_DATASOURCE_URL
-          value: "jdbc:mariadb://mariadb.caritas.svc.cluster.local:3306/videoservice"
-        - name: SPRING_DATASOURCE_USERNAME
-          value: "videoservice"
-        - name: SPRING_DATASOURCE_PASSWORD
-          value: "videoservice"
-        - name: KEYCLOAK_AUTH_SERVER_URL
-          value: "http://keycloak.caritas.svc.cluster.local:8080"
-        - name: KEYCLOAK_REALM
-          value: "online-beratung"
-        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
-          value: "http://keycloak.caritas.svc.cluster.local:8080/realms/online-beratung"
+        envFrom:
+        - configMapRef:
+            name: videoservice-config
+        - secretRef:
+            name: videoservice-secrets
         resources:
           requests:
             memory: "256Mi"
