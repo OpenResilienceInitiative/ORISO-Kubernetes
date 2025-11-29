@@ -22,6 +22,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # Frontend Services
           - repo: ORISO-Frontend
             path: ORISO-Frontend
             image: oriso-frontend
@@ -30,26 +31,46 @@ jobs:
             path: ORISO-Admin
             image: oriso-admin
             type: frontend
+          
+          # Java Services (Java 17)
           - repo: ORISO-TenantService
             path: ORISO-TenantService
             image: oriso-tenantservice
             type: java
-          - repo: ORISO-UserService
-            path: ORISO-UserService
-            image: oriso-userservice
-            type: java
-          - repo: ORISO-ConsultingTypeService
-            path: ORISO-ConsultingTypeService
-            image: oriso-consultingtypeservice
-            type: java
+            java-version: 17
+            jar-name: TenantService.jar
           - repo: ORISO-AgencyService
             path: ORISO-AgencyService
             image: oriso-agencyservice
             type: java
+            java-version: 17
+            jar-name: AgencyService.jar
+          
+          # Java Services (Java 11)
+          - repo: ORISO-UserService
+            path: ORISO-UserService
+            image: oriso-userservice
+            type: java
+            java-version: 11
+            jar-name: UserService.jar
+          - repo: ORISO-ConsultingTypeService
+            path: ORISO-ConsultingTypeService
+            image: oriso-consultingtypeservice
+            type: java
+            java-version: 11
+            jar-name: ConsultingTypeService.jar
+          
+          # Node.js Services
           - repo: ORISO-HealthDashboard
             path: ORISO-HealthDashboard
             image: oriso-healthdashboard
             type: node
+          - repo: ORISO-Status
+            path: ORISO-Status
+            image: oriso-status
+            type: node
+          
+          # Specialized Services
           - repo: ORISO-Nginx
             path: ORISO-Nginx
             image: oriso-nginx
@@ -61,6 +82,10 @@ jobs:
           - repo: ORISO-Redis
             path: ORISO-Redis
             image: oriso-redis
+            type: docker
+          - repo: ORISO-Livekit
+            path: ORISO-Livekit
+            image: oriso-livekit
             type: docker
 
     steps:
@@ -84,14 +109,28 @@ jobs:
           echo "✓ Dockerfile found"
 
       - name: Fix OpenJDK base image
+        if: matrix.type == 'java'
         working-directory: ${{ matrix.path }}
         run: |
-          # Replace deprecated openjdk:17-oracle with eclipse-temurin:17-jdk
+          # Replace deprecated base images with eclipse-temurin
+          # Java 17 replacements
           if grep -q "openjdk:17-oracle" Dockerfile; then
             echo "Replacing openjdk:17-oracle with eclipse-temurin:17-jdk"
             sed -i 's|FROM openjdk:17-oracle|FROM eclipse-temurin:17-jdk|g' Dockerfile
             echo "✓ Base image updated"
           fi
+          # Java 11 replacements
+          if grep -q "openjdk:11-oracle" Dockerfile; then
+            echo "Replacing openjdk:11-oracle with eclipse-temurin:11-jdk"
+            sed -i 's|FROM openjdk:11-oracle|FROM eclipse-temurin:11-jdk|g' Dockerfile
+            echo "✓ Base image updated"
+          fi
+          if grep -q "adoptopenjdk/openjdk11" Dockerfile; then
+            echo "Replacing adoptopenjdk/openjdk11 with eclipse-temurin:11-jdk"
+            sed -i 's|FROM adoptopenjdk/openjdk11|FROM eclipse-temurin:11-jdk|g' Dockerfile
+            echo "✓ Base image updated"
+          fi
+          # Note: eclipse-temurin:17-jre is already correct, no change needed
 
       - name: Setup Node.js
         if: matrix.type == 'frontend' || matrix.type == 'node'
@@ -119,22 +158,12 @@ jobs:
           npm ci --only=production
           echo "✓ Node.js dependencies installed"
 
-      - name: Determine Java version
-        if: matrix.type == 'java'
-        id: java-version
-        run: |
-          if [ "${{ matrix.repo }}" == "ORISO-UserService" ] || [ "${{ matrix.repo }}" == "ORISO-ConsultingTypeService" ]; then
-            echo "version=11" >> $GITHUB_OUTPUT
-          else
-            echo "version=17" >> $GITHUB_OUTPUT
-          fi
-
       - name: Set up Java and Maven
         if: matrix.type == 'java'
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: ${{ steps.java-version.outputs.version }}
+          java-version: ${{ matrix.java-version }}
           cache: maven
           cache-dependency-path: ${{ matrix.path }}/pom.xml
 
@@ -242,25 +271,10 @@ jobs:
           fi
           JAR_NAME=$(basename "$JAR_FILE")
           echo "Found JAR: $JAR_NAME"
-          # Determine expected JAR name based on service
-          case "${{ matrix.repo }}" in
-            ORISO-UserService)
-              EXPECTED_NAME="UserService.jar"
-              ;;
-            ORISO-TenantService)
-              EXPECTED_NAME="TenantService.jar"
-              ;;
-            ORISO-AgencyService)
-              EXPECTED_NAME="AgencyService.jar"
-              ;;
-            ORISO-ConsultingTypeService)
-              EXPECTED_NAME="ConsultingTypeService.jar"
-              ;;
-            *)
-              echo "Error: Unknown service ${{ matrix.repo }}"
-              exit 1
-              ;;
-          esac
+          
+          # Use the expected JAR name from matrix
+          EXPECTED_NAME="${{ matrix.jar-name }}"
+          
           # Copy JAR to root with expected name
           cp "$JAR_FILE" "$EXPECTED_NAME"
           echo "✓ JAR file copied as $EXPECTED_NAME"
@@ -314,3 +328,4 @@ jobs:
             echo "Please check the build logs for details." >> $GITHUB_STEP_SUMMARY
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
+
