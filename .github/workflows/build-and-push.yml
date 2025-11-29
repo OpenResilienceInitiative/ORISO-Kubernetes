@@ -154,7 +154,7 @@ jobs:
         with:
           node-version: 18
           cache: npm
-          cache-dependency-path: ${{ matrix.path }}/package-lock.json
+          cache-dependency-path: ${{ matrix.path }}${{ matrix.repo == 'ORISO-Status' && '/frontend/package-lock.json' || '/package-lock.json' }}
         continue-on-error: true
 
       - name: Build frontend
@@ -171,10 +171,18 @@ jobs:
         if: matrix.type == 'node'
         working-directory: ${{ matrix.path }}
         run: |
-          # For ORISO-Status, Dockerfile handles npm install internally
-          # For other Node.js services, check if package-lock.json exists
+          # For ORISO-Status, need to build frontend before Docker build
           if [ "${{ matrix.repo }}" == "ORISO-Status" ]; then
-            echo "ORISO-Status: Dockerfile handles npm install, skipping"
+            echo "ORISO-Status: Building frontend..."
+            cd frontend
+            if [ -f package-lock.json ]; then
+              npm ci
+            else
+              npm install
+            fi
+            npm run build
+            cd ..
+            echo "✓ Frontend built successfully"
             echo "✓ Ready for Docker build"
           elif [ -f package-lock.json ]; then
             echo "Found package-lock.json, using npm ci"
