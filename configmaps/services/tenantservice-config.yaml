@@ -17,6 +17,9 @@ data:
   CONSULTING_TYPE_SERVICE_API_URL: "http://consultingtypeservice:8083"
   USER_SERVICE_API_URL: "http://userservice:8082"
   
+  # Spring Profile - Use local profile (application-local.properties)
+  SPRING_PROFILES_ACTIVE: "local"
+  
   # Liquibase - Explicitly disabled (database schemas managed separately in ORISO-Database)
   SPRING_LIQUIBASE_ENABLED: "false"
 

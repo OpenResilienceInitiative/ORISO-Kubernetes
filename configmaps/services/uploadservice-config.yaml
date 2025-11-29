@@ -22,4 +22,10 @@ data:
   
   # MongoDB Configuration - Use service names
   MONGODB_URI: "mongodb://mongodb:27017/rocketchat?retryWrites=false"
+  
+  # Spring Profile - Use local profile (application-local.properties)
+  SPRING_PROFILES_ACTIVE: "local"
+  
+  # Liquibase - Explicitly disabled (database schemas managed separately in ORISO-Database)
+  SPRING_LIQUIBASE_ENABLED: "false"
 

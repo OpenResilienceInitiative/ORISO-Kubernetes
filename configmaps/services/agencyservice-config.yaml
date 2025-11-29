@@ -34,6 +34,9 @@ data:
   # Feature Flags
   FEATURE_TOPICS_ENABLED: "true"
   
+  # Spring Profile - Use local profile (application-local.properties)
+  SPRING_PROFILES_ACTIVE: "local"
+  
   # Liquibase - Explicitly disabled (database schemas managed separately in ORISO-Database)
   SPRING_LIQUIBASE_ENABLED: "false"
 

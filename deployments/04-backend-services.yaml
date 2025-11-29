@@ -294,9 +294,6 @@ spec:
         ports:
         - containerPort: 8085
         # Load all configuration from ConfigMaps and Secrets
-        env:
-        - name: SPRING_PROFILES_ACTIVE
-          value: "prod"
         envFrom:
         - configMapRef:
             name: uploadservice-config
@@ -362,9 +359,6 @@ spec:
         ports:
         - containerPort: 8086
         # Load all configuration from ConfigMaps and Secrets
-        env:
-        - name: SPRING_PROFILES_ACTIVE
-          value: "prod"
         envFrom:
         - configMapRef:
             name: videoservice-config

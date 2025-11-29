@@ -21,6 +21,9 @@ data:
   # App Base URL
   APP_BASE_URL: "http://localhost:8083"
   
+  # Spring Profile - Use local profile (application-local.properties)
+  SPRING_PROFILES_ACTIVE: "local"
+  
   # Liquibase - Explicitly disabled (database schemas managed separately in ORISO-Database)
   SPRING_LIQUIBASE_ENABLED: "false"
 

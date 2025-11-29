@@ -12,4 +12,10 @@ data:
   KEYCLOAK_REALM: "online-beratung"
   SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: "http://keycloak:8080/realms/online-beratung"
   SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: "http://keycloak:8080/realms/online-beratung/protocol/openid-connect/certs"
+  
+  # Spring Profile - Use local profile (application-local.properties)
+  SPRING_PROFILES_ACTIVE: "local"
+  
+  # Liquibase - Explicitly disabled (database schemas managed separately in ORISO-Database)
+  SPRING_LIQUIBASE_ENABLED: "false"
 
