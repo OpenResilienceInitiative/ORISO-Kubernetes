@@ -1,0 +1,153 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: matrix-backup-cronjob-github
+  namespace: caritas
+spec:
+  schedule: "0 2 * * *"
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 3
+  suspend: false
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: matrix-backup
+              image: postgres:15-alpine
+              imagePullPolicy: IfNotPresent
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  echo "=========================================="
+                  echo "Matrix PostgreSQL Backup with GitHub Push"
+                  echo "Started at: $(date)"
+                  echo "=========================================="
+
+                  # Install dependencies
+                  apk add --no-cache git curl bash
+
+                  # Database connection details
+                  export PGHOST="matrix-postgres-service"
+                  export PGPORT="5432"
+                  export PGUSER="synapse"
+                  export PGPASSWORD="synapse_secure_password_2025"
+                  export PGDATABASE="synapse"
+
+                  # Create backup
+                  echo "💾 Creating database backup..."
+                  pg_dump --format=plain --no-owner --no-acl --encoding=UTF8 --compress=0 ${PGDATABASE} | gzip -9 > /tmp/matrix-backup.sql.gz
+
+                  BACKUP_SIZE=$(du -h /tmp/matrix-backup.sql.gz | cut -f1)
+                  echo "✅ Backup created: ${BACKUP_SIZE}"
+
+                  # Generate checksum
+                  cd /tmp
+                  sha256sum matrix-backup.sql.gz > matrix-backup.sql.gz.sha256
+
+                  # Get database stats
+                  DB_SIZE=$(psql -t -c "SELECT pg_size_pretty(pg_database_size('${PGDATABASE}'));")
+                  TABLE_COUNT=$(psql -t -c "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public';")
+
+                  # Setup git repo
+                  echo "📦 Preparing GitHub push..."
+                  mkdir -p /tmp/repo && cd /tmp/repo
+                  git init
+                  git config user.name "Caritas Backup Bot"
+                  git config user.email "backup@caritas.local"
+
+                  # Copy backup files
+                  mkdir -p matrix-backups
+                  BACKUP_NAME="matrix-synapse-backup-$(date +%Y%m%d-%H%M).sql.gz"
+                  cp /tmp/matrix-backup.sql.gz "matrix-backups/${BACKUP_NAME}"
+                  cp /tmp/matrix-backup.sql.gz.sha256 "matrix-backups/${BACKUP_NAME}.sha256"
+
+                  # Create README
+                  cat > matrix-backups/README.md << EOF
+                  # Matrix Synapse Database Backup
+
+                  **Backup Date**: $(date)
+                  **Database**: synapse (PostgreSQL 15)
+                  **Backup Size**: ${BACKUP_SIZE}
+                  **Database Size**: ${DB_SIZE}
+                  **Tables**: ${TABLE_COUNT}
+
+                  ## Latest Backup
+                  - File: ${BACKUP_NAME}
+                  - Checksum: $(cat matrix-backups/${BACKUP_NAME}.sha256)
+
+                  ## Backup Information
+                  - **Format**: PostgreSQL SQL dump (compressed with gzip)
+                  - **Compression**: Level 9
+                  - **Retention**: Managed by repository
+                  - **Automated**: Daily at 02:00 UTC
+
+                  ## Restore Instructions
+                  \`\`\`bash
+                  # Download backup
+                  # Extract and restore
+                  gunzip -c ${BACKUP_NAME} | psql -U synapse -d synapse
+                  \`\`\`
+
+                  ---
+                  *Automated backup from Caritas Matrix infrastructure*
+                  EOF
+
+                  # Commit and push
+                  git add .
+                  git commit -m "Matrix backup: $(date +%Y-%m-%d_%H:%M:%S) - ${BACKUP_SIZE}"
+
+                  # Push to GitHub (using the same token as MariaDB)
+                  git remote add origin https://YOUR_GITHUB_TOKEN@github.com/ALI-RUBASS/caritas-matrix-backups.git 2>/dev/null || true
+                  git branch -M main
+                  git push origin main --force
+
+                  echo ""
+                  echo "=========================================="
+                  echo "✅ Backup completed and pushed to GitHub!"
+                  echo "Repository: ALI-RUBASS/caritas-matrix-backups"
+                  echo "Backup file: ${BACKUP_NAME}"
+                  echo "Backup size: ${BACKUP_SIZE}"
+                  echo "Finished at: $(date)"
+                  echo "=========================================="
+          restartPolicy: OnFailure
+
+---
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: matrix-keycloak-sync
+  namespace: caritas
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Allow
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 3
+  suspend: false
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: sync
+              image: bitnami/kubectl:latest
+              imagePullPolicy: Always
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  apk add --no-cache curl sqlite
+                  /scripts/sync.sh
+              volumeMounts:
+                - mountPath: /scripts
+                  name: sync-script
+          restartPolicy: OnFailure
+          serviceAccountName: default
+          volumes:
+            - name: sync-script
+              configMap:
+                name: matrix-keycloak-sync-script
+                defaultMode: 493

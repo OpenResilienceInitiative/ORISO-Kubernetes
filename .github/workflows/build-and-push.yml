@@ -1,0 +1,386 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  ORG: openresilienceinitiative
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Frontend Services
+          - repo: ORISO-Frontend
+            path: ORISO-Frontend
+            image: oriso-frontend
+            type: frontend
+          - repo: ORISO-Admin
+            path: ORISO-Admin
+            image: oriso-admin
+            type: frontend
+          
+          # Java Services (Java 17)
+          - repo: ORISO-TenantService
+            path: ORISO-TenantService
+            image: oriso-tenantservice
+            type: java
+            java-version: 17
+            jar-name: TenantService.jar
+          - repo: ORISO-AgencyService
+            path: ORISO-AgencyService
+            image: oriso-agencyservice
+            type: java
+            java-version: 17
+            jar-name: AgencyService.jar
+          
+          # Java Services (Java 11)
+          - repo: ORISO-UserService
+            path: ORISO-UserService
+            image: oriso-userservice
+            type: java
+            java-version: 11
+            jar-name: UserService.jar
+          - repo: ORISO-ConsultingTypeService
+            path: ORISO-ConsultingTypeService
+            image: oriso-consultingtypeservice
+            type: java
+            java-version: 11
+            jar-name: ConsultingTypeService.jar
+          
+          # Node.js Services
+          - repo: ORISO-HealthDashboard
+            path: ORISO-HealthDashboard
+            image: oriso-healthdashboard
+            type: node
+          - repo: ORISO-Status
+            path: ORISO-Status
+            image: oriso-status
+            type: node
+          
+          # Specialized Services
+          - repo: ORISO-Nginx
+            path: ORISO-Nginx
+            image: oriso-nginx
+            type: nginx
+          - repo: ORISO-Matrix
+            path: ORISO-Matrix
+            image: oriso-matrix
+            type: docker
+          - repo: ORISO-Redis
+            path: ORISO-Redis
+            image: oriso-redis
+            type: docker
+          - repo: ORISO-Livekit
+            path: ORISO-Livekit
+            image: oriso-livekit
+            type: docker
+
+    steps:
+      - name: Checkout workflow repository
+        uses: actions/checkout@v4
+
+      - name: Checkout target repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ format('{0}/{1}', github.repository_owner, matrix.repo) }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ matrix.path }}
+
+      - name: Check if Dockerfile exists
+        working-directory: ${{ matrix.path }}
+        run: |
+          # Check for Dockerfile in root or common subdirectories
+          if [ -f Dockerfile ]; then
+            echo "✓ Dockerfile found in root"
+          elif [ -f token-service/Dockerfile ] && [ "${{ matrix.repo }}" == "ORISO-Livekit" ]; then
+            echo "✓ Dockerfile found in token-service/ subdirectory"
+            # Update path for Livekit
+            echo "DOCKERFILE_PATH=token-service" >> $GITHUB_ENV
+          else
+            echo "Error: Dockerfile not found in ${{ matrix.path }}"
+            echo "Searched locations:"
+            echo "  - ./Dockerfile"
+            if [ "${{ matrix.repo }}" == "ORISO-Livekit" ]; then
+              echo "  - ./token-service/Dockerfile"
+            fi
+            exit 1
+          fi
+
+      - name: Fix OpenJDK base image
+        if: matrix.type == 'java'
+        working-directory: ${{ matrix.path }}
+        run: |
+          # Determine Dockerfile path
+          DOCKERFILE="Dockerfile"
+          if [ -n "$DOCKERFILE_PATH" ]; then
+            DOCKERFILE="$DOCKERFILE_PATH/Dockerfile"
+          fi
+          # Replace deprecated base images with eclipse-temurin
+          # Java 17 replacements
+          if grep -q "openjdk:17-oracle" "$DOCKERFILE"; then
+            echo "Replacing openjdk:17-oracle with eclipse-temurin:17-jdk"
+            sed -i 's|FROM openjdk:17-oracle|FROM eclipse-temurin:17-jdk|g' "$DOCKERFILE"
+            echo "✓ Base image updated"
+          fi
+          # Java 11 replacements
+          if grep -q "openjdk:11-oracle" "$DOCKERFILE"; then
+            echo "Replacing openjdk:11-oracle with eclipse-temurin:11-jdk"
+            sed -i 's|FROM openjdk:11-oracle|FROM eclipse-temurin:11-jdk|g' "$DOCKERFILE"
+            echo "✓ Base image updated"
+          fi
+          if grep -q "adoptopenjdk/openjdk11" "$DOCKERFILE"; then
+            echo "Replacing adoptopenjdk/openjdk11 with eclipse-temurin:11-jdk"
+            sed -i 's|FROM adoptopenjdk/openjdk11|FROM eclipse-temurin:11-jdk|g' "$DOCKERFILE"
+            echo "✓ Base image updated"
+          fi
+          # Note: eclipse-temurin:17-jre is already correct, no change needed
+
+      - name: Setup Node.js
+        if: matrix.type == 'frontend' || matrix.type == 'node'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+          cache-dependency-path: ${{ matrix.path }}${{ matrix.repo == 'ORISO-Status' && '/frontend/package-lock.json' || '/package-lock.json' }}
+        continue-on-error: true
+
+      - name: Build frontend
+        if: matrix.type == 'frontend'
+        working-directory: ${{ matrix.path }}
+        env:
+          CI: false
+          SKIP_TESTS: true
+        run: |
+          npm ci --legacy-peer-deps
+          npm run build
+
+      - name: Build Node.js service
+        if: matrix.type == 'node'
+        working-directory: ${{ matrix.path }}
+        run: |
+          # For ORISO-Status, need to build frontend before Docker build
+          if [ "${{ matrix.repo }}" == "ORISO-Status" ]; then
+            echo "ORISO-Status: Building frontend..."
+            cd frontend
+            if [ -f package-lock.json ]; then
+              npm ci
+            else
+              npm install
+            fi
+            npm run build
+            cd ..
+            echo "✓ Frontend built successfully"
+            echo "✓ Ready for Docker build"
+          elif [ -f package-lock.json ]; then
+            echo "Found package-lock.json, using npm ci"
+            npm ci --omit=dev
+            echo "✓ Node.js dependencies installed"
+          else
+            echo "No package-lock.json found, using npm install"
+            npm install --omit=dev
+            echo "✓ Node.js dependencies installed"
+          fi
+
+      - name: Set up Java and Maven
+        if: matrix.type == 'java'
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java-version }}
+          cache: maven
+          cache-dependency-path: ${{ matrix.path }}/pom.xml
+
+      - name: Setup Maven wrapper
+        if: matrix.type == 'java'
+        working-directory: ${{ matrix.path }}
+        run: |
+          if [ -f "./mvnw" ]; then
+            mkdir -p .mvn/wrapper
+            
+            # Create properties file if missing
+            if [ ! -f ".mvn/wrapper/maven-wrapper.properties" ]; then
+              echo "Maven wrapper properties file missing, creating..."
+              echo "distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.5/apache-maven-3.9.5-bin.zip" > .mvn/wrapper/maven-wrapper.properties
+              echo "wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.2.0/maven-wrapper-3.2.0.jar" >> .mvn/wrapper/maven-wrapper.properties
+              echo "wrapperVersion=3.2.0" >> .mvn/wrapper/maven-wrapper.properties
+              echo "✓ Maven wrapper properties file created"
+            fi
+            
+            # Ensure Maven wrapper JAR exists
+            if [ ! -f ".mvn/wrapper/maven-wrapper.jar" ]; then
+              echo "Maven wrapper JAR missing, downloading..."
+              
+              # Get version and URL from properties file
+              WRAPPER_URL=$(grep -E "^wrapperUrl=" .mvn/wrapper/maven-wrapper.properties | cut -d'=' -f2 | tr -d '\r\n' || echo "")
+              MVNW_VERSION=$(grep -E "^wrapperVersion=" .mvn/wrapper/maven-wrapper.properties | cut -d'=' -f2 | tr -d '\r\n' || echo "")
+              
+              # If no URL in properties, construct it based on version
+              if [ -z "$WRAPPER_URL" ]; then
+                if [ -z "$MVNW_VERSION" ]; then
+                  MVNW_VERSION="3.2.0"
+                fi
+                # Try new format first (org.apache.maven), then old format (io.takari)
+                if [ "$(echo "$MVNW_VERSION" | cut -d'.' -f1)" -ge "3" ] 2>/dev/null; then
+                  WRAPPER_URL="https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/$MVNW_VERSION/maven-wrapper-$MVNW_VERSION.jar"
+                else
+                  WRAPPER_URL="https://repo.maven.apache.org/maven2/io/takari/maven-wrapper/$MVNW_VERSION/maven-wrapper-$MVNW_VERSION.jar"
+                fi
+              fi
+              
+              echo "Downloading Maven wrapper from: $WRAPPER_URL"
+              # Download wrapper JAR
+              if command -v curl > /dev/null; then
+                curl -L -f -o .mvn/wrapper/maven-wrapper.jar "$WRAPPER_URL" || {
+                  echo "Failed with curl, trying alternative URL..."
+                  # Try alternative format
+                  if [[ "$WRAPPER_URL" == *"org/apache/maven"* ]]; then
+                    ALT_URL="https://repo.maven.apache.org/maven2/io/takari/maven-wrapper/0.4.2/maven-wrapper-0.4.2.jar"
+                  else
+                    ALT_URL="https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.2.0/maven-wrapper-3.2.0.jar"
+                  fi
+                  curl -L -f -o .mvn/wrapper/maven-wrapper.jar "$ALT_URL"
+                }
+              elif command -v wget > /dev/null; then
+                wget -O .mvn/wrapper/maven-wrapper.jar "$WRAPPER_URL" || {
+                  echo "Failed with wget, trying alternative URL..."
+                  if [[ "$WRAPPER_URL" == *"org/apache/maven"* ]]; then
+                    ALT_URL="https://repo.maven.apache.org/maven2/io/takari/maven-wrapper/0.4.2/maven-wrapper-0.4.2.jar"
+                  else
+                    ALT_URL="https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.2.0/maven-wrapper-3.2.0.jar"
+                  fi
+                  wget -O .mvn/wrapper/maven-wrapper.jar "$ALT_URL"
+                }
+              else
+                echo "Error: Neither curl nor wget available"
+                exit 1
+              fi
+              
+              if [ ! -f ".mvn/wrapper/maven-wrapper.jar" ]; then
+                echo "Error: Failed to download Maven wrapper JAR"
+                exit 1
+              fi
+              echo "✓ Maven wrapper JAR downloaded"
+            else
+              echo "✓ Maven wrapper JAR already exists"
+            fi
+          fi
+
+      - name: Build Java service
+        if: matrix.type == 'java'
+        working-directory: ${{ matrix.path }}
+        run: |
+          if [ -f "./mvnw" ]; then
+            chmod +x ./mvnw
+            # Override surefire plugin configuration to skip all tests
+            # Using -Dmaven.test.skip=true skips test compilation and execution
+            # Also override surefire plugin skipTests property directly
+            # Skip code quality checks during CI builds (Spotless, Checkstyle)
+            ./mvnw clean package \
+              -Dmaven.test.skip=true \
+              -Dsurefire.skipTests=true \
+              -DskipTests=true \
+              -Dspotless.check.skip=true \
+              -Dcheckstyle.skip=true \
+              -Dmaven.checkstyle.skip=true
+          else
+            echo "Error: mvnw not found, cannot build"
+            exit 1
+          fi
+          echo "✓ JAR file built successfully"
+
+      - name: Verify and prepare JAR file
+        if: matrix.type == 'java'
+        working-directory: ${{ matrix.path }}
+        run: |
+          # Find the main JAR file (exclude sources and javadoc)
+          JAR_FILE=$(find target -name "*.jar" ! -name "*-sources.jar" ! -name "*-javadoc.jar" | head -n 1)
+          if [ -z "$JAR_FILE" ]; then
+            echo "Error: JAR file not found in target directory"
+            ls -la target/ || true
+            exit 1
+          fi
+          JAR_NAME=$(basename "$JAR_FILE")
+          echo "Found JAR: $JAR_NAME"
+          
+          # Use the expected JAR name from matrix
+          EXPECTED_NAME="${{ matrix.jar-name }}"
+          
+          # Copy JAR to root with expected name
+          cp "$JAR_FILE" "$EXPECTED_NAME"
+          echo "✓ JAR file copied as $EXPECTED_NAME"
+          ls -lh "$EXPECTED_NAME"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set Docker build context and file
+        id: docker-config
+        run: |
+          if [ -n "$DOCKERFILE_PATH" ]; then
+            echo "context=${{ matrix.path }}/$DOCKERFILE_PATH" >> $GITHUB_OUTPUT
+            echo "file=${{ matrix.path }}/$DOCKERFILE_PATH/Dockerfile" >> $GITHUB_OUTPUT
+          else
+            echo "context=${{ matrix.path }}" >> $GITHUB_OUTPUT
+            echo "file=${{ matrix.path }}/Dockerfile" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.ORG }}/${{ matrix.image }}
+          tags: |
+            type=sha
+            type=ref,event=branch
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
+
+      - name: Build and push Docker image
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ steps.docker-config.outputs.context }}
+          file: ${{ steps.docker-config.outputs.file }}
+          push: ${{ github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build summary
+        if: always()
+        run: |
+          echo "### Build Summary for ${{ matrix.repo }}" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.build.outcome }}" == "success" ]; then
+            echo "✅ **Status:** Success" >> $GITHUB_STEP_SUMMARY
+            echo "📦 **Image:** \`${{ env.REGISTRY }}/${{ env.ORG }}/${{ matrix.image }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "🏷️ **Tags:**" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "${{ steps.meta.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Status:** Failed" >> $GITHUB_STEP_SUMMARY
+            echo "Please check the build logs for details." >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+

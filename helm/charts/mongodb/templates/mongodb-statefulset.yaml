@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: 
+  name: mongodb
+spec:
+  serviceName: mongodb
+  replicas: 1
+  selector:
+    matchLabels:
+     app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      initContainers:
+        - name: add-keyfile
+          image: {{ .Values.imageName }}:{{ .Values.imageVersion }}
+          command: ["bash", "-c"]
+          args:
+            - >
+              cp /data/replica.key.tmp /data/key/replica.key &&
+              chmod 400 /data/key/replica.key &&
+              chown mongodb:mongodb /data/key/replica.key
+          volumeMounts:
+            - mountPath: /data/replica.key.tmp
+              subPath: replica.key.tmp
+              name: replica-key
+            - mountPath: /data/key
+              name: mongodb-data
+      containers:
+        - name: mongodb
+          image: {{ .Values.imageName }}:{{ .Values.imageVersion }}
+          args:
+          - --bind_ip_all
+          - --oplogSize
+          - "128"
+          - --replSet
+          - rs0
+          - --keyFile
+          - /data/key/replica.key
+          {{- if .Values.global.initializeDummyData }}
+          readinessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - -c
+                - >
+                  if [[ ! -f /data/db/mongo-database-initialized.lock ]]; then
+                    mongosh --eval "rs.initiate({_id: 'rs0', members: [{ _id: 0, host: 'mongodb-0.mongodb.{{ .Release.Namespace }}.svc.cluster.local:27017' }]});"
+                    mongosh --eval "db = db.getSiblingDB('admin'); db.createUser({ user: '$MONGODB_USERNAME', pwd: '$MONGODB_PASSWORD', roles: [{ role: 'root', db: 'admin' }]});"
+                    touch /data/db/mongo-database-initialized.lock
+                  fi;
+            timeoutSeconds: 30
+            initialDelaySeconds: 60
+          {{- end }}
+          env:
+            - name: MONGODB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: MONGO_INITDB_ROOT_USERNAME
+                  name: mongodb-secret
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MONGO_INITDB_ROOT_PASSWORD
+                  name: mongodb-secret
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongodb-data
+            - mountPath: /data/key
+              name: mongodb-data
+      volumes:
+        - name: replica-key
+          secret:
+            secretName: mongodb-secret-replica
+  volumeClaimTemplates:
+    - metadata:
+        name: mongodb-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 8Gi

@@ -1,0 +1,14 @@
+# TenantService Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: tenantservice
+spec:
+  ports:
+  - port: 8081
+    targetPort: 8081
+  selector:
+    app: tenantservice
+  type: ClusterIP
+
+---

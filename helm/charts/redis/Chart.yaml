@@ -1,0 +1,6 @@
+name: online-counseling-redis
+description: The chart providing redis
+version: 0.0.1
+apiVersion: v1
+keywords:
+ - online-counseling-redis

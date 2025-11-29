@@ -1,0 +1,75 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontend-root
+  namespace: {{ .Release.Namespace }}
+  annotations:
+  {{- if .Values.global.multitenancyEnabled }}
+    nginx.ingress.kubernetes.io/rewrite-target: /error.400.html
+  {{- end }}
+    cert-manager.io/cluster-issuer: letsencrypt-production
+spec:
+  ingressClassName: nginx
+{{- if .Values.global.enableTls }}
+  tls:
+    - hosts:
+        - {{ .Values.global.domainName }}
+      secretName: {{ .Values.global.domainName }}
+{{- end }}
+  rules:
+    - host: {{ .Values.global.domainName }}
+      http:
+        paths:
+          - backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontend-error
+  namespace: {{ .Release.Namespace }}
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {{ .Values.global.domainName }}
+      http:
+        paths:
+          - backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
+            path: /(error.400.html|static|public)
+            pathType: Prefix
+{{- if .Values.global.multitenancyEnabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontend-wildcard
+  namespace: {{ .Release.Namespace }}
+spec:
+  ingressClassName: nginx
+{{- if .Values.global.enableTls }}
+  tls:
+    - hosts:
+        - "*.{{ .Values.global.domainName }}"
+      secretName: "onlineberatung-{{ .Release.Namespace }}-wildcard-tls"
+{{- end }}
+  rules:
+    - host: "*.{{ .Values.global.domainName }}"
+      http:
+        paths:
+          - backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix
+{{- end }}

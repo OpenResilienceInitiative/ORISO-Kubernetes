@@ -1,0 +1,372 @@
+apiVersion: v1
+data:
+  backup.sh: "#!/bin/bash\nset -e\n\necho \"==========================================\"\necho
+    \"Matrix PostgreSQL Backup Script\"\necho \"Started at: $(date)\"\necho \"==========================================\"\n\n#
+    Configuration\nBACKUP_DIR=\"/backup/matrix\"\nWAL_ARCHIVE_DIR=\"/backup/wal_archive\"\nTIMESTAMP=$(date
+    +%Y%m%d_%H%M%S)\nBACKUP_FILE=\"matrix_synapse_${TIMESTAMP}.sql.gz\"\nRETENTION_DAYS=30\n\n#
+    Database credentials\nexport PGHOST=\"matrix-postgres-service\"\nexport PGPORT=\"5432\"\nexport
+    PGUSER=\"${POSTGRES_USER}\"\nexport PGPASSWORD=\"${POSTGRES_PASSWORD}\"\nexport
+    PGDATABASE=\"${POSTGRES_DB}\"\n\n# Create backup directories\nmkdir -p \"${BACKUP_DIR}\"\nmkdir
+    -p \"${WAL_ARCHIVE_DIR}\"\n\necho \"\"\necho \"\U0001F4CA Database Information:\"\npsql
+    -c \"SELECT version();\" | head -3\npsql -c \"SELECT pg_size_pretty(pg_database_size('${PGDATABASE}'))
+    as db_size;\"\n\necho \"\"\necho \"\U0001F4BE Creating backup: ${BACKUP_FILE}\"\n\n#
+    Create backup with pg_dump\npg_dump --verbose \\\n        --format=plain \\\n
+    \       --no-owner \\\n        --no-acl \\\n        --encoding=UTF8 \\\n        --compress=0
+    \\\n        \"${PGDATABASE}\" | gzip -9 > \"${BACKUP_DIR}/${BACKUP_FILE}\"\n\n#
+    Verify backup was created\nif [ ! -f \"${BACKUP_DIR}/${BACKUP_FILE}\" ]; then\n
+    \   echo \"❌ ERROR: Backup file was not created!\"\n    exit 1\nfi\n\nBACKUP_SIZE=$(du
+    -h \"${BACKUP_DIR}/${BACKUP_FILE}\" | cut -f1)\necho \"✅ Backup created successfully:
+    ${BACKUP_SIZE}\"\n\n# Generate checksum\necho \"\"\necho \"\U0001F510 Generating
+    checksum...\"\ncd \"${BACKUP_DIR}\"\nsha256sum \"${BACKUP_FILE}\" > \"${BACKUP_FILE}.sha256\"\ncat
+    \"${BACKUP_FILE}.sha256\"\n\n# Create backup metadata\ncat > \"${BACKUP_DIR}/${BACKUP_FILE}.metadata\"
+    << EOF\n{\n  \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\n  \"database\":
+    \"${PGDATABASE}\",\n  \"size\": \"$(stat -f%z \"${BACKUP_DIR}/${BACKUP_FILE}\"
+    2>/dev/null || stat -c%s \"${BACKUP_DIR}/${BACKUP_FILE}\")\",\n  \"compressed\":
+    true,\n  \"format\": \"sql.gz\",\n  \"checksum\": \"$(cat ${BACKUP_FILE}.sha256
+    | cut -d' ' -f1)\"\n}\nEOF\n\necho \"\"\necho \"\U0001F4CB Backup Details:\"\ncat
+    \"${BACKUP_DIR}/${BACKUP_FILE}.metadata\"\n\n# WAL Archive status\necho \"\"\necho
+    \"\U0001F4DA WAL Archive Status:\"\nWAL_COUNT=$(find \"${WAL_ARCHIVE_DIR}\" -type
+    f 2>/dev/null | wc -l)\nWAL_SIZE=$(du -sh \"${WAL_ARCHIVE_DIR}\" 2>/dev/null |
+    cut -f1)\necho \"WAL Files: ${WAL_COUNT}\"\necho \"WAL Archive Size: ${WAL_SIZE}\"\n\n#
+    Cleanup old backups\necho \"\"\necho \"\U0001F9F9 Cleaning up old backups (older
+    than ${RETENTION_DAYS} days)...\"\nfind \"${BACKUP_DIR}\" -name \"matrix_synapse_*.sql.gz\"
+    -type f -mtime +${RETENTION_DAYS} -delete\nfind \"${BACKUP_DIR}\" -name \"matrix_synapse_*.sha256\"
+    -type f -mtime +${RETENTION_DAYS} -delete\nfind \"${BACKUP_DIR}\" -name \"matrix_synapse_*.metadata\"
+    -type f -mtime +${RETENTION_DAYS} -delete\n\n# Cleanup old WAL files (older than
+    7 days)\necho \"\U0001F9F9 Cleaning up old WAL files (older than 7 days)...\"\nfind
+    \"${WAL_ARCHIVE_DIR}\" -type f -mtime +7 -delete\n\n# List recent backups\necho
+    \"\"\necho \"\U0001F4E6 Recent Backups:\"\nls -lh \"${BACKUP_DIR}\"/*.sql.gz 2>/dev/null
+    | tail -5 || echo \"No backups found\"\n\necho \"\"\necho \"==========================================\"\necho
+    \"✅ Backup completed successfully!\"\necho \"Finished at: $(date)\"\necho \"==========================================\"\n"
+  github-sync.sh: "#!/bin/bash\nset -e\n\necho \"==========================================\"\necho
+    \"GitHub Backup Sync Script\"\necho \"Started at: $(date)\"\necho \"==========================================\"\n\nBACKUP_DIR=\"/backup/matrix\"\nGITHUB_REPO=\"${GITHUB_REPO}\"\nGITHUB_TOKEN=\"${GITHUB_TOKEN}\"\nGITHUB_BRANCH=\"main\"\n\n#
+    Clone or update repository\nif [ -d \"/tmp/backup-repo/.git\" ]; then\n    echo
+    \"\U0001F4E5 Updating existing repository...\"\n    cd /tmp/backup-repo\n    git
+    pull origin ${GITHUB_BRANCH}\nelse\n    echo \"\U0001F4E5 Cloning repository...\"\n
+    \   git clone https://${GITHUB_TOKEN}@github.com/${GITHUB_REPO}.git /tmp/backup-repo\n
+    \   cd /tmp/backup-repo\nfi\n\n# Create matrix backup directory\nmkdir -p matrix-backups\n\n#
+    Copy latest backup files\necho \"\U0001F4CB Copying latest backup files...\"\nLATEST_BACKUP=$(ls
+    -t ${BACKUP_DIR}/matrix_synapse_*.sql.gz 2>/dev/null | head -1)\n\nif [ -z \"$LATEST_BACKUP\"
+    ]; then\n    echo \"⚠️  No backup files found!\"\n    exit 1\nfi\n\nBACKUP_NAME=$(basename
+    \"$LATEST_BACKUP\")\ncp \"$LATEST_BACKUP\" matrix-backups/\ncp \"${LATEST_BACKUP}.sha256\"
+    matrix-backups/ 2>/dev/null || true\ncp \"${LATEST_BACKUP}.metadata\" matrix-backups/
+    2>/dev/null || true\n\n# Create backup inventory\ncat > matrix-backups/INVENTORY.md
+    << EOF\n# Matrix Synapse Database Backups\n\nLast Updated: $(date -u +%Y-%m-%dT%H:%M:%SZ)\n\n##
+    Latest Backup\n- **File**: ${BACKUP_NAME}\n- **Size**: $(du -h \"matrix-backups/${BACKUP_NAME}\"
+    | cut -f1)\n- **Date**: $(date -u)\n\n## All Backups\n\nEOF\n\nls -lh matrix-backups/*.sql.gz
+    2>/dev/null | awk '{print \"- \" $9 \" (\" $5 \")\"}' >> matrix-backups/INVENTORY.md
+    || true\n\n# Git commit and push\ngit config user.name \"Matrix Backup Bot\"\ngit
+    config user.email \"backup@caritas.local\"\n\ngit add matrix-backups/\n\nif git
+    diff --staged --quiet; then\n    echo \"✅ No changes to commit\"\nelse\n    git
+    commit -m \"Matrix backup: ${BACKUP_NAME} - $(date -u +%Y-%m-%d)\"\n    git push
+    origin ${GITHUB_BRANCH}\n    echo \"✅ Backup pushed to GitHub successfully!\"\nfi\n\necho
+    \"==========================================\"\necho \"✅ GitHub sync completed!\"\necho
+    \"Finished at: $(date)\"\necho \"==========================================\"\n"
+kind: ConfigMap
+metadata: 
+  name: matrix-backup-script
+  namespace: caritas 
+---
+apiVersion: v1
+data:
+  default.conf: |
+    server {
+        listen 8090;
+        server_name 91.99.219.182;
+
+        location /well-known-matrix-server {
+            alias /usr/share/nginx/html/.well-known/matrix/server/caritas.local;
+            default_type application/json;
+        }
+
+        location /caritas2-well-known-matrix-server {
+            alias /usr/share/nginx/html/.well-known/matrix/server/caritas2.local;
+            default_type application/json;
+        }
+    }
+kind: ConfigMap
+metadata: 
+  name: matrix-discovery-config
+  namespace: caritas 
+---
+apiVersion: v1
+data:
+  caritas.local: |
+    {
+      "m.server": "91.99.219.182:8448"
+    }
+  caritas2.local: |
+    {
+      "m.server": "91.99.219.182:8449"
+    }
+kind: ConfigMap
+metadata: 
+  name: matrix-discovery-data
+  namespace: caritas 
+---
+apiVersion: v1
+data:
+  homeserver.yaml: |
+    server_name: "91.99.219.182"
+    pid_file: /data/homeserver.pid
+
+    listeners:
+      - port: 8008
+        tls: false
+        type: http
+        x_forwarded: true
+        bind_addresses: ["0.0.0.0"]
+        resources:
+          - names: [client, federation]
+            compress: false
+
+    database:
+      name: sqlite3
+      args:
+        database: /data/homeserver.db
+
+    redis:
+      enabled: true
+      host: redis
+      port: 6379
+      password: caritas123
+      dbid: 0
+
+    caches:
+      global_factor: 1.0
+      per_cache_factors:
+        get_users_in_room: 10.0
+        get_remote_users_in_room: 10.0
+
+    media_store_path: /data/media_store
+
+    # Disable authenticated media requirement
+    enable_authenticated_media: false
+    matrix_synapse_enable_authenticated_media: false
+
+    registration_shared_secret: "caritas-registration-secret-2025"
+    report_stats: false
+    enable_registration: true
+    enable_registration_without_verification: true
+    public_baseurl: "http://91.99.219.182:8008"
+
+    suppress_key_validation_warnings: true
+    trusted_key_servers:
+      - server_name: "matrix.org"
+        accept_keys_insecurely: true
+
+    # TURN/STUN configuration for WebRTC calls
+    turn_uris:
+      - "stun:stun.l.google.com:19302"
+      - "stun:stun1.l.google.com:19302"
+    turn_allow_guests: true
+
+    # Rate limiting - set to 100000 to effectively never hit limits
+    rc_message:
+      per_second: 100000
+      burst_count: 100000
+
+    rc_registration:
+      per_second: 100000
+      burst_count: 100000
+
+    rc_login:
+      address:
+        per_second: 100000
+        burst_count: 100000
+      account:
+        per_second: 100000
+        burst_count: 100000
+      failed_attempts:
+        per_second: 100000
+        burst_count: 100000
+
+    rc_admin_redaction:
+      per_second: 100000
+      burst_count: 100000
+
+    rc_joins:
+      local:
+        per_second: 100000
+        burst_count: 100000
+      remote:
+        per_second: 100000
+        burst_count: 100000
+
+    rc_3pid_validation:
+      per_second: 100000
+      burst_count: 100000
+
+    rc_invites:
+      per_room:
+        per_second: 100000
+        burst_count: 100000
+      per_user:
+        per_second: 100000
+        burst_count: 100000
+
+    # Exempt internal network from rate limiting
+    exempt_from_ratelimiting:
+      - "10.42.0.0/16"
+      - "91.99.219.182"
+      - "127.0.0.1"
+
+    # Enable Sliding Sync (Matrix 2.0) for INSTANT real-time synchronization
+    experimental_features:
+      msc3575_enabled: true
+      msc3575_for_workers: true
+kind: ConfigMap
+metadata:
+  name: matrix-homeserver-oidc
+  namespace: caritas 
+---
+apiVersion: v1
+data:
+  sync.sh: "#!/bin/bash\necho \"\U0001F504 Syncing Matrix users to Keycloak...\"\n\n#
+    Get Matrix users\nUSERS=$(kubectl exec -n caritas matrix-postgres-0 -- psql -U
+    synapse_user -d synapse -t -c \"SELECT name FROM users WHERE name LIKE '@%:91.99.219.182'
+    AND name NOT LIKE '%:matrix.org'\" 2>/dev/null || echo \"\")\n\nif [ -z \"$USERS\"
+    ]; then\n    echo \"No Matrix users found or using SQLite\"\n    # Try SQLite\n
+    \   USERS=$(kubectl exec -n caritas matrix-synapse-fresh -- sqlite3 /data/homeserver.db
+    \"SELECT name FROM users WHERE name LIKE '@%:91.99%'\" 2>/dev/null || echo \"\")\nfi\n\n#
+    Get Keycloak admin token\nTOKEN=$(curl -s -X POST \"http://keycloak-service:8080/realms/master/protocol/openid-connect/token\"
+    \\\n  -d \"client_id=admin-cli\" \\\n  -d \"username=admin\" \\\n  -d \"password=admin\"
+    \\\n  -d \"grant_type=password\" | grep -o \"\\\"access_token\\\":\\\"[^\\\"]*\\\"\"
+    | cut -d\"\\\"\" -f4)\n\nif [ -z \"$TOKEN\" ]; then\n    echo \"❌ Failed to get
+    Keycloak admin token\"\n    exit 1\nfi\n\necho \"✅ Got Keycloak admin token\"\n\n#
+    For each Matrix user, create in Keycloak if not exists\necho \"$USERS\" | while
+    read matrix_user; do\n    if [ ! -z \"$matrix_user\" ]; then\n        # Extract
+    username from @username:domain\n        username=$(echo \"$matrix_user\" | sed
+    \"s/@//;s/:.*//\")\n        echo \"Checking user: $username\"\n        \n        #
+    Create user in Keycloak\n        curl -s -X POST \"http://keycloak-service:8080/admin/realms/online-beratung/users\"
+    \\\n          -H \"Authorization: Bearer $TOKEN\" \\\n          -H \"Content-Type:
+    application/json\" \\\n          -d \"{\\\"username\\\":\\\"$username\\\",\\\"enabled\\\":true,\\\"email\\\":\\\"$username@caritas.local\\\",\\\"emailVerified\\\":true}\"
+    \\\n          && echo \"✅ Synced: $username\" || echo \"⚠️  Already exists or
+    error: $username\"\n    fi\ndone\n\necho \"✅ Sync complete!\"\n"
+kind: ConfigMap
+metadata:
+  name: matrix-keycloak-sync-script
+  namespace: caritas 
+---
+apiVersion: v1
+data:
+  oidc-keycloak.yaml: |
+    # Matrix Synapse OIDC Integration with Keycloak
+    oidc_providers:
+      - idp_id: keycloak
+        idp_name: "Caritas Keycloak SSO"
+        idp_brand: "keycloak"
+        discover: false
+        issuer: "http://localhost:8080/realms/online-beratung"
+        client_id: "matrix-synapse"
+        client_secret: "caritas-matrix-secret-2025"
+        scopes: ["openid", "profile", "email"]
+        authorization_endpoint: "http://91.99.219.182:8089/auth/realms/online-beratung/protocol/openid-connect/auth"
+        token_endpoint: "http://localhost:8080/realms/online-beratung/protocol/openid-connect/token"
+        userinfo_endpoint: "http://localhost:8080/realms/online-beratung/protocol/openid-connect/userinfo"
+        user_mapping_provider:
+          config:
+            localpart_template: "{{`{{`}} user.preferred_username {{`}}`}}"
+            display_name_template: "{{`{{`}} user.name|default(user.preferred_username) {{`}}`}}"
+            email_template: "{{`{{`}} user.email {{`}}`}}"
+        allow_existing_users: true
+        user_profile_method: "userinfo_endpoint"
+kind: ConfigMap
+metadata:
+  name: matrix-oidc-config
+  namespace: caritas 
+---  
+apiVersion: v1
+data:
+  create-base-backup.sh: "#!/bin/bash\nset -e\n\necho \"==========================================\"\necho
+    \"Creating Base Backup for PITR\"\necho \"Started at: $(date)\"\necho \"==========================================\"\n\nBACKUP_DIR=\"/backup/pitr_base\"\nTIMESTAMP=$(date
+    +%Y%m%d_%H%M%S)\nBACKUP_NAME=\"base_backup_${TIMESTAMP}\"\n\nmkdir -p \"${BACKUP_DIR}\"\n\necho
+    \"\U0001F4E6 Creating base backup: ${BACKUP_NAME}\"\n\npg_basebackup \\\n  -h
+    matrix-postgres-service \\\n  -U ${POSTGRES_USER} \\\n  -D \"${BACKUP_DIR}/${BACKUP_NAME}\"
+    \\\n  -Ft \\\n  -z \\\n  -Xs \\\n  -P \\\n  -v\n\necho \"\"\necho \"✅ Base backup
+    created: ${BACKUP_DIR}/${BACKUP_NAME}\"\necho \"Backup size: $(du -sh ${BACKUP_DIR}/${BACKUP_NAME}
+    | cut -f1)\"\n\n# Create metadata\ncat > \"${BACKUP_DIR}/${BACKUP_NAME}/backup.metadata\"
+    << EOF\n{\n  \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\n  \"type\": \"base_backup\",\n
+    \ \"format\": \"tar\",\n  \"compressed\": true,\n  \"wal_method\": \"stream\"\n}\nEOF\n\necho
+    \"\"\necho \"==========================================\"\necho \"✅ Base backup
+    completed!\"\necho \"==========================================\"\n"
+  restore-pitr.sh: "#!/bin/bash\nset -e\n\necho \"==========================================\"\necho
+    \"PITR Restore Script\"\necho \"==========================================\"\necho
+    \"\"\necho \"⚠️  THIS IS A DESTRUCTIVE OPERATION!\"\necho \"This script will restore
+    the database to a specific point in time.\"\necho \"\"\n\nif [ -z \"$RESTORE_TARGET_TIME\"
+    ]; then\n    echo \"❌ ERROR: RESTORE_TARGET_TIME environment variable is required\"\n
+    \   echo \"Example: RESTORE_TARGET_TIME='2025-10-20 12:00:00'\"\n    exit 1\nfi\n\nBACKUP_DIR=\"/backup/pitr_base\"\nWAL_ARCHIVE_DIR=\"/backup/wal_archive\"\nPGDATA=\"/var/lib/postgresql/data/pgdata\"\n\necho
+    \"Restore target time: ${RESTORE_TARGET_TIME}\"\necho \"\"\n\n# Find latest base
+    backup\nLATEST_BACKUP=$(ls -t ${BACKUP_DIR} | head -1)\n\nif [ -z \"$LATEST_BACKUP\"
+    ]; then\n    echo \"❌ ERROR: No base backup found!\"\n    exit 1\nfi\n\necho \"Using
+    base backup: ${LATEST_BACKUP}\"\necho \"\"\n\n# Stop PostgreSQL (if running)\necho
+    \"\U0001F6D1 Stopping PostgreSQL...\"\npg_ctl -D ${PGDATA} stop -m fast || true\n\n#
+    Backup current data (just in case)\necho \"\U0001F4BE Backing up current data...\"\nmv
+    ${PGDATA} ${PGDATA}.before_restore.$(date +%Y%m%d_%H%M%S)\n\n# Restore base backup\necho
+    \"\U0001F4E6 Restoring base backup...\"\nmkdir -p ${PGDATA}\ntar -xzf ${BACKUP_DIR}/${LATEST_BACKUP}/base.tar.gz
+    -C ${PGDATA}\n\n# Create recovery configuration\necho \"⚙️  Creating recovery
+    configuration...\"\ncat > ${PGDATA}/recovery.signal << EOF\n# Recovery signal
+    file\nEOF\n\ncat > ${PGDATA}/postgresql.auto.conf << EOF\nrestore_command = 'cp
+    ${WAL_ARCHIVE_DIR}/%f %p'\nrecovery_target_time = '${RESTORE_TARGET_TIME}'\nrecovery_target_action
+    = 'promote'\nEOF\n\necho \"✅ Recovery configuration created\"\necho \"\"\necho
+    \"\U0001F680 Starting PostgreSQL in recovery mode...\"\npg_ctl -D ${PGDATA} start\n\necho
+    \"\"\necho \"==========================================\"\necho \"✅ PITR restore
+    initiated!\"\necho \"PostgreSQL will now recover to: ${RESTORE_TARGET_TIME}\"\necho
+    \"Monitor logs to see recovery progress.\"\necho \"==========================================\"\n"
+  setup-pitr.sh: "#!/bin/bash\nset -e\n\necho \"==========================================\"\necho
+    \"Matrix PostgreSQL PITR Setup\"\necho \"Started at: $(date)\"\necho \"==========================================\"\n\n#
+    Create WAL archive directory\nmkdir -p /backup/wal_archive\nchmod 700 /backup/wal_archive\n\necho
+    \"✅ WAL archive directory created\"\n\n# Test archive command\necho \"\U0001F9EA
+    Testing archive command...\"\npsql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -c \"SELECT
+    pg_switch_wal();\"\n\n# Wait a moment\nsleep 2\n\n# Check if WAL files are being
+    archived\nWAL_COUNT=$(find /backup/wal_archive -type f | wc -l)\necho \"WAL files
+    in archive: ${WAL_COUNT}\"\n\nif [ ${WAL_COUNT} -gt 0 ]; then\n    echo \"✅ PITR
+    is working! WAL archiving is active.\"\nelse\n    echo \"⚠️  No WAL files found
+    yet. This is normal on first setup.\"\nfi\n\necho \"\"\necho \"\U0001F4CA Current
+    WAL status:\"\npsql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -c \"\n  SELECT \n    pg_current_wal_lsn()
+    as current_wal_lsn,\n    pg_walfile_name(pg_current_wal_lsn()) as current_wal_file;\n\"\n\necho
+    \"\"\necho \"==========================================\"\necho \"✅ PITR setup
+    completed!\"\necho \"==========================================\"\n"
+kind: ConfigMap
+metadata:
+  name: matrix-pitr-scripts
+  namespace: caritas 
+---  
+apiVersion: v1
+data:
+  postgresql.conf: |
+    # PostgreSQL configuration for Matrix Synapse with PITR
+    listen_addresses = '*'
+    max_connections = 200
+    shared_buffers = 256MB
+    effective_cache_size = 1GB
+    maintenance_work_mem = 64MB
+    checkpoint_completion_target = 0.9
+    wal_buffers = 16MB
+    default_statistics_target = 100
+    random_page_cost = 1.1
+    effective_io_concurrency = 200
+    work_mem = 2621kB
+    min_wal_size = 1GB
+    max_wal_size = 4GB
+
+    # PITR Configuration
+    wal_level = replica
+    archive_mode = on
+    archive_command = 'test ! -f /backup/wal_archive/%f && cp %p /backup/wal_archive/%f'
+    archive_timeout = 300
+    max_wal_senders = 3
+    wal_keep_size = 1GB
+
+    # Logging
+    logging_collector = on
+    log_directory = 'log'
+    log_filename = 'postgresql-%Y-%m-%d_%H%M%S.log'
+    log_rotation_age = 1d
+    log_rotation_size = 100MB
+    log_line_prefix = '%t [%p]: [%l-1] user=%u,db=%d,app=%a,client=%h '
+    log_timezone = 'UTC'
+kind: ConfigMap
+metadata:
+  name: matrix-postgres-config
+  namespace: caritas 

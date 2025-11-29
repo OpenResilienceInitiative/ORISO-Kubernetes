@@ -1,0 +1,145 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      initContainers:
+        - name: wait-for-mariadb
+          image: busybox:1.36
+          command: ['sh', '-c', 'until nc -z {{ .Values.dbServer }}.{{ .Release.Namespace }} 3306; do echo waiting for mariadb; sleep 2; done']
+      containers:
+        - name: keycloak
+          image: {{ .Values.imageName }}:{{ .Values.imageVersion }}
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 8080
+
+          command:
+            - /opt/keycloak/bin/kc.sh
+          args:
+            - start
+            - --auto-build
+          env:
+            - name: KC_DB
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_VENDOR
+                  name: keycloak-configmap-env
+            - name: KC_DB_URL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_ADDR
+                  name: keycloak-configmap-env
+            - name: KC_DB_URL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_DATABASE
+                  name: keycloak-configmap-env
+            - name: KC_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: DB_USER
+                  name: keycloak-secret-env
+            - name: KC_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: DB_PASSWORD
+                  name: keycloak-secret-env
+            - name: KC_HTTP_RELATIVE_PATH
+              value: "/auth"
+            - name: KC_PROXY
+              value: "edge"
+            - name: KC_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: KEYCLOAK_HOSTNAME
+                  name: keycloak-configmap-env
+            {{- if not .Values.global.enableTls }}
+            - name: KC_HOSTNAME_STRICT_HTTPS
+              value: "false"
+            {{- end }}
+            - name: KC_LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: ROOT_LOGLEVEL
+                  name: keycloak-configmap-env
+          {{- if .Values.global.initializeDummyData }}
+          readinessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  if [[ ! -f /tmp/keycloak-initialized.lock ]]; then
+                    /opt/keycloak/bin/kc.sh import --file /data/import/keycloak-full-export.json
+                    touch /tmp/keycloak-initialized.lock
+                  fi;
+            timeoutSeconds: 30
+            initialDelaySeconds: 30
+            failureThreshold: 3
+          {{- end }}
+          volumeMounts:
+            # --- LOGIN THEME MOUNTS ---
+            # Hauptordner Login (inkl. ftl Dateien & theme.properties)
+            - mountPath: /opt/keycloak/themes/custom-theme/login
+              name: keycloak-theme-templates
+            # Messages
+            - mountPath: /opt/keycloak/themes/custom-theme/login/messages
+              name: keycloak-theme-templates-messages
+            # CSS Styles
+            - mountPath: /opt/keycloak/themes/custom-theme/login/resources/css
+              name: keycloak-theme-templates-styles
+            # Fonts
+            - mountPath: /opt/keycloak/themes/custom-theme/login/resources/fonts/Nunito
+              name: keycloak-theme-templates-fonts
+            # --- EMAIL THEME MOUNTS ---
+            # Messages
+            - mountPath: /opt/keycloak/themes/custom-theme/email/messages
+              name: keycloak-theme-email-messages
+            # HTML Templates
+            - mountPath: /opt/keycloak/themes/custom-theme/email/html
+              name: keycloak-theme-email-html
+            # Text Templates
+            - mountPath: /opt/keycloak/themes/custom-theme/email/text
+              name: keycloak-theme-email-text
+            # --- DATA IMPORT ---
+            - mountPath: /data/import
+              name: keycloak-full-dump
+
+      volumes:
+        - name: keycloak-theme-templates
+          configMap:
+            name: keycloak-configmap-theme-templates
+        - name: keycloak-theme-templates-messages
+          configMap:
+            name: keycloak-configmap-theme-templates-messages
+        - name: keycloak-theme-templates-styles
+          configMap:
+            name: keycloak-configmap-theme-templates-styles
+        - name: keycloak-theme-templates-fonts
+          configMap:
+            name: keycloak-configmap-theme-templates-fonts
+        - name: keycloak-theme-email-html
+          configMap:
+            name: keycloak-configmap-theme-email-html
+        - name: keycloak-theme-email-text
+          configMap:
+            name: keycloak-configmap-theme-email-text
+        - name: keycloak-theme-email-messages
+          configMap:
+            name: keycloak-configmap-theme-email-messages
+        - name: keycloak-full-dump
+          configMap:
+            name: keycloak-configmap-data

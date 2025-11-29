@@ -1,0 +1,15 @@
+# Admin Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin
+  namespace: caritas
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 9000
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: admin

@@ -1,0 +1,6 @@
+name: online-counseling-mariadb
+description: The chart providing mariadb
+version: 0.0.1
+apiVersion: v1
+keywords:
+ - online-counseling-mariadb

@@ -1,0 +1,98 @@
+# TenantService Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tenantservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tenantservice
+  template:
+    metadata:
+      labels:
+        app: tenantservice
+        tier: backend
+    spec:
+      containers:
+      - name: tenantservice
+        image:  {{ .Values.tenantService.imageName }}:{{ .Values.tenantService.imageVersion }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8081
+        env:
+          - name: SPRING_PROFILES_ACTIVE
+            valueFrom:
+              configMapKeyRef:
+                key: SPRING_PROFILES_ACTIVE
+                name: tenantservice-configmap-env          
+          - name: SPRING_DATASOURCE_URL
+            valueFrom:
+              configMapKeyRef:
+                key: SPRING_DATASOURCE_URL
+                name: tenantservice-configmap-env          
+          - name: SPRING_DATASOURCE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: SPRING_DATASOURCE_USERNAME
+                name: tenantservice-secret      
+          - name: SPRING_DATASOURCE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: SPRING_DATASOURCE_PASSWORD
+                name: tenantservice-secret  
+          - name: KEYCLOAK_AUTH_SERVER_URL
+            valueFrom:
+              configMapKeyRef:
+                key: KEYCLOAK_AUTH_SERVER_URL
+                name: tenantservice-configmap-env          
+          - name: KEYCLOAK_REALM
+            valueFrom:
+              configMapKeyRef:
+                key: KEYCLOAK_REALM
+                name: tenantservice-configmap-env          
+          - name: SPRING_RABBITMQ_HOST
+            valueFrom:
+              configMapKeyRef:
+                key: SPRING_RABBITMQ_HOST
+                name: tenantservice-configmap-env          
+          - name: SPRING_RABBITMQ_PORT
+            valueFrom:
+              configMapKeyRef:
+                key: SPRING_RABBITMQ_PORT
+                name: tenantservice-configmap-env          
+          - name: SPRING_RABBITMQ_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: SPRING_RABBITMQ_USERNAME
+                name: tenantservice-secret 
+          - name: SPRING_RABBITMQ_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: SPRING_RABBITMQ_PASSWORD
+                name: tenantservice-secret                       
+          - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+            valueFrom:
+              configMapKeyRef:
+                key: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+                name: tenantservice-configmap-env
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8081
+          initialDelaySeconds: 120
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8081
+          initialDelaySeconds: 60
+          periodSeconds: 10
+ 
