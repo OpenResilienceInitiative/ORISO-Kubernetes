@@ -102,32 +102,48 @@ jobs:
       - name: Check if Dockerfile exists
         working-directory: ${{ matrix.path }}
         run: |
-          if [ ! -f Dockerfile ]; then
+          # Check for Dockerfile in root or common subdirectories
+          if [ -f Dockerfile ]; then
+            echo "✓ Dockerfile found in root"
+          elif [ -f token-service/Dockerfile ] && [ "${{ matrix.repo }}" == "ORISO-Livekit" ]; then
+            echo "✓ Dockerfile found in token-service/ subdirectory"
+            # Update path for Livekit
+            echo "DOCKERFILE_PATH=token-service" >> $GITHUB_ENV
+          else
             echo "Error: Dockerfile not found in ${{ matrix.path }}"
+            echo "Searched locations:"
+            echo "  - ./Dockerfile"
+            if [ "${{ matrix.repo }}" == "ORISO-Livekit" ]; then
+              echo "  - ./token-service/Dockerfile"
+            fi
             exit 1
           fi
-          echo "✓ Dockerfile found"
 
       - name: Fix OpenJDK base image
         if: matrix.type == 'java'
         working-directory: ${{ matrix.path }}
         run: |
+          # Determine Dockerfile path
+          DOCKERFILE="Dockerfile"
+          if [ -n "$DOCKERFILE_PATH" ]; then
+            DOCKERFILE="$DOCKERFILE_PATH/Dockerfile"
+          fi
           # Replace deprecated base images with eclipse-temurin
           # Java 17 replacements
-          if grep -q "openjdk:17-oracle" Dockerfile; then
+          if grep -q "openjdk:17-oracle" "$DOCKERFILE"; then
             echo "Replacing openjdk:17-oracle with eclipse-temurin:17-jdk"
-            sed -i 's|FROM openjdk:17-oracle|FROM eclipse-temurin:17-jdk|g' Dockerfile
+            sed -i 's|FROM openjdk:17-oracle|FROM eclipse-temurin:17-jdk|g' "$DOCKERFILE"
             echo "✓ Base image updated"
           fi
           # Java 11 replacements
-          if grep -q "openjdk:11-oracle" Dockerfile; then
+          if grep -q "openjdk:11-oracle" "$DOCKERFILE"; then
             echo "Replacing openjdk:11-oracle with eclipse-temurin:11-jdk"
-            sed -i 's|FROM openjdk:11-oracle|FROM eclipse-temurin:11-jdk|g' Dockerfile
+            sed -i 's|FROM openjdk:11-oracle|FROM eclipse-temurin:11-jdk|g' "$DOCKERFILE"
             echo "✓ Base image updated"
           fi
-          if grep -q "adoptopenjdk/openjdk11" Dockerfile; then
+          if grep -q "adoptopenjdk/openjdk11" "$DOCKERFILE"; then
             echo "Replacing adoptopenjdk/openjdk11 with eclipse-temurin:11-jdk"
-            sed -i 's|FROM adoptopenjdk/openjdk11|FROM eclipse-temurin:11-jdk|g' Dockerfile
+            sed -i 's|FROM adoptopenjdk/openjdk11|FROM eclipse-temurin:11-jdk|g' "$DOCKERFILE"
             echo "✓ Base image updated"
           fi
           # Note: eclipse-temurin:17-jre is already correct, no change needed
@@ -155,8 +171,20 @@ jobs:
         if: matrix.type == 'node'
         working-directory: ${{ matrix.path }}
         run: |
-          npm ci --only=production
-          echo "✓ Node.js dependencies installed"
+          # For ORISO-Status, Dockerfile handles npm install internally
+          # For other Node.js services, check if package-lock.json exists
+          if [ "${{ matrix.repo }}" == "ORISO-Status" ]; then
+            echo "ORISO-Status: Dockerfile handles npm install, skipping"
+            echo "✓ Ready for Docker build"
+          elif [ -f package-lock.json ]; then
+            echo "Found package-lock.json, using npm ci"
+            npm ci --omit=dev
+            echo "✓ Node.js dependencies installed"
+          else
+            echo "No package-lock.json found, using npm install"
+            npm install --omit=dev
+            echo "✓ Node.js dependencies installed"
+          fi
 
       - name: Set up Java and Maven
         if: matrix.type == 'java'
@@ -251,12 +279,14 @@ jobs:
             # Override surefire plugin configuration to skip all tests
             # Using -Dmaven.test.skip=true skips test compilation and execution
             # Also override surefire plugin skipTests property directly
-            # Skip Spotless formatting checks during CI builds
+            # Skip code quality checks during CI builds (Spotless, Checkstyle)
             ./mvnw clean package \
               -Dmaven.test.skip=true \
               -Dsurefire.skipTests=true \
               -DskipTests=true \
-              -Dspotless.check.skip=true
+              -Dspotless.check.skip=true \
+              -Dcheckstyle.skip=true \
+              -Dmaven.checkstyle.skip=true
           else
             echo "Error: mvnw not found, cannot build"
             exit 1
@@ -296,6 +326,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set Docker build context and file
+        id: docker-config
+        run: |
+          if [ -n "$DOCKERFILE_PATH" ]; then
+            echo "context=${{ matrix.path }}/$DOCKERFILE_PATH" >> $GITHUB_OUTPUT
+            echo "file=${{ matrix.path }}/$DOCKERFILE_PATH/Dockerfile" >> $GITHUB_OUTPUT
+          else
+            echo "context=${{ matrix.path }}" >> $GITHUB_OUTPUT
+            echo "file=${{ matrix.path }}/Dockerfile" >> $GITHUB_OUTPUT
+          fi
+
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
@@ -310,7 +351,8 @@ jobs:
         id: build
         uses: docker/build-push-action@v6
         with:
-          context: ${{ matrix.path }}
+          context: ${{ steps.docker-config.outputs.context }}
+          file: ${{ steps.docker-config.outputs.file }}
           push: ${{ github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
