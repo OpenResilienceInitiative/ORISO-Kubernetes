@@ -1,0 +1,7 @@
+apiVersion: v2
+name: mariadb
+description: MariaDB StatefulSet with init scripts for ORISO platform
+type: application
+version: 1.0.0
+appVersion: "10.11"
+

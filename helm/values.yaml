@@ -1,0 +1,13 @@
+# ORISO Platform - Main Values File
+# This file contains default values for all sub-charts
+
+global:
+  namespace: caritas
+
+# MariaDB Configuration
+mariadb:
+  enabled: true
+  namespace: caritas
+  initScripts:
+    enabled: true
+

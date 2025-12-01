@@ -1,0 +1,61 @@
+# MariaDB Helm Chart Values
+# Default values for MariaDB StatefulSet with init scripts
+
+namespace: caritas
+
+# MariaDB Configuration
+image:
+  repository: mariadb
+  tag: "10.11"
+  pullPolicy: IfNotPresent
+
+# Storage
+storage:
+  size: 10Gi
+  storageClassName: local-path
+  accessModes:
+    - ReadWriteOnce
+
+# Resources
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 2Gi
+
+# Secrets (should be created separately)
+secrets:
+  rootPassword: "root"  # Override in production
+  database: "caritas"
+
+# Databases to create
+databases:
+  - name: agencyservice
+    user: agencyservice
+    password: agencyservice
+  - name: consultingtypeservice
+    user: consultingtypeservice
+    password: consultingtypeservice
+  - name: tenantservice
+    user: tenantservice
+    password: tenantservice
+  - name: userservice
+    user: userservice
+    password: userservice
+  - name: videoservice
+    user: videoservice
+    password: videoservice
+  - name: uploadservice
+    user: uploadservice
+    password: uploadservice
+  - name: caritas
+    user: caritas
+    password: caritas
+
+# Init scripts enabled
+initScripts:
+  enabled: true
+  # SQL schemas will be loaded from ConfigMaps
+

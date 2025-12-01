@@ -1,0 +1,82 @@
+{{- if .Values.initScripts.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mariadb-init-databases
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mariadb
+    component: init
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    metadata:
+      labels:
+        app: mariadb
+        component: init
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: init-databases
+        image: mariadb:{{ .Values.image.tag }}
+        command:
+        - /bin/bash
+        - -c
+        - |
+          set -e
+          echo "Waiting for MariaDB to be ready..."
+          until mysql -h mariadb -u root -p$MYSQL_ROOT_PASSWORD -e "SELECT 1;" &>/dev/null; do
+            echo "Waiting for MariaDB..."
+            sleep 2
+          done
+          echo "MariaDB is ready!"
+          
+          # Create databases and users
+          {{- range .Values.databases }}
+          echo "Creating database {{ .name }}..."
+          mysql -h mariadb -u root -p$MYSQL_ROOT_PASSWORD <<EOF
+          CREATE DATABASE IF NOT EXISTS {{ .name }} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+          CREATE USER IF NOT EXISTS '{{ .user }}'@'%' IDENTIFIED BY '{{ .password }}';
+          GRANT ALL PRIVILEGES ON {{ .name }}.* TO '{{ .user }}'@'%';
+          FLUSH PRIVILEGES;
+          EOF
+          
+          # Apply schema from mounted ConfigMap
+          if [ -f /init-scripts/{{ .name }}/schema.sql ]; then
+            echo "Applying schema for {{ .name }}..."
+            mysql -h mariadb -u root -p$MYSQL_ROOT_PASSWORD {{ .name }} < /init-scripts/{{ .name }}/schema.sql
+            echo "✓ Schema applied for {{ .name }}"
+          else
+            echo "⚠ No schema file found for {{ .name }}, skipping schema application"
+          fi
+          {{- end }}
+          
+          echo "✓ All databases initialized!"
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secrets
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secrets
+              key: MYSQL_DATABASE
+        volumeMounts:
+        {{- range .Values.databases }}
+        - name: schema-{{ .name }}
+          mountPath: /init-scripts/{{ .name }}
+        {{- end }}
+      volumes:
+      {{- range .Values.databases }}
+      - name: schema-{{ .name }}
+        configMap:
+          name: mariadb-init-{{ .name }}-schema
+      {{- end }}
+      serviceAccountName: default
+{{- end }}
+

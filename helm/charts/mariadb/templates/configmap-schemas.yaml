@@ -1,0 +1,23 @@
+{{- if .Values.initScripts.enabled }}
+{{- range .Values.databases }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mariadb-init-{{ .name }}-schema
+  namespace: {{ $.Values.namespace }}
+  labels:
+    app: mariadb
+    component: init-script
+    database: {{ .name }}
+data:
+  schema.sql: |
+{{- $file := printf "init-scripts/%s-schema.sql" .name }}
+{{- if $.Files.Get $file }}
+{{ $.Files.Get $file | indent 4 }}
+{{- else }}
+-- Schema file not found: {{ $file }}
+{{- end }}
+{{- end }}
+{{- end }}
+
