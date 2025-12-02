@@ -17,6 +17,8 @@ data:
   KEYCLOAK_RESOURCE: {{ .Values.consultingTypeService.keycloakResource }}
   KEYCLOAKSERVICE_ADMIN_CLIENTID: {{ .Values.global.keycloak.serviceAdminClientId }}
   KEYCLOAKSERVICE_APP_CLIENTID: {{ .Values.global.keycloak.serviceAppClientId }}
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: {{ .Values.global.springSecurityOAuth2ResourceserverJWTIssuerURI }}   
+
 {{- if .Values.global.multitenancyWithSingleDomainEnabled }}
   MULTITENANCY_ENABLED: "false"
 {{- else }}

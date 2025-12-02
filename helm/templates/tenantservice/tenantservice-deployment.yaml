@@ -81,6 +81,21 @@ spec:
               configMapKeyRef:
                 key: SPRING_LIQUIBASE_ENABLED
                 name: tenantservice-configmap-env
+          - name: CONSULTING_TYPE_SERVICE_API_URL
+            valueFrom:
+              configMapKeyRef:
+                key: CONSULTING_TYPE_SERVICE_API_URL
+                name: tenantservice-configmap-env
+          - name: USER_SERVICE_API_URL
+            valueFrom:
+              configMapKeyRef:
+                key: USER_SERVICE_API_URL
+                name: tenantservice-configmap-env
+          - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
+            valueFrom:
+              configMapKeyRef:
+                key: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
+                name: tenantservice-configmap-env
         resources:
           requests:
             memory: "512Mi"

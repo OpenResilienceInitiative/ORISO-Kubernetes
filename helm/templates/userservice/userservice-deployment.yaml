@@ -351,6 +351,11 @@ spec:
                 secretKeyRef:
                   key: SPRING_RABBITMQ_USERNAME
                   name: userservice-secret
+            - name: MATRIX_REGISTRATION_SHARED_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: MATRIX_REGISTRATION_SHARED_SECRET
+                  name: userservice-secret                  
             - name: SPRING_RABBITMQ_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -391,6 +396,23 @@ spec:
                 configMapKeyRef:
                   key: SPRING_LIQUIBASE_ENABLED
                   name: userservice-configmap-env
+            - name: ROCKET_CHAT_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: ROCKET_CHAT_BASE_URL
+                  name: userservice-configmap-env
+            - name: ROCKET_CHAT_MONGO_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: ROCKET_CHAT_MONGO_URL
+                  name: userservice-configmap-env             
+            - name: MATRIX_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: MATRIX_API_URL
+                  name: userservice-configmap-env 
+
+                  
           ports:
             - containerPort: 8080
           resources: {}

@@ -19,14 +19,18 @@ data:
   CONSULTING_TYPE_SERVICE_API_URL: "http://consultingtypeservice.{{ .Release.Namespace }}:8080"
   TENANT_SERVICE_API_URL: "http://tenantservice.{{ .Release.Namespace }}:8080"
   MULTITENANCY_ENABLED: {{ .Values.global.multitenancyEnabled | quote }}
-  FEATURE_TOPICS_ENABLED: {{ .Values.global.topicsEnabled | quote }}
+  FEATURE_TOPICS_ENABLED: {{ .Values.global.featureTopicsEnabled | quote }}
   FEATURE_DEMOGRAPHICS_ENABLED: {{ .Values.global.demographicsEnabled | quote }}
   JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
   USER_ADMIN_SERVICE_API_URL: "http://userservice.{{ .Release.Namespace }}:8080"
   FEATURE_APPOINTMENT_ENABLED:  "false"
   APPOINTMENT_SERVICE_API_URL: "http://appointmentservice.{{ .Release.Namespace }}:8080"
   FEATURE_MULTITENANCY_WITH_SINGLE_DOMAIN_ENABLED: {{ .Values.global.multitenancyWithSingleDomainEnabled | quote }}
-  AGENCY_DELETEWORKFLOW_CRON: {{ .Values.agencyService.agencyDeleteworkflowCron | quote }}
+  AGENCY_DELETEWORKFLOW_CRON: {{ .Values.agencyService.agencyDeleteworkflowCron | quote }}  
+  MATRIX_API_URL: {{ .Values.matrix.matrixApiUrl }}  
+  MATRIX_SERVER_NAME: {{ .Values.matrix.matrixServerName }}    
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: {{ .Values.global.springSecurityOAuth2ResourceserverJWTIssuerURI }}   
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: {{ .Values.global.springSecurityOAuth2ResourceserverJWTJWKSETURI }}   
 
   {{- if .Values.global.enableTls }}
   APP_BASE_URL: "https://{{ .Values.global.domainName }}"

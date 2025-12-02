@@ -36,7 +36,11 @@ data:
   KEYCLOAK_CONFIG_ADMIN_CLIENTID: {{ .Values.global.keycloak.serviceAdminClientId }}
   KEYCLOAK_CONFIG_APP_CLIENTID: {{ .Values.global.keycloak.serviceAppClientId }}
   KEYCLOAKSERVICE_TECHUSER_ID: {{ .Values.global.keycloak.serviceTechUserId }}
-  # Rocket.Chat
+  # Rocket.Chat (dummy values)
+  ROCKET_CHAT_BASE_URL: "http://localhost:3000/api/v1"
+  ROCKET_CHAT_MONGO_URL: "mongodb://localhost:27017/rocketchat?retryWrites=false"
+  SESSION_INACTIVE_DELETEWORKFLOW_ENABLED: "false"
+
   ROCKET_CHAT_API_URL: "http://rocketchat.{{ .Release.Namespace }}:3000/api/v1"
   ROCKET_SYSTEMUSER_ID: {{ .Values.userService.rocketSystemuserId }}
   ROCKET_CREDENTIALSCHEDULER_CRON: {{ .Values.userService.rocketCredentialschedulerCron }}
@@ -86,3 +90,5 @@ data:
   LOGSTASH_HOST: {{ .Values.global.logstashHost }}
   FEATURE_APPOINTMENT_ENABLED: "false"
   FEATURE_MULTITENANCY_WITH_SINGLE_DOMAIN_ENABLED: {{ .Values.global.multitenancyWithSingleDomainEnabled | quote }}
+  MATRIX_API_URL: {{ .Values.matrix.matrixApiUrl }}  
+

@@ -14,5 +14,10 @@ data:
   KEYCLOAK_REALM: {{ .Values.global.keycloak.realm }}  
   SPRING_RABBITMQ_HOST: {{ .Values.tenantService.springRabbitmqHost }}  
   SPRING_RABBITMQ_PORT: "{{ .Values.tenantService.springRabbitmqPort }}"  
-  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: {{ .Values.tenantService.springSecurityOAuth2ResourceserverJWTIssuerURI }}   
-  
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: {{ .Values.global.springSecurityOAuth2ResourceserverJWTIssuerURI }}   
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: {{ .Values.global.springSecurityOAuth2ResourceserverJWTJWKSETURI }}   
+  USER_SERVICE_API_URL: {{ .Values.userService.serviceURL }}  
+  CONSULTING_TYPE_SERVICE_API_URL: {{ .Values.consultingTypeService.serviceURL }}  
+  MATRIX_API_URL: {{ .Values.matrix.matrixApiUrl }}  
+  MATRIX_SERVER_NAME: {{ .Values.matrix.matrixServerName }}  
+

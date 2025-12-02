@@ -119,6 +119,14 @@ spec:
                 configMapKeyRef:
                  key: KEYCLOAK_RESOURCE
                  name: consultingtypeservice-configmap-env
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              valueFrom:
+                configMapKeyRef:
+                 key: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+                 name: consultingtypeservice-configmap-env
+
+
+                 
           ports:
             - containerPort: 8080
           volumeMounts:

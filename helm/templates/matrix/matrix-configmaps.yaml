@@ -107,7 +107,7 @@ metadata:
 apiVersion: v1
 data:
   homeserver.yaml: |
-    server_name: "91.99.219.182"
+    server_name: {{ .Values.matrix.matrixServerName }}  
     pid_file: /data/homeserver.pid
 
     listeners:
