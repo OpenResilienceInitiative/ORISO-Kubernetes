@@ -380,11 +380,16 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   key: FEATURE_DEMOGRAPHICS_ENABLED
-                  name: userservice-configmap-env
+                  name: userservice-configmap-env  
             - name: FEATURE_MULTITENANCY_WITH_SINGLE_DOMAIN_ENABLED
               valueFrom:
                 configMapKeyRef:
                   key: FEATURE_MULTITENANCY_WITH_SINGLE_DOMAIN_ENABLED
+                  name: userservice-configmap-env
+            - name: SPRING_LIQUIBASE_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: SPRING_LIQUIBASE_ENABLED
                   name: userservice-configmap-env
           ports:
             - containerPort: 8080
