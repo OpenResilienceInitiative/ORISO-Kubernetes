@@ -21,9 +21,14 @@ data:
   APPOINTMENT_SERVICE_API_URL: ""
   LIVE_SERVICE_API_URL: ""
   
-  # Rocket.Chat Configuration - Use service names
-  ROCKET_CHAT_BASE_URL: "http://rocketchat:3000/api/v1"
-  ROCKET_CHAT_MONGO_URL: "mongodb://mongodb:27017/rocketchat?retryWrites=false"
+  # Rocket.Chat Configuration - Legacy (DISABLED - migrated to Matrix)
+  # Dummy values required to satisfy Spring Boot validation - RocketChat is not deployed
+  # The scheduler using RocketChat is disabled via session.inactive.deleteWorkflow.enabled=false
+  ROCKET_CHAT_BASE_URL: "http://localhost:3000/api/v1"
+  ROCKET_CHAT_MONGO_URL: "mongodb://localhost:27017/rocketchat?retryWrites=false"
+  
+  # Disable RocketChat-dependent schedulers
+  SESSION_INACTIVE_DELETEWORKFLOW_ENABLED: "false"
   
   # Matrix Configuration - Use service names
   MATRIX_API_URL: "http://matrix-synapse:8008"
