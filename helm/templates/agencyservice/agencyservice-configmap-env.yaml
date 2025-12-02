@@ -31,9 +31,11 @@ data:
   MATRIX_SERVER_NAME: {{ .Values.matrix.matrixServerName }}    
   SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: {{ .Values.global.springSecurityOAuth2ResourceserverJWTIssuerURI }}   
   SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: {{ .Values.global.springSecurityOAuth2ResourceserverJWTJWKSETURI }}   
-
+  SPRING_DATA_MONGODB_URI: {{ .Values.global.ServiceURL }} 
   {{- if .Values.global.enableTls }}
   APP_BASE_URL: "https://{{ .Values.global.domainName }}"
-{{- else }}
+  {{- else }}
   APP_BASE_URL: "http://{{ .Values.global.domainName }}"
-{{- end }}
+  {{- end }}
+
+

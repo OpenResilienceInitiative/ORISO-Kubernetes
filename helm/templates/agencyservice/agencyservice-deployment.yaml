@@ -178,6 +178,26 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   key: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
-                  name: agencyservice-configmap-env
+                  name: agencyservice-configmap-env       
+            - name: MATRIX_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MATRIX_ADMIN_PASSWORD
+                  name: agencyservice-secret                
+            - name: MATRIX_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: MATRIX_ADMIN_USERNAME
+                  name: agencyservice-secret                
+            - name: MATRIX_REGISTRATION_SHARED_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: MATRIX_REGISTRATION_SHARED_SECRET
+                  name: agencyservice-secret                
+            - name: SPRING_DATA_MONGODB_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: SPRING_DATA_MONGODB_URI
+                  name: agencyservice-configmap-env   
           ports:
             - containerPort: 8080
