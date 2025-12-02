@@ -45,9 +45,9 @@ spec:
           EOF
           
           # Apply schema from mounted ConfigMap
-          if [ -f /init-scripts/{{ .name }}/schema.sql ]; then
+          if [ -f /sql-schemas/{{ .name }}/schema.sql ]; then
             echo "Applying schema for {{ .name }}..."
-            mysql -h mariadb -u root -p$MYSQL_ROOT_PASSWORD {{ .name }} < /init-scripts/{{ .name }}/schema.sql
+            mysql -h mariadb -u root -p$MYSQL_ROOT_PASSWORD {{ .name }} < /sql-schemas/{{ .name }}/schema.sql
             echo "✓ Schema applied for {{ .name }}"
           else
             echo "⚠ No schema file found for {{ .name }}, skipping schema application"
@@ -69,7 +69,7 @@ spec:
         volumeMounts:
         {{- range .Values.databases }}
         - name: schema-{{ .name }}
-          mountPath: /init-scripts/{{ .name }}
+          mountPath: /sql-schemas/{{ .name }}
         {{- end }}
       volumes:
       {{- range .Values.databases }}

@@ -7,7 +7,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DB_DIR="$SCRIPT_DIR/../../ORISO-Database/mariadb"
-HELM_DIR="$SCRIPT_DIR/charts/mariadb/templates/init-scripts"
+HELM_DIR="$SCRIPT_DIR/charts/mariadb/sql-schemas"
 
 # Color codes
 GREEN='\033[0;32m'
@@ -64,8 +64,8 @@ echo "Synced: $synced"
 echo "Skipped: $skipped"
 echo ""
 echo "Next steps:"
-echo "  1. Review changes: git diff helm/charts/mariadb/templates/init-scripts/"
-echo "  2. Commit if needed: git add helm/charts/mariadb/templates/init-scripts/"
+echo "  1. Review changes: git diff helm/charts/mariadb/sql-schemas/"
+echo "  2. Commit if needed: git add helm/charts/mariadb/sql-schemas/"
 echo "  3. Upgrade Helm release: helm upgrade mariadb ./helm/charts/mariadb --namespace caritas"
 echo ""
 

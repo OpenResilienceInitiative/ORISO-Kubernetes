@@ -29,11 +29,11 @@ When SQL files in `ORISO-Database/mariadb/` are updated:
 cd /home/caritas/Desktop/online-beratung/caritas-workspace/ORISO-Kubernetes/helm/charts/mariadb
 
 # Copy all schemas
-cp ../../../ORISO-Database/mariadb/*/schema.sql templates/init-scripts/
+cp ../../../ORISO-Database/mariadb/*/schema.sql sql-schemas/
 
 # Rename to match chart naming
 for db in agencyservice consultingtypeservice tenantservice userservice videoservice uploadservice caritas; do
-  mv templates/init-scripts/schema.sql templates/init-scripts/${db}-schema.sql
+  mv sql-schemas/schema.sql sql-schemas/${db}-schema.sql
 done
 ```
 
@@ -80,7 +80,7 @@ vim ORISO-Database/mariadb/tenantservice/schema.sql
 
 # 2. Copy to Helm chart (or automate this)
 cp ORISO-Database/mariadb/tenantservice/schema.sql \
-   ORISO-Kubernetes/helm/charts/mariadb/templates/init-scripts/tenantservice-schema.sql
+   ORISO-Kubernetes/helm/charts/mariadb/sql-schemas/tenantservice-schema.sql
 
 # 3. Upgrade Helm release
 cd ORISO-Kubernetes/helm

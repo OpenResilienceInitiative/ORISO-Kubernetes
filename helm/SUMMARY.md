@@ -36,20 +36,20 @@ ORISO-Kubernetes/helm/
         ├── Chart.yaml
         ├── values.yaml
         ├── README.md
-        └── templates/
-            ├── configmap-schemas.yaml
-            ├── job-init-databases.yaml
-            ├── statefulset.yaml
-            ├── service.yaml
-            ├── _helpers.tpl
-            └── init-scripts/    # SQL schema files
-                ├── agencyservice-schema.sql
-                ├── consultingtypeservice-schema.sql
-                ├── tenantservice-schema.sql
-                ├── userservice-schema.sql
-                ├── videoservice-schema.sql
-                ├── uploadservice-schema.sql
-                └── caritas-schema.sql
+        ├── templates/
+        │   ├── configmap-schemas.yaml
+        │   ├── job-init-databases.yaml
+        │   ├── statefulset.yaml
+        │   ├── service.yaml
+        │   └── _helpers.tpl
+        └── sql-schemas/         # SQL files (not in templates/)
+            ├── agencyservice-schema.sql
+            ├── consultingtypeservice-schema.sql
+            ├── tenantservice-schema.sql
+            ├── userservice-schema.sql
+            ├── videoservice-schema.sql
+            ├── uploadservice-schema.sql
+            └── caritas-schema.sql
 ```
 
 ## 🎯 How It Solves the Problem

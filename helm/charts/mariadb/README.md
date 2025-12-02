@@ -39,7 +39,7 @@ See `values.yaml` for all configurable options.
 
 ## SQL Schema Files
 
-SQL schemas are stored in `templates/init-scripts/`:
+SQL schemas are stored in `sql-schemas/` (not in templates/ to avoid Helm parsing):
 - `agencyservice-schema.sql`
 - `consultingtypeservice-schema.sql`
 - `tenantservice-schema.sql`
@@ -49,6 +49,7 @@ SQL schemas are stored in `templates/init-scripts/`:
 - `caritas-schema.sql`
 
 These files are automatically loaded from `ORISO-Database/mariadb/` during chart creation.
+MariaDB-specific comments (/*!40101...*/) are removed to reduce file size.
 
 ## Migration from Shell Scripts
 

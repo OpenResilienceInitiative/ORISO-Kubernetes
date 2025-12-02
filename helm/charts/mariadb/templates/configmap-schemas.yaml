@@ -12,7 +12,7 @@ metadata:
     database: {{ .name }}
 data:
   schema.sql: |
-{{- $file := printf "init-scripts/%s-schema.sql" .name }}
+{{- $file := printf "sql-schemas/%s-schema.sql" .name }}
 {{- if $.Files.Get $file }}
 {{ $.Files.Get $file | indent 4 }}
 {{- else }}

@@ -1,20 +1,6 @@
-/*M!999999\- enable the sandbox mode */ 
--- MariaDB dump 10.19  Distrib 10.11.14-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: userservice
 -- ------------------------------------------------------
--- Server version	10.11.14-MariaDB-ubu2204
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
 -- Sequence structure for `sequence_admin_agency`
@@ -109,8 +95,6 @@ DO SETVAL(`sequence_user_mobile_token`, 0, 0);
 --
 
 DROP TABLE IF EXISTS `DATABASECHANGELOG`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `DATABASECHANGELOG` (
   `ID` varchar(255) NOT NULL,
   `AUTHOR` varchar(255) NOT NULL,
@@ -127,15 +111,12 @@ CREATE TABLE `DATABASECHANGELOG` (
   `LABELS` varchar(255) DEFAULT NULL,
   `DEPLOYMENT_ID` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `DATABASECHANGELOGLOCK`
 --
 
 DROP TABLE IF EXISTS `DATABASECHANGELOGLOCK`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `DATABASECHANGELOGLOCK` (
   `ID` int(11) NOT NULL,
   `LOCKED` bit(1) NOT NULL,
@@ -143,15 +124,12 @@ CREATE TABLE `DATABASECHANGELOGLOCK` (
   `LOCKEDBY` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `admin`
 --
 
 DROP TABLE IF EXISTS `admin`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `admin` (
   `admin_id` varchar(36) NOT NULL,
   `tenant_id` bigint(21) DEFAULT NULL,
@@ -168,15 +146,12 @@ CREATE TABLE `admin` (
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `idx_username_first_name_last_name_email` (`username`,`first_name`,`last_name`,`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `admin_agency`
 --
 
 DROP TABLE IF EXISTS `admin_agency`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `admin_agency` (
   `id` bigint(21) unsigned NOT NULL,
   `admin_id` varchar(36) NOT NULL,
@@ -187,15 +162,12 @@ CREATE TABLE `admin_agency` (
   KEY `admin_id` (`admin_id`),
   CONSTRAINT `admin_agency_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `admin` (`admin_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `appointment`
 --
 
 DROP TABLE IF EXISTS `appointment`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `appointment` (
   `id` char(36) NOT NULL,
   `booking_id` int(11) DEFAULT NULL,
@@ -207,15 +179,12 @@ CREATE TABLE `appointment` (
   KEY `appointment_consultant_constraint` (`consultant_id`),
   CONSTRAINT `appointment_consultant_constraint` FOREIGN KEY (`consultant_id`) REFERENCES `consultant` (`consultant_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `chat`
 --
 
 DROP TABLE IF EXISTS `chat`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `chat` (
   `id` bigint(21) unsigned NOT NULL,
   `topic` varchar(255) NOT NULL,
@@ -237,15 +206,12 @@ CREATE TABLE `chat` (
   KEY `consultant_id_owner` (`consultant_id_owner`),
   CONSTRAINT `chat_consultant_ibfk_1` FOREIGN KEY (`consultant_id_owner`) REFERENCES `consultant` (`consultant_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `chat_agency`
 --
 
 DROP TABLE IF EXISTS `chat_agency`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `chat_agency` (
   `id` bigint(21) unsigned NOT NULL,
   `chat_id` bigint(21) unsigned NOT NULL,
@@ -256,15 +222,12 @@ CREATE TABLE `chat_agency` (
   KEY `chat_id` (`chat_id`),
   CONSTRAINT `chat_agency_ibfk_1` FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `consultant`
 --
 
 DROP TABLE IF EXISTS `consultant`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `consultant` (
   `consultant_id` varchar(36) NOT NULL,
   `tenant_id` bigint(21) DEFAULT NULL,
@@ -297,15 +260,12 @@ CREATE TABLE `consultant` (
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `idx_first_name_last_name_email_delete_date` (`first_name`,`last_name`,`email`,`delete_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `consultant_agency`
 --
 
 DROP TABLE IF EXISTS `consultant_agency`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `consultant_agency` (
   `id` bigint(21) unsigned NOT NULL,
   `tenant_id` bigint(21) DEFAULT NULL,
@@ -319,15 +279,12 @@ CREATE TABLE `consultant_agency` (
   KEY `consultant_id` (`consultant_id`),
   CONSTRAINT `consultant_agency_ibfk_1` FOREIGN KEY (`consultant_id`) REFERENCES `consultant` (`consultant_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `consultant_mobile_token`
 --
 
 DROP TABLE IF EXISTS `consultant_mobile_token`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `consultant_mobile_token` (
   `id` bigint(21) unsigned NOT NULL,
   `consultant_id` varchar(36) NOT NULL,
@@ -339,15 +296,12 @@ CREATE TABLE `consultant_mobile_token` (
   KEY `consultant_id` (`consultant_id`),
   CONSTRAINT `consultant_mobile_token_ibfk_1` FOREIGN KEY (`consultant_id`) REFERENCES `consultant` (`consultant_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `group_chat_participant`
 --
 
 DROP TABLE IF EXISTS `group_chat_participant`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `group_chat_participant` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `chat_id` bigint(20) unsigned NOT NULL,
@@ -357,30 +311,24 @@ CREATE TABLE `group_chat_participant` (
   UNIQUE KEY `unique_chat_consultant` (`chat_id`,`consultant_id`),
   KEY `idx_consultant` (`consultant_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=154 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `language`
 --
 
 DROP TABLE IF EXISTS `language`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `language` (
   `language_code` varchar(2) NOT NULL,
   `consultant_id` varchar(36) NOT NULL,
   PRIMARY KEY (`consultant_id`,`language_code`),
   CONSTRAINT `language_id_consultant_constraint` FOREIGN KEY (`consultant_id`) REFERENCES `consultant` (`consultant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `session`
 --
 
 DROP TABLE IF EXISTS `session`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `session` (
   `id` bigint(21) unsigned NOT NULL,
   `tenant_id` bigint(21) DEFAULT NULL,
@@ -411,15 +359,12 @@ CREATE TABLE `session` (
   CONSTRAINT `session_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE,
   CONSTRAINT `session_ibfk_2` FOREIGN KEY (`consultant_id`) REFERENCES `consultant` (`consultant_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `session_data`
 --
 
 DROP TABLE IF EXISTS `session_data`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `session_data` (
   `id` bigint(21) unsigned NOT NULL,
   `session_id` bigint(21) unsigned NOT NULL,
@@ -433,15 +378,12 @@ CREATE TABLE `session_data` (
   KEY `session_id` (`session_id`),
   CONSTRAINT `session_data_ibfk_2` FOREIGN KEY (`session_id`) REFERENCES `session` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `session_topic`
 --
 
 DROP TABLE IF EXISTS `session_topic`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `session_topic` (
   `id` bigint(21) NOT NULL,
   `session_id` bigint(21) unsigned NOT NULL,
@@ -452,15 +394,12 @@ CREATE TABLE `session_topic` (
   KEY `session_id` (`session_id`),
   CONSTRAINT `session_topic_ibfk_1` FOREIGN KEY (`session_id`) REFERENCES `session` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `user`
 --
 
 DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
   `user_id` varchar(36) NOT NULL,
   `tenant_id` bigint(21) DEFAULT NULL,
@@ -483,15 +422,12 @@ CREATE TABLE `user` (
   `matrix_password` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `user_agency`
 --
 
 DROP TABLE IF EXISTS `user_agency`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_agency` (
   `id` bigint(21) unsigned NOT NULL,
   `user_id` varchar(36) NOT NULL,
@@ -502,15 +438,12 @@ CREATE TABLE `user_agency` (
   KEY `chat_id` (`user_id`),
   CONSTRAINT `user_agency_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `user_chat`
 --
 
 DROP TABLE IF EXISTS `user_chat`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_chat` (
   `id` bigint(21) NOT NULL,
   `user_id` varchar(36) NOT NULL,
@@ -523,15 +456,12 @@ CREATE TABLE `user_chat` (
   CONSTRAINT `chat_user_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE,
   CONSTRAINT `chat_user_ibfk_2` FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `user_mobile_token`
 --
 
 DROP TABLE IF EXISTS `user_mobile_token`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_mobile_token` (
   `id` bigint(21) unsigned NOT NULL,
   `user_id` varchar(36) NOT NULL,
@@ -543,15 +473,5 @@ CREATE TABLE `user_mobile_token` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `user_mobile_token_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-28 17:29:08

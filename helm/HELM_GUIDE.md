@@ -73,7 +73,7 @@ helm/
 │       │   ├── job-init-databases.yaml   # Init Job (Helm hook)
 │       │   ├── statefulset.yaml          # MariaDB StatefulSet
 │       │   └── service.yaml              # MariaDB Service
-│       └── templates/init-scripts/       # SQL schema files
+│       └── sql-schemas/                  # SQL schema files (not in templates/)
 │           ├── agencyservice-schema.sql
 │           ├── tenantservice-schema.sql
 │           └── ...
@@ -116,7 +116,7 @@ kubectl get configmap mariadb-init-tenantservice-schema -n caritas -o yaml
 
 # Manually apply schema
 kubectl exec -i -n caritas mariadb-0 -- mysql -u root -proot tenantservice < \
-  charts/mariadb/templates/init-scripts/tenantservice-schema.sql
+  charts/mariadb/sql-schemas/tenantservice-schema.sql
 ```
 
 ### Rollback
