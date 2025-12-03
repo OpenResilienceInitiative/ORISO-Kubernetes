@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mariadb-init-script
+  namespace: caritas
+data:
+  01-set-max-connections.sql: |
+    -- Set max_connections permanently
+    SET GLOBAL max_connections = 1000;
+    SET PERSIST max_connections = 1000;
+

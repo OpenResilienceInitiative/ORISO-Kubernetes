@@ -34,6 +34,9 @@ spec:
         volumeMounts:
         - name: mariadb-data
           mountPath: /var/lib/mysql
+        - name: mariadb-config
+          mountPath: /etc/mysql/conf.d
+          readOnly: true
         resources:
           requests:
             cpu: 250m
@@ -73,4 +76,8 @@ spec:
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: Retain
     whenScaled: Retain
+  volumes:
+  - name: mariadb-config
+    configMap:
+      name: mariadb-config
 

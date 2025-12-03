@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mariadb-config
+  namespace: caritas
+data:
+  my.cnf: |
+    [mysqld]
+    # Connection settings
+    max_connections = 1000
+    
+    # Performance tuning
+    innodb_buffer_pool_size = 256M
+    innodb_log_file_size = 64M
+    
+    # Character set
+    character-set-server = utf8mb4
+    collation-server = utf8mb4_unicode_ci
+
