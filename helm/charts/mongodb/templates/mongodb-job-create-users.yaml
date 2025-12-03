@@ -65,10 +65,10 @@ spec:
             - >
               set -e;
               echo "Creating user: nosqlclient";
-              mongosh "mongodb://$MONGODB_USERNAME:$MONGODB_PASSWORD@mongodb-0.mongodb.{{ .Release.Namespace }}.svc.cluster.local:27017/?replicaSet=rs0" --eval "db=db.getSiblingDB('nosqlclient'); db.createUser({ user: '$MONGO_NOSQLCLIENT_USER', pwd: '$MONGO_NOSQLCLIENT_PASSWORD', roles: [{ role: 'readWrite', db: 'nosqlclient' }]});" &&
+              mongosh "mongodb://$MONGODB_USERNAME:$MONGODB_PASSWORD@mongodb.{{ .Release.Namespace }}:27017/?replicaSet=rs0" --eval "db=db.getSiblingDB('nosqlclient'); db.createUser({ user: '$MONGO_NOSQLCLIENT_USER', pwd: '$MONGO_NOSQLCLIENT_PASSWORD', roles: [{ role: 'readWrite', db: 'nosqlclient' }]});" &&
               echo "Creating user: statistics";
-              mongosh "mongodb://$MONGODB_USERNAME:$MONGODB_PASSWORD@mongodb-0.mongodb.{{ .Release.Namespace }}.svc.cluster.local:27017/?replicaSet=rs0" --eval "db=db.getSiblingDB('statistics'); db.createUser({ user: '$MONGO_STATISTICS_USER', pwd: '$MONGO_STATISTICS_PASSWORD', roles: [{ role: 'readWrite', db: 'statistics' }]});" &&
+              mongosh "mongodb://$MONGODB_USERNAME:$MONGODB_PASSWORD@mongodb.{{ .Release.Namespace }}:27017/?replicaSet=rs0" --eval "db=db.getSiblingDB('statistics'); db.createUser({ user: '$MONGO_STATISTICS_USER', pwd: '$MONGO_STATISTICS_PASSWORD', roles: [{ role: 'readWrite', db: 'statistics' }]});" &&
               echo "Creating user: consulting_types";
-              mongosh "mongodb://$MONGODB_USERNAME:$MONGODB_PASSWORD@mongodb-0.mongodb.{{ .Release.Namespace }}.svc.cluster.local:27017/?replicaSet=rs0" --eval "db=db.getSiblingDB('consulting_types'); db.createUser({ user: '$MONGO_CONSULTING_TYPES_USER', pwd: '$MONGO_CONSULTING_TYPES_PASSWORD', roles: [{ role: 'readWrite', db: 'consulting_types' }]});"
+              mongosh "mongodb://$MONGODB_USERNAME:$MONGODB_PASSWORD@mongodb.{{ .Release.Namespace }}:27017/?replicaSet=rs0" --eval "db=db.getSiblingDB('consulting_types'); db.createUser({ user: '$MONGO_CONSULTING_TYPES_USER', pwd: '$MONGO_CONSULTING_TYPES_PASSWORD', roles: [{ role: 'readWrite', db: 'consulting_types' }]});"
   backoffLimit: 1
 {{- end }}

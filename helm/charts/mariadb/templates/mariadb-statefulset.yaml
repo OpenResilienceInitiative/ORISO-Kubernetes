@@ -21,7 +21,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mariadb-secret
-                  key: MYSQL_ROOT_PASSWORD
+                  key: MYSQL_ROOT_PASSWORD            
+            - name: MYSQL_MAX_CONNECTIONS
+              valueFrom:
+                configMapKeyRef:
+                  name: mariadb-configmap
+                  key: MYSQL_MAX_CONNECTIONS
           ports:
             - containerPort: 3306
           volumeMounts:
