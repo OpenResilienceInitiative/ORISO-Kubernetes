@@ -24,10 +24,24 @@ items:
         labels:
           app: matrix-synapse
       spec:
+        initContainers:
+        - name: fix-permissions
+          image: busybox:latest
+          command:
+          - sh
+          - -c
+          - |
+            chown -R 991:991 /data || true
+            chmod -R u+w /data || true
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+          - name: synapse-data
+            mountPath: /data
         containers:
         - env:
           - name: SYNAPSE_SERVER_NAME
-            value: "matrix.oriso.site"  # Update with your Matrix server domain
+            value: "caritas.local"
           - name: SYNAPSE_REPORT_STATS
             value: 'no'
           - name: SYNAPSE_ENABLE_AUTHENTICATED_MEDIA
@@ -78,7 +92,10 @@ items:
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         schedulerName: default-scheduler
-        securityContext: {}
+        securityContext:
+          fsGroup: 991
+          runAsUser: 991
+          runAsGroup: 991
         terminationGracePeriodSeconds: 30
         volumes:
         - name: synapse-data
