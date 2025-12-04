@@ -129,7 +129,7 @@ data:
       enabled: true
       host: redis
       port: 6379
-      password: caritas123
+      password:  {{ .Values.global.secrets.redisdefaultPass }}  
       dbid: 0
 
     caches:
@@ -148,7 +148,7 @@ data:
     report_stats: false
     enable_registration: true
     enable_registration_without_verification: true
-    public_baseurl: "http://91.99.219.182:8008"
+    public_baseurl: {{ .Values.matrix.matrixApiUrl }}   
 
     suppress_key_validation_warnings: true
     trusted_key_servers:
@@ -257,13 +257,13 @@ data:
         idp_name: "Caritas Keycloak SSO"
         idp_brand: "keycloak"
         discover: false
-        issuer: "http://localhost:8080/realms/online-beratung"
+        issuer: {{ .Values.global.springSecurityOAuth2ResourceserverJWTIssuerURI }}
         client_id: "matrix-synapse"
         client_secret: "caritas-matrix-secret-2025"
         scopes: ["openid", "profile", "email"]
-        authorization_endpoint: "http://91.99.219.182:8089/auth/realms/online-beratung/protocol/openid-connect/auth"
-        token_endpoint: "http://localhost:8080/realms/online-beratung/protocol/openid-connect/token"
-        userinfo_endpoint: "http://localhost:8080/realms/online-beratung/protocol/openid-connect/userinfo"
+        authorization_endpoint:  {{ .Values.global.authorizationendpoint }} 
+        token_endpoint:  {{ .Values.global.tokenendpoint }} 
+        userinfo_endpoint:  {{ .Values.global.userinfoendpoint }} 
         user_mapping_provider:
           config:
             localpart_template: "{{`{{`}} user.preferred_username {{`}}`}}"

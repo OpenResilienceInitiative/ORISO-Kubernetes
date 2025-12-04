@@ -4,6 +4,7 @@ metadata:
   name: mariadb-configmap-initsql
 data: 
   00init.sql: |
+    SET GLOBAL max_connections = {{ .Values.maxconnections }}; 
     CREATE USER IF NOT EXISTS '{{ .Values.global.secrets.keycloakDbUsername }}'@'%' IDENTIFIED BY '{{ .Values.global.secrets.keycloakDbPassword }}';
     CREATE DATABASE IF NOT EXISTS keycloak CHARACTER SET utf8 COLLATE utf8_unicode_ci;
     GRANT ALTER, CREATE, CREATE VIEW, DELETE, DROP, INDEX, INSERT, REFERENCES, SELECT, SHOW VIEW, TRIGGER, UPDATE, ALTER ROUTINE, EXECUTE ON keycloak.* TO '{{ .Values.global.secrets.keycloakDbUsername }}'@'%';

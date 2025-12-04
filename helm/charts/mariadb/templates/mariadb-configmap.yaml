@@ -3,4 +3,6 @@ kind: ConfigMap
 metadata:
   name: mariadb-configmap
 data:  
-  MYSQL_MAX_CONNECTIONS:  {{ .Values.maxconnections  | quote }}
+  my.cnf: |
+    [mysqld]
+    max_connections= {{ .Values.maxconnections  | quote }} 
