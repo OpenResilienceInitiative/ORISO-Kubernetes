@@ -19,7 +19,21 @@ spec:
     metadata:
       labels:
         app: matrix-synapse
-    spec:
+    spec:       
+      initContainers:
+        - name: fix-permissions
+          image: busybox:latest
+          command:
+          - sh
+          - -c
+          - |
+            chown -R 991:991 /data || true
+            chmod -R u+w /data || true
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+          - name: synapse-data
+            mountPath: /data
       containers:
       - name: synapse
         image: matrixdotorg/synapse:latest

@@ -1,2 +1,4 @@
 helm/values.yaml
 helm/values.yaml
+helm/out.yaml
+helm/.idea

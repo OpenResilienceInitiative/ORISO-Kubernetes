@@ -129,7 +129,7 @@ data:
       enabled: true
       host: redis
       port: 6379
-      password:  {{ .Values.global.secrets.redisdefaultPass }}  
+      password: {{ .Values.global.secrets.redisdefaultPass }}
       dbid: 0
 
     caches:
@@ -144,7 +144,7 @@ data:
     enable_authenticated_media: false
     matrix_synapse_enable_authenticated_media: false
 
-    registration_shared_secret: "caritas-registration-secret-2025"
+    registration_shared_secret: {{ .Values.global.secrets.matrixRegistrationSharedSecret }}
     report_stats: false
     enable_registration: true
     enable_registration_without_verification: true
@@ -230,7 +230,7 @@ data:
     \   USERS=$(kubectl exec -n caritas matrix-synapse-fresh -- sqlite3 /data/homeserver.db
     \"SELECT name FROM users WHERE name LIKE '@%:91.99%'\" 2>/dev/null || echo \"\")\nfi\n\n#
     Get Keycloak admin token\nTOKEN=$(curl -s -X POST \"http://keycloak-service:8080/realms/master/protocol/openid-connect/token\"
-    \\\n  -d \"client_id=admin-cli\" \\\n  -d \"username=admin\" \\\n  -d \"password=admin\"
+    \\\n  -d \"client_id=admin-cli\" \\\n  -d \"username={{ .Values.global.secrets.keycloakAdminUsername }}\" \\\n  -d \"password={{ .Values.global.secrets.keycloakAdminPassword }}\"
     \\\n  -d \"grant_type=password\" | grep -o \"\\\"access_token\\\":\\\"[^\\\"]*\\\"\"
     | cut -d\"\\\"\" -f4)\n\nif [ -z \"$TOKEN\" ]; then\n    echo \"❌ Failed to get
     Keycloak admin token\"\n    exit 1\nfi\n\necho \"✅ Got Keycloak admin token\"\n\n#

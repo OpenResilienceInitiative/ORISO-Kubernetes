@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: keycloak-configmap-data
 data:
-  {{- (.Files.Glob "resources/keycloak-full-export.json").AsConfig | nindent 2 }}
+  {{- (.Files.Glob "resources/realm.json").AsConfig | nindent 2 }}

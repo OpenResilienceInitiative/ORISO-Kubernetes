@@ -23,7 +23,8 @@ spec:
               protocol: TCP
           command:
             - redis-server
-{{/*            - /etc/redis/redis.conf*/}}
+            - "--requirepass"
+            - "$(REDIS_DEFAULT_PASS)"
           env:
             - name: REDIS_DEFAULT_PASS
               valueFrom:
@@ -35,7 +36,7 @@ spec:
               command:
                 - /bin/sh
                 - -c
-                - redis-cli --no-auth-warning -a "$REDIS_PASSWORD" ping
+                - redis-cli --no-auth-warning -a "$REDIS_DEFAULT_PASS" ping
             failureThreshold: 3
             initialDelaySeconds: 30
             periodSeconds: 10
@@ -46,7 +47,7 @@ spec:
               command:
                 - /bin/sh
                 - -c
-                - redis-cli --no-auth-warning -a "$REDIS_PASSWORD" ping
+                - redis-cli --no-auth-warning -a "$REDIS_DEFAULT_PASS" ping
             failureThreshold: 3
             initialDelaySeconds: 5
             periodSeconds: 5
@@ -55,7 +56,7 @@ spec:
           volumeMounts:
             - mountPath: /data
               name: redis-data
-            
+
         - name: redis-exporter
           image: oliver006/redis_exporter:latest
           ports:
@@ -67,7 +68,6 @@ spec:
                 configMapKeyRef:
                   name: redis-configmap
                   key: REDIS_SERVICE_URL
-             
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
