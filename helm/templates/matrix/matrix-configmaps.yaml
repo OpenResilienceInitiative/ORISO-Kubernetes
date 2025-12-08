@@ -222,34 +222,6 @@ metadata:
 ---
 apiVersion: v1
 data:
-  sync.sh: "#!/bin/bash\necho \"\U0001F504 Syncing Matrix users to Keycloak...\"\n\n#
-    Get Matrix users\nUSERS=$(kubectl exec -n caritas matrix-postgres-0 -- psql -U
-    synapse_user -d synapse -t -c \"SELECT name FROM users WHERE name LIKE '@%:91.99.219.182'
-    AND name NOT LIKE '%:matrix.org'\" 2>/dev/null || echo \"\")\n\nif [ -z \"$USERS\"
-    ]; then\n    echo \"No Matrix users found or using SQLite\"\n    # Try SQLite\n
-    \   USERS=$(kubectl exec -n caritas matrix-synapse-fresh -- sqlite3 /data/homeserver.db
-    \"SELECT name FROM users WHERE name LIKE '@%:91.99%'\" 2>/dev/null || echo \"\")\nfi\n\n#
-    Get Keycloak admin token\nTOKEN=$(curl -s -X POST \"http://keycloak-service:8080/realms/master/protocol/openid-connect/token\"
-    \\\n  -d \"client_id=admin-cli\" \\\n  -d \"username={{ .Values.global.secrets.keycloakAdminUsername }}\" \\\n  -d \"password={{ .Values.global.secrets.keycloakAdminPassword }}\"
-    \\\n  -d \"grant_type=password\" | grep -o \"\\\"access_token\\\":\\\"[^\\\"]*\\\"\"
-    | cut -d\"\\\"\" -f4)\n\nif [ -z \"$TOKEN\" ]; then\n    echo \"❌ Failed to get
-    Keycloak admin token\"\n    exit 1\nfi\n\necho \"✅ Got Keycloak admin token\"\n\n#
-    For each Matrix user, create in Keycloak if not exists\necho \"$USERS\" | while
-    read matrix_user; do\n    if [ ! -z \"$matrix_user\" ]; then\n        # Extract
-    username from @username:domain\n        username=$(echo \"$matrix_user\" | sed
-    \"s/@//;s/:.*//\")\n        echo \"Checking user: $username\"\n        \n        #
-    Create user in Keycloak\n        curl -s -X POST \"http://keycloak-service:8080/admin/realms/online-beratung/users\"
-    \\\n          -H \"Authorization: Bearer $TOKEN\" \\\n          -H \"Content-Type:
-    application/json\" \\\n          -d \"{\\\"username\\\":\\\"$username\\\",\\\"enabled\\\":true,\\\"email\\\":\\\"$username@caritas.local\\\",\\\"emailVerified\\\":true}\"
-    \\\n          && echo \"✅ Synced: $username\" || echo \"⚠️  Already exists or
-    error: $username\"\n    fi\ndone\n\necho \"✅ Sync complete!\"\n"
-kind: ConfigMap
-metadata:
-  name: matrix-keycloak-sync-script
-  namespace: caritas 
----
-apiVersion: v1
-data:
   oidc-keycloak.yaml: |
     # Matrix Synapse OIDC Integration with Keycloak
     oidc_providers:
