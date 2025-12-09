@@ -20,8 +20,14 @@ spec:
         - image:  {{ .Values.frontend.imageName }}:{{ .Values.frontend.imageVersion }}
           name: frontend          
           imagePullPolicy: Always
+          env:            
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: PORT
+                  name: frontend-configmap
           ports:
-            - containerPort: 80
+            - containerPort: 8080
           resources: {}          
       imagePullSecrets:
         - name: registry-secret
