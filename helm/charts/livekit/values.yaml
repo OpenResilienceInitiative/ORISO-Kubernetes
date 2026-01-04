@@ -1,0 +1,37 @@
+# LiveKit Helm Chart - Values
+# Based on actual running services
+
+# LiveKit Main Service
+livekit:
+  image:
+    repository: livekit/livekit-server
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  
+  replicas: 1
+  
+  service:
+    type: ClusterIP
+    port: 7880
+    targetPort: 7880
+
+# LiveKit Token Service
+tokenService:
+  image:
+    repository: livekit-token-service
+    tag: "latest"
+    pullPolicy: Never  # Use local image
+  
+  replicas: 1
+  
+  service:
+    type: ClusterIP
+    port: 3010
+    targetPort: 3010
+
+namespace: caritas
+
+resources: {}  # No limits set in original
+
+
+

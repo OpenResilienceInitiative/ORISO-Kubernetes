@@ -1,0 +1,117 @@
+# Global Values for ORISO Platform
+# This file contains all shared configuration used across all Helm charts
+# Environment-specific overrides: values-dev.yaml, values-staging.yaml, values-prod.yaml
+
+global:
+  # Namespace - can be overridden per environment
+  namespace: "caritas"
+  
+  # Domain Configuration - All external domains
+  # These are used by Frontend, Admin, and Ingress resources
+  domains:
+    api: "api.oriso-dev.site"           # Backend API gateway
+    app: "app.oriso-dev.site"            # Main frontend application
+    admin: "admin.oriso-dev.site"        # Admin panel
+    auth: "auth.oriso-dev.site"          # Keycloak authentication
+    matrix: "matrix.oriso-dev.site"       # Matrix client API
+    element: "element.oriso-dev.site"    # Element Matrix client UI
+    call: "call.oriso-dev.site"          # Element Call for video
+    livekit: "livekit.oriso-dev.site"    # LiveKit WebRTC server
+    health: "health.oriso-dev.site"      # Health monitoring dashboard
+    status: "status.oriso-dev.site"      # System status page
+    redis: "redis.oriso-dev.site"        # Redis Commander UI
+    signoz: "signoz.oriso-dev.site"      # SigNoz observability
+    storybook: "storybook.oriso-dev.site" # UI component development
+  
+  # Keycloak Configuration
+  keycloak:
+    # Internal Kubernetes DNS (for service-to-service communication)
+    internalUrl: "http://oriso-platform-keycloak.caritas.svc.cluster.local:8080"
+    # External URL (for JWT validation - must match token issuer)
+    externalUrl: "https://auth.oriso-dev.site"
+    realm: "online-beratung"
+    # Admin credentials (should be in Secrets, but defaults here)
+    admin:
+      username: "admin"
+      # Password should be in Secret
+    # JWT validation URLs (external for managed clusters)
+    jwt:
+      issuerUri: "https://auth.oriso-dev.site/realms/online-beratung"
+      jwkSetUri: "https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs"
+  
+  # Matrix Synapse Configuration
+  matrix:
+    # Server name (standardized across all services)
+    serverName: "oriso-dev.site"
+    # Internal Kubernetes DNS
+    internalUrl: "http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008"
+    # External URL
+    externalUrl: "https://matrix.oriso-dev.site"
+    # Registration secret (should be in Secret)
+    registrationSharedSecret: "caritas-registration-secret-2025"
+  
+  # CORS Configuration
+  cors:
+    allowedOrigins:
+      - "https://app.oriso-dev.site"
+      - "https://admin.oriso-dev.site"
+      - "https://api.oriso-dev.site"
+    allowedMethods:
+      - "GET"
+      - "POST"
+      - "PUT"
+      - "PATCH"
+      - "DELETE"
+      - "OPTIONS"
+    allowedHeaders:
+      - "Authorization"
+      - "Content-Type"
+      - "Cache-Control"
+      - "Pragma"
+      - "Expires"
+      - "X-CSRF-Token"
+      - "x-csrf-token"
+      - "X-Requested-With"
+      - "X-WHITELIST-HEADER"
+    allowCredentials: true
+    maxAge: 86400
+  
+  # Database Configuration (Internal Kubernetes DNS)
+  databases:
+    mariadb:
+      host: "oriso-platform-mariadb.caritas.svc.cluster.local"
+      port: 3306
+    mongodb:
+      host: "oriso-platform-mongodb.caritas.svc.cluster.local"
+      port: 27017
+    redis:
+      host: "oriso-platform-redis.caritas.svc.cluster.local"
+      port: 6379
+    rabbitmq:
+      host: "oriso-platform-rabbitmq.caritas.svc.cluster.local"
+      port: 5672
+      managementPort: 15672
+  
+  # Service URLs (Internal Kubernetes DNS)
+  services:
+    agencyservice:
+      url: "http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084"
+    userservice:
+      url: "http://oriso-platform-userservice.caritas.svc.cluster.local:8082"
+    tenantservice:
+      url: "http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081"
+    consultingtypeservice:
+      url: "http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083"
+
+# Default image pull policy
+imagePullPolicy: "IfNotPresent"
+
+# Default resource requests/limits (can be overridden per chart)
+defaultResources:
+  requests:
+    cpu: "100m"
+    memory: "128Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+

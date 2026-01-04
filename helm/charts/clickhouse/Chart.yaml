@@ -1,0 +1,9 @@
+apiVersion: v2
+name: clickhouse
+description: ClickHouse database for SigNoz
+type: application
+version: 1.0.0
+appVersion: "23.8"
+
+
+

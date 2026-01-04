@@ -1,0 +1,9 @@
+apiVersion: v2
+name: mariadb
+description: A Helm chart for MariaDB StatefulSet
+type: application
+version: 1.0.0
+appVersion: "10.11"
+
+
+

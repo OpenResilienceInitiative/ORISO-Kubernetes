@@ -1,0 +1,72 @@
+# Redis Helm Chart - Values
+# Based on actual running deployment
+
+image:
+  repository: redis
+  tag: "7-alpine"
+  pullPolicy: IfNotPresent
+
+replicas: 1
+namespace: caritas
+
+service:
+  type: ClusterIP
+  port: 6379
+  targetPort: 6379
+
+# Redis Configuration
+redis:
+  # Password (should be in Secret)
+  password: ""  # Should reference Secret
+  secret:
+    name: redis-secret
+    key: password
+
+# Storage Configuration
+persistence:
+  enabled: true
+  storageClass: "local-path"
+  size: 1Gi
+  accessMode: ReadWriteOnce
+  existingClaim: "redis-pvc"  # Use existing PVC
+
+# ConfigMap for redis.conf
+configMap:
+  name: redis-config
+  existing: true  # Use existing ConfigMap
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi
+
+# Probes
+livenessProbe:
+  exec:
+    command:
+    - sh
+    - -c
+    - redis-cli --no-auth-warning -a $REDIS_PASSWORD ping
+  failureThreshold: 3
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 5
+
+readinessProbe:
+  exec:
+    command:
+    - sh
+    - -c
+    - redis-cli --no-auth-warning -a $REDIS_PASSWORD ping
+  failureThreshold: 3
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  successThreshold: 1
+  timeoutSeconds: 3
+
+
+

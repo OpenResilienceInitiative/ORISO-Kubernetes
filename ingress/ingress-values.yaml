@@ -1,0 +1,72 @@
+# Ingress Configuration Values
+# This file contains all configurable values for Ingress resources
+# Replace hardcoded values in Ingress YAML files with these values
+
+# Domain Configuration
+domains:
+  api: "api.oriso-dev.site"
+  app: "app.oriso-dev.site"
+  admin: "admin.oriso-dev.site"
+  auth: "auth.oriso-dev.site"
+  matrix: "matrix.oriso-dev.site"
+  element: "element.oriso-dev.site"
+  call: "call.oriso-dev.site"
+  livekit: "livekit.oriso-dev.site"
+  health: "health.oriso-dev.site"
+  status: "status.oriso-dev.site"
+  redis: "redis.oriso-dev.site"
+  signoz: "signoz.oriso-dev.site"
+  storybook: "storybook.oriso-dev.site"
+
+# TLS/Certificate Configuration
+tls:
+  clusterIssuer: "letsencrypt-prod"  # Cert-Manager ClusterIssuer name
+  # Secret names follow pattern: {domain-prefix}-oriso-site-tls
+  # Example: app-oriso-site-tls, api-oriso-dev-site-tls
+
+# Service Names (Helm-managed)
+services:
+  frontend: "oriso-platform-frontend"
+  admin: "oriso-platform-admin"
+  health-dashboard: "oriso-platform-health-dashboard"
+  status-page: "oriso-platform-status-page"
+  element: "oriso-platform-element"
+  signoz: "oriso-platform-signoz"
+  consultingtypeservice: "oriso-platform-consultingtypeservice"
+  userservice: "oriso-platform-userservice"
+  agencyservice: "oriso-platform-agencyservice"
+  tenantservice: "oriso-platform-tenantservice"
+  keycloak: "oriso-platform-keycloak"
+  matrix-synapse: "oriso-platform-matrix-synapse"
+  element-call: "oriso-platform-element-call"
+  livekit: "oriso-platform-livekit"
+  redis-commander: "oriso-platform-redis-commander"
+  storybook: "oriso-platform-storybook"
+
+# Service Ports
+ports:
+  frontend: 80
+  admin: 80
+  health-dashboard: 9100
+  status-page: 9200
+  element: 8087
+  signoz: 8080
+  consultingtypeservice: 8083
+  userservice: 8082
+  agencyservice: 8084
+  tenantservice: 8081
+  keycloak: 8080
+  matrix-synapse: 8008
+  element-call: 80
+  livekit: 7880
+  redis-commander: 8081
+  storybook: 6006
+
+# Namespace
+namespace: "caritas"
+
+# Ingress Class
+ingressClass: "nginx"
+
+
+

@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "tenantservice.fullname" . }}-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "tenantservice.labels" . | nindent 4 }}
+data:
+  # Database Configuration - Use full Kubernetes DNS FQDN (required for managed clusters)
+  SPRING_DATASOURCE_URL: {{ .Values.database.url | quote }}
+  
+  # Keycloak Configuration - Use global values if available, otherwise chart values
+  KEYCLOAK_AUTH_SERVER_URL: {{ if and .Values.global .Values.global.keycloak .Values.global.keycloak.internalUrl }}{{ .Values.global.keycloak.internalUrl | quote }}{{ else }}{{ .Values.keycloak.authServerUrl | quote }}{{ end }}
+  KEYCLOAK_REALM: {{ if and .Values.global .Values.global.keycloak .Values.global.keycloak.realm }}{{ .Values.global.keycloak.realm | quote }}{{ else }}{{ .Values.keycloak.realm | quote }}{{ end }}
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: {{ if and .Values.global .Values.global.keycloak .Values.global.keycloak.jwt .Values.global.keycloak.jwt.issuerUri }}{{ .Values.global.keycloak.jwt.issuerUri | quote }}{{ else }}{{ .Values.keycloak.jwt.issuerUri | quote }}{{ end }}
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: {{ if and .Values.global .Values.global.keycloak .Values.global.keycloak.jwt .Values.global.keycloak.jwt.jwkSetUri }}{{ .Values.global.keycloak.jwt.jwkSetUri | quote }}{{ else }}{{ .Values.keycloak.jwt.jwkSetUri | quote }}{{ end }}
+  
+  # RabbitMQ Configuration - Use full Kubernetes DNS FQDN (required for managed clusters)
+  SPRING_RABBITMQ_HOST: {{ .Values.rabbitmq.host | quote }}
+  SPRING_RABBITMQ_PORT: {{ .Values.rabbitmq.port | quote }}
+  SPRING_RABBITMQ_USERNAME: {{ .Values.rabbitmq.username | quote }}
+  SPRING_RABBITMQ_PASSWORD: {{ .Values.rabbitmq.password | quote }}
+  
+  # Service URLs - Use full Kubernetes DNS FQDN (required for managed clusters)
+  # Use global values if available, otherwise chart values
+  CONSULTING_TYPE_SERVICE_API_URL: {{ if and .Values.global .Values.global.services .Values.global.services.consultingtypeservice .Values.global.services.consultingtypeservice.url }}{{ .Values.global.services.consultingtypeservice.url | quote }}{{ else }}{{ .Values.services.consultingTypeService.apiUrl | quote }}{{ end }}
+  USER_SERVICE_API_URL: {{ if and .Values.global .Values.global.services .Values.global.services.userservice .Values.global.services.userservice.url }}{{ .Values.global.services.userservice.url | quote }}{{ else }}{{ .Values.services.userService.apiUrl | quote }}{{ end }}
+  
+  # Spring Profile
+  SPRING_PROFILES_ACTIVE: {{ .Values.spring.profiles.active | quote }}
+  
+  # Feature Flags
+  FEATURE_MULTITENANCY_WITH_SINGLE_DOMAIN_ENABLED: {{ .Values.features.multitenancy.withSingleDomain.enabled | quote }}
+  
+  # Liquibase - Explicitly disabled (database schemas managed separately in ORISO-Database)
+  SPRING_LIQUIBASE_ENABLED: {{ .Values.database.liquibase.enabled | quote }}
+
+

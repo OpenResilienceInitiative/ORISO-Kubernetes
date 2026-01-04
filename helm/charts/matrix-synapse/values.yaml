@@ -1,0 +1,82 @@
+# Matrix Synapse Helm Chart - Values
+# Based on actual running deployment
+
+image:
+  repository: matrixdotorg/synapse
+  tag: "latest"
+  pullPolicy: Always
+
+replicas: 1
+namespace: caritas
+
+service:
+  type: ClusterIP
+  port: 8008
+  targetPort: 8008
+  federationPort: 8009
+
+# Matrix Configuration
+matrix:
+  # Server name (uses global.matrix.serverName if available)
+  serverName: "oriso-dev.site"
+  reportStats: "no"
+  enableAuthenticatedMedia: "false"
+
+# Storage Configuration
+persistence:
+  enabled: true
+  storageClass: "local-path"
+  size: 10Gi
+  accessMode: ReadWriteOnce
+  existingClaim: "matrix-synapse-data"  # Use existing PVC
+
+# ConfigMap for homeserver.yaml
+configMap:
+  name: matrix-homeserver-oidc
+  existing: true  # Use existing ConfigMap
+
+resources:
+  requests:
+    cpu: 1500m
+    memory: 3Gi
+  limits:
+    cpu: "3"
+    memory: 6Gi
+
+# Probes
+livenessProbe:
+  httpGet:
+    path: /_matrix/client/versions
+    port: 8008
+    scheme: HTTP
+  failureThreshold: 3
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  successThreshold: 1
+  timeoutSeconds: 1
+
+readinessProbe:
+  httpGet:
+    path: /_matrix/client/versions
+    port: 8008
+    scheme: HTTP
+  failureThreshold: 3
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 1
+
+# Init Container for permissions fix
+initContainer:
+  enabled: true
+  image: busybox:latest
+  runAsUser: 0
+
+# Security Context
+securityContext:
+  fsGroup: 991
+  runAsUser: 991
+  runAsGroup: 991
+
+
+

@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: element-call-ingress
+  namespace: caritas
+  annotations:
+    # SSL/TLS
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: call.oriso-dev.site
+    http:
+      paths:
+      - path: /config.json
+        pathType: Exact
+        backend:
+          service:
+            name: oriso-platform-element-call
+            port:
+              number: 80
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: oriso-platform-element-call
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - call.oriso-dev.site
+    secretName: element-call-tls
+
+

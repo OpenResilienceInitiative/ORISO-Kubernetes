@@ -1,0 +1,25 @@
+# Health Dashboard Helm Chart - Values
+# All values from ACTUAL running cluster resources
+
+# Application Configuration
+image:
+  repository: health-dashboard
+  tag: latest
+  pullPolicy: Never  # Use local image from k3s
+
+# Deployment Configuration
+replicas: 1
+namespace: caritas
+
+resources: {}
+
+# Service Configuration
+service:
+  type: ClusterIP
+  port: 9100
+  targetPort: 9100
+
+# Environment Variables
+env:
+  PORT: "9100"
+

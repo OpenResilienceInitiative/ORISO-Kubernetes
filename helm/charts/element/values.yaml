@@ -1,0 +1,21 @@
+# Element Helm Chart - Values
+# Based on actual running deployment
+
+image:
+  repository: oriso-element
+  tag: "latest"
+  pullPolicy: Never  # Use local image (must exist)
+
+replicas: 1
+namespace: caritas
+
+service:
+  type: ClusterIP
+  port: 8087
+  targetPort: 8087
+
+resources: {}  # No limits set in original
+
+# Network Configuration
+hostNetwork: false
+

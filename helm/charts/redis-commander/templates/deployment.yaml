@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "redis-commander.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "redis-commander.labels" . | nindent 4 }}
+    app: redis-commander
+spec:
+  replicas: {{ .Values.replicas }}
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: redis-commander
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: redis-commander
+    spec:
+      containers:
+      - name: redis-commander
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.redis.secret.name }}
+              key: {{ .Values.redis.secret.keys.password }}
+        - name: REDIS_HOSTS
+          value: local:{{ .Values.redis.host }}:{{ .Values.redis.port }}:0:$(REDIS_PASSWORD)
+        - name: HTTP_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.redis.secret.name }}
+              key: {{ .Values.redis.secret.keys.httpUser }}
+        - name: HTTP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.redis.secret.name }}
+              key: {{ .Values.redis.secret.keys.httpPassword }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.service.targetPort }}
+          protocol: TCP
+        {{- if .Values.livenessProbe }}
+        livenessProbe:
+          {{- toYaml .Values.livenessProbe | nindent 10 }}
+        {{- end }}
+        {{- if .Values.readinessProbe }}
+        readinessProbe:
+          {{- toYaml .Values.readinessProbe | nindent 10 }}
+        {{- end }}
+        {{- if .Values.resources }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        {{- end }}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      terminationGracePeriodSeconds: 30
+
+
+

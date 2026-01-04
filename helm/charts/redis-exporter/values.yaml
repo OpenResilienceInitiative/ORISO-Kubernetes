@@ -1,0 +1,35 @@
+# Redis Exporter Helm Chart - Values
+# Based on actual running deployment
+
+image:
+  repository: oliver006/redis_exporter
+  tag: "latest"
+  pullPolicy: Always
+
+replicas: 1
+namespace: caritas
+
+service:
+  type: ClusterIP
+  port: 9121
+  targetPort: 9121
+
+# Redis Configuration
+redis:
+  # Redis address (Kubernetes service name)
+  addr: "redis:6379"
+  # Secret reference for Redis password
+  secret:
+    name: redis-secret
+    key: password
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 100m
+    memory: 128Mi
+
+
+

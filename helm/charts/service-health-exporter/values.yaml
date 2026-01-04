@@ -1,0 +1,45 @@
+# Service Health Exporter Helm Chart - Values
+# Monitors backend services and exports metrics to SigNoz
+
+image:
+  repository: python
+  tag: "3.11-slim"
+  pullPolicy: IfNotPresent
+
+replicas: 1
+namespace: caritas
+
+# OTEL Collector Configuration
+# Send to OTEL Collector which forwards to SigNoz
+otel:
+  endpoint: "http://oriso-platform-otel-collector.caritas.svc.cluster.local:4318"  # OTEL Collector HTTP endpoint
+  insecure: true
+
+# Services to Monitor
+services:
+  tenantservice:
+    url: "http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081/actuator/health"
+    port: 8081
+  userservice:
+    url: "http://oriso-platform-userservice.caritas.svc.cluster.local:8082/actuator/health"
+    port: 8082
+  consultingtypeservice:
+    url: "http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083/actuator/health"
+    port: 8083
+  agencyservice:
+    url: "http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084/actuator/health"
+    port: 8084
+
+# Monitoring Configuration
+monitoring:
+  checkInterval: 10  # seconds
+  timeout: 5  # seconds
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+

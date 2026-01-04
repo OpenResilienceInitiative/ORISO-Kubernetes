@@ -1,0 +1,55 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: uploadservice-ingress
+  namespace: caritas
+  annotations:
+    # CORS Configuration (includes RocketChat headers)
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "$http_origin"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER, rcToken, rcUserId, rctoken, rcuserid"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-max-age: "86400"
+    # Handle OPTIONS preflight requests
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_method = OPTIONS) {
+        add_header Access-Control-Allow-Origin $http_origin always;
+        add_header Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS" always;
+        add_header Access-Control-Allow-Headers "Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER, rcToken, rcUserId, rctoken, rcuserid" always;
+        add_header Access-Control-Allow-Credentials "true" always;
+        add_header Access-Control-Max-Age 86400 always;
+        add_header Content-Type "text/plain charset=UTF-8" always;
+        add_header Content-Length 0 always;
+        return 204;
+      }
+      add_header Access-Control-Allow-Origin $http_origin always;
+      add_header Access-Control-Allow-Credentials "true" always;
+    # Large file upload support (25MB)
+    nginx.ingress.kubernetes.io/proxy-body-size: "25m"
+    # Path Rewrite: /service/uploads/(.*) -> /uploads/$2
+    nginx.ingress.kubernetes.io/rewrite-target: /uploads/$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    # SSL/TLS
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: api.oriso-dev.site
+    http:
+      paths:
+      # UploadService endpoints - Matrix file uploads (uploads go through Matrix)
+      - path: /service/uploads(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: oriso-platform-uploadservice
+            port:
+              number: 8085
+  tls:
+  - hosts:
+    - api.oriso-dev.site
+    secretName: api-oriso-dev-site-tls
+
+

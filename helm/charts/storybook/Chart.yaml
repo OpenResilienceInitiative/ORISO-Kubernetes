@@ -1,0 +1,9 @@
+apiVersion: v2
+name: storybook
+description: A Helm chart for Storybook (UI component development)
+type: application
+version: 1.0.0
+appVersion: "latest"
+
+
+

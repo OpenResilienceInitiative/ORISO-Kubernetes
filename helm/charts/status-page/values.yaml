@@ -1,0 +1,25 @@
+# Status Page Helm Chart - Values
+# All values from ACTUAL running cluster resources
+
+# Application Configuration
+image:
+  repository: oriso-status
+  tag: v2
+  pullPolicy: Never  # Use local image from k3s
+
+# Deployment Configuration
+replicas: 1
+namespace: caritas
+
+resources: {}
+
+# Service Configuration
+service:
+  type: LoadBalancer
+  port: 9200
+  targetPort: 9200
+
+# Environment Variables
+env:
+  PORT: "9200"
+

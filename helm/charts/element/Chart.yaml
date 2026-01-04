@@ -1,0 +1,9 @@
+apiVersion: v2
+name: element
+description: A Helm chart for Element Matrix Client
+type: application
+version: 1.0.0
+appVersion: "latest"
+
+
+

@@ -1,0 +1,257 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubectl.kubernetes.io/last-applied-configuration: '{"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{"cert-manager.io/cluster-issuer":"letsencrypt-prod","nginx.ingress.kubernetes.io/configuration-snippet":"if
+      ($request_method = OPTIONS) {\n        add_header Access-Control-Allow-Origin
+      $http_origin always;\n        add_header Access-Control-Allow-Methods \"GET,
+      POST, PUT, PATCH, DELETE, OPTIONS\" always;\n        add_header Access-Control-Allow-Headers
+      \"Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token,
+      x-csrf-token, X-Requested-With, X-WHITELIST-HEADER\" always;\n        add_header
+      Access-Control-Allow-Credentials \"true\" always;\n        add_header Access-Control-Max-Age
+      86400 always;\n        add_header Content-Type \"text/plain charset=UTF-8\"
+      always;\n        add_header Content-Length 0 always;\n        return 204;\n      }\n      add_header
+      Access-Control-Allow-Origin $http_origin always;\n      add_header Access-Control-Allow-Credentials
+      \"true\" always;","nginx.ingress.kubernetes.io/cors-allow-credentials":"true","nginx.ingress.kubernetes.io/cors-allow-headers":"Authorization,
+      Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With,
+      X-WHITELIST-HEADER","nginx.ingress.kubernetes.io/cors-allow-methods":"GET, POST,
+      PUT, PATCH, DELETE, OPTIONS","nginx.ingress.kubernetes.io/cors-allow-origin":"$http_origin","nginx.ingress.kubernetes.io/cors-max-age":"86400","nginx.ingress.kubernetes.io/enable-cors":"true","nginx.ingress.kubernetes.io/ssl-redirect":"true"},"name":"agencyservice-agencies-ingress","namespace":"caritas"},"spec":{"ingressClassName":"nginx","rules":[{"host":"api.oriso-dev.site","http":{"paths":[{"backend":{"service":{"name":"agencyservice","port":{"number":8084}}},"path":"/service/agencies","pathType":"Exact"},{"backend":{"service":{"name":"agencyservice","port":{"number":8084}}},"path":"/service/agencies(/|$)(.*)","pathType":"ImplementationSpecific"}]}}],"tls":[{"hosts":["api.oriso-dev.site"],"secretName":"api-oriso-dev-site-tls"}]}}
+
+      '
+    nginx.ingress.kubernetes.io/configuration-snippet: "if ($request_method = OPTIONS)\
+      \ {\n        add_header Access-Control-Allow-Origin $http_origin always;\n \
+      \       add_header Access-Control-Allow-Methods \"GET, POST, PUT, PATCH, DELETE,\
+      \ OPTIONS\" always;\n        add_header Access-Control-Allow-Headers \"Authorization,\
+      \ Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token,\
+      \ X-Requested-With, X-WHITELIST-HEADER\" always;\n        add_header Access-Control-Allow-Credentials\
+      \ \"true\" always;\n        add_header Access-Control-Max-Age 86400 always;\n\
+      \        add_header Content-Type \"text/plain charset=UTF-8\" always;\n    \
+      \    add_header Content-Length 0 always;\n        return 204;\n      }\n   \
+      \   add_header Access-Control-Allow-Origin $http_origin always;\n      add_header\
+      \ Access-Control-Allow-Credentials \"true\" always;"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: 'true'
+    nginx.ingress.kubernetes.io/cors-allow-headers: Authorization, Content-Type, Cache-Control,
+      Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER
+    nginx.ingress.kubernetes.io/cors-allow-methods: GET, POST, PUT, PATCH, DELETE,
+      OPTIONS
+    nginx.ingress.kubernetes.io/cors-allow-origin: $http_origin
+    nginx.ingress.kubernetes.io/cors-max-age: '86400'
+    nginx.ingress.kubernetes.io/enable-cors: 'true'
+    nginx.ingress.kubernetes.io/rewrite-target: /agencies/$2
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+  name: agencyservice-agencies-ingress
+  namespace: caritas
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: api.oriso-dev.site
+    http:
+      paths:
+      - backend:
+          service:
+            name: oriso-platform-agencyservice
+            port:
+              number: 8084
+        path: /service/agencies
+        pathType: Exact
+      - backend:
+          service:
+            name: oriso-platform-agencyservice
+            port:
+              number: 8084
+        path: /service/agencies(/|$)(.*)
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - api.oriso-dev.site
+    secretName: api-oriso-dev-site-tls
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubectl.kubernetes.io/last-applied-configuration: '{"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{"cert-manager.io/cluster-issuer":"letsencrypt-prod","nginx.ingress.kubernetes.io/configuration-snippet":"if
+      ($request_method = OPTIONS) {\n        add_header Access-Control-Allow-Origin
+      $http_origin always;\n        add_header Access-Control-Allow-Methods \"GET,
+      POST, PUT, PATCH, DELETE, OPTIONS\" always;\n        add_header Access-Control-Allow-Headers
+      \"Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token,
+      x-csrf-token, X-Requested-With, X-WHITELIST-HEADER\" always;\n        add_header
+      Access-Control-Allow-Credentials \"true\" always;\n        add_header Access-Control-Max-Age
+      86400 always;\n        add_header Content-Type \"text/plain charset=UTF-8\"
+      always;\n        add_header Content-Length 0 always;\n        return 204;\n      }\n      add_header
+      Access-Control-Allow-Origin $http_origin always;\n      add_header Access-Control-Allow-Credentials
+      \"true\" always;","nginx.ingress.kubernetes.io/cors-allow-credentials":"true","nginx.ingress.kubernetes.io/cors-allow-headers":"Authorization,
+      Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With,
+      X-WHITELIST-HEADER","nginx.ingress.kubernetes.io/cors-allow-methods":"GET, POST,
+      PUT, PATCH, DELETE, OPTIONS","nginx.ingress.kubernetes.io/cors-allow-origin":"$http_origin","nginx.ingress.kubernetes.io/cors-max-age":"86400","nginx.ingress.kubernetes.io/enable-cors":"true","nginx.ingress.kubernetes.io/rewrite-target":"/agencyadmin/$2","nginx.ingress.kubernetes.io/ssl-redirect":"true","nginx.ingress.kubernetes.io/use-regex":"true"},"name":"agencyservice-agencyadmin-ingress","namespace":"caritas"},"spec":{"ingressClassName":"nginx","rules":[{"host":"api.oriso-dev.site","http":{"paths":[{"backend":{"service":{"name":"agencyservice","port":{"number":8084}}},"path":"/service/agencyadmin(/|$)(.*)","pathType":"ImplementationSpecific"}]}}],"tls":[{"hosts":["api.oriso-dev.site"],"secretName":"api-oriso-dev-site-tls"}]}}
+
+      '
+    nginx.ingress.kubernetes.io/configuration-snippet: "if ($request_method = OPTIONS)\
+      \ {\n        add_header Access-Control-Allow-Origin $http_origin always;\n \
+      \       add_header Access-Control-Allow-Methods \"GET, POST, PUT, PATCH, DELETE,\
+      \ OPTIONS\" always;\n        add_header Access-Control-Allow-Headers \"Authorization,\
+      \ Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token,\
+      \ X-Requested-With, X-WHITELIST-HEADER\" always;\n        add_header Access-Control-Allow-Credentials\
+      \ \"true\" always;\n        add_header Access-Control-Max-Age 86400 always;\n\
+      \        add_header Content-Type \"text/plain charset=UTF-8\" always;\n    \
+      \    add_header Content-Length 0 always;\n        return 204;\n      }\n   \
+      \   add_header Access-Control-Allow-Origin $http_origin always;\n      add_header\
+      \ Access-Control-Allow-Credentials \"true\" always;"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: 'true'
+    nginx.ingress.kubernetes.io/cors-allow-headers: Authorization, Content-Type, Cache-Control,
+      Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER
+    nginx.ingress.kubernetes.io/cors-allow-methods: GET, POST, PUT, PATCH, DELETE,
+      OPTIONS
+    nginx.ingress.kubernetes.io/cors-allow-origin: $http_origin
+    nginx.ingress.kubernetes.io/cors-max-age: '86400'
+    nginx.ingress.kubernetes.io/enable-cors: 'true'
+    nginx.ingress.kubernetes.io/rewrite-target: /agencyadmin/$2
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+  name: agencyservice-agencyadmin-ingress
+  namespace: caritas
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: api.oriso-dev.site
+    http:
+      paths:
+      - backend:
+          service:
+            name: oriso-platform-agencyservice
+            port:
+              number: 8084
+        path: /service/agencyadmin(/|$)(.*)
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - api.oriso-dev.site
+    secretName: api-oriso-dev-site-tls
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubectl.kubernetes.io/last-applied-configuration: '{"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{"cert-manager.io/cluster-issuer":"letsencrypt-prod","nginx.ingress.kubernetes.io/configuration-snippet":"if
+      ($request_method = OPTIONS) {\n        add_header Access-Control-Allow-Origin
+      $http_origin always;\n        add_header Access-Control-Allow-Methods \"GET,
+      POST, PUT, PATCH, DELETE, OPTIONS\" always;\n        add_header Access-Control-Allow-Headers
+      \"Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token,
+      x-csrf-token, X-Requested-With, X-WHITELIST-HEADER\" always;\n        add_header
+      Access-Control-Allow-Credentials \"true\" always;\n        add_header Access-Control-Max-Age
+      86400 always;\n        add_header Content-Type \"text/plain charset=UTF-8\"
+      always;\n        add_header Content-Length 0 always;\n        return 204;\n      }\n      add_header
+      Access-Control-Allow-Origin $http_origin always;\n      add_header Access-Control-Allow-Credentials
+      \"true\" always;","nginx.ingress.kubernetes.io/cors-allow-credentials":"true","nginx.ingress.kubernetes.io/cors-allow-headers":"Authorization,
+      Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With,
+      X-WHITELIST-HEADER","nginx.ingress.kubernetes.io/cors-allow-methods":"GET, POST,
+      PUT, PATCH, DELETE, OPTIONS","nginx.ingress.kubernetes.io/cors-allow-origin":"$http_origin","nginx.ingress.kubernetes.io/cors-max-age":"86400","nginx.ingress.kubernetes.io/enable-cors":"true","nginx.ingress.kubernetes.io/ssl-redirect":"true","nginx.ingress.kubernetes.io/use-regex":"true"},"name":"agencyservice-appointmentservice-ingress","namespace":"caritas"},"spec":{"ingressClassName":"nginx","rules":[{"host":"api.oriso-dev.site","http":{"paths":[{"backend":{"service":{"name":"agencyservice","port":{"number":8084}}},"path":"/service/appointmentservice(/|$)(.*)","pathType":"ImplementationSpecific"}]}}],"tls":[{"hosts":["api.oriso-dev.site"],"secretName":"api-oriso-dev-site-tls"}]}}
+
+      '
+    nginx.ingress.kubernetes.io/configuration-snippet: "if ($request_method = OPTIONS)\
+      \ {\n        add_header Access-Control-Allow-Origin $http_origin always;\n \
+      \       add_header Access-Control-Allow-Methods \"GET, POST, PUT, PATCH, DELETE,\
+      \ OPTIONS\" always;\n        add_header Access-Control-Allow-Headers \"Authorization,\
+      \ Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token,\
+      \ X-Requested-With, X-WHITELIST-HEADER\" always;\n        add_header Access-Control-Allow-Credentials\
+      \ \"true\" always;\n        add_header Access-Control-Max-Age 86400 always;\n\
+      \        add_header Content-Type \"text/plain charset=UTF-8\" always;\n    \
+      \    add_header Content-Length 0 always;\n        return 204;\n      }\n   \
+      \   add_header Access-Control-Allow-Origin $http_origin always;\n      add_header\
+      \ Access-Control-Allow-Credentials \"true\" always;"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: 'true'
+    nginx.ingress.kubernetes.io/cors-allow-headers: Authorization, Content-Type, Cache-Control,
+      Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER
+    nginx.ingress.kubernetes.io/cors-allow-methods: GET, POST, PUT, PATCH, DELETE,
+      OPTIONS
+    nginx.ingress.kubernetes.io/cors-allow-origin: $http_origin
+    nginx.ingress.kubernetes.io/cors-max-age: '86400'
+    nginx.ingress.kubernetes.io/enable-cors: 'true'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+  name: agencyservice-appointmentservice-ingress
+  namespace: caritas
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: api.oriso-dev.site
+    http:
+      paths:
+      - backend:
+          service:
+            name: oriso-platform-agencyservice
+            port:
+              number: 8084
+        path: /service/appointmentservice(/|$)(.*)
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - api.oriso-dev.site
+    secretName: api-oriso-dev-site-tls
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubectl.kubernetes.io/last-applied-configuration: '{"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{"cert-manager.io/cluster-issuer":"letsencrypt-prod","nginx.ingress.kubernetes.io/configuration-snippet":"if
+      ($request_method = OPTIONS) {\n        add_header Access-Control-Allow-Origin
+      $http_origin always;\n        add_header Access-Control-Allow-Methods \"GET,
+      POST, PUT, PATCH, DELETE, OPTIONS\" always;\n        add_header Access-Control-Allow-Headers
+      \"Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token,
+      x-csrf-token, X-Requested-With, X-WHITELIST-HEADER\" always;\n        add_header
+      Access-Control-Allow-Credentials \"true\" always;\n        add_header Access-Control-Max-Age
+      86400 always;\n        add_header Content-Type \"text/plain charset=UTF-8\"
+      always;\n        add_header Content-Length 0 always;\n        return 204;\n      }\n      add_header
+      Access-Control-Allow-Origin $http_origin always;\n      add_header Access-Control-Allow-Credentials
+      \"true\" always;","nginx.ingress.kubernetes.io/cors-allow-credentials":"true","nginx.ingress.kubernetes.io/cors-allow-headers":"Authorization,
+      Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, X-Requested-With,
+      rcToken, rcUserId, rctoken, rcuserid, X-WHITELIST-HEADER","nginx.ingress.kubernetes.io/cors-allow-methods":"GET,
+      POST, PUT, PATCH, DELETE, OPTIONS","nginx.ingress.kubernetes.io/cors-allow-origin":"$http_origin","nginx.ingress.kubernetes.io/cors-max-age":"86400","nginx.ingress.kubernetes.io/enable-cors":"true","nginx.ingress.kubernetes.io/ssl-redirect":"true","nginx.ingress.kubernetes.io/use-regex":"true"},"name":"agencyservice-topicadmin-ingress","namespace":"caritas"},"spec":{"ingressClassName":"nginx","rules":[{"host":"api.oriso-dev.site","http":{"paths":[{"backend":{"service":{"name":"agencyservice","port":{"number":8084}}},"path":"/service/topicadmin(/|$)(.*)","pathType":"ImplementationSpecific"}]}}],"tls":[{"hosts":["api.oriso-dev.site"],"secretName":"api-oriso-dev-site-tls"}]}}
+
+      '
+    nginx.ingress.kubernetes.io/configuration-snippet: "if ($request_method = OPTIONS)\
+      \ {\n        add_header Access-Control-Allow-Origin $http_origin always;\n \
+      \       add_header Access-Control-Allow-Methods \"GET, POST, PUT, PATCH, DELETE,\
+      \ OPTIONS\" always;\n        add_header Access-Control-Allow-Headers \"Authorization,\
+      \ Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token,\
+      \ X-Requested-With, X-WHITELIST-HEADER\" always;\n        add_header Access-Control-Allow-Credentials\
+      \ \"true\" always;\n        add_header Access-Control-Max-Age 86400 always;\n\
+      \        add_header Content-Type \"text/plain charset=UTF-8\" always;\n    \
+      \    add_header Content-Length 0 always;\n        return 204;\n      }\n   \
+      \   add_header Access-Control-Allow-Origin $http_origin always;\n      add_header\
+      \ Access-Control-Allow-Credentials \"true\" always;"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: 'true'
+    nginx.ingress.kubernetes.io/cors-allow-headers: Authorization, Content-Type, Cache-Control,
+      Pragma, Expires, X-CSRF-Token, X-Requested-With, rcToken, rcUserId, rctoken,
+      rcuserid, X-WHITELIST-HEADER
+    nginx.ingress.kubernetes.io/cors-allow-methods: GET, POST, PUT, PATCH, DELETE,
+      OPTIONS
+    nginx.ingress.kubernetes.io/cors-allow-origin: $http_origin
+    nginx.ingress.kubernetes.io/cors-max-age: '86400'
+    nginx.ingress.kubernetes.io/enable-cors: 'true'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+  name: agencyservice-topicadmin-ingress
+  namespace: caritas
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: api.oriso-dev.site
+    http:
+      paths:
+      - backend:
+          service:
+            name: oriso-platform-agencyservice
+            port:
+              number: 8084
+        path: /service/topicadmin(/|$)(.*)
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - api.oriso-dev.site
+    secretName: api-oriso-dev-site-tls

@@ -1,0 +1,124 @@
+# AgencyService Helm Chart - Values
+# All values match current production deployment to ensure no breaking changes
+
+# Application Configuration
+image:
+  repository: oriso-agencyservice
+  tag: latest
+  pullPolicy: Never  # Use local image from k3s
+
+# Deployment Configuration
+replicas: 1
+namespace: caritas
+
+resources:
+  requests:
+    memory: "512Mi"
+    cpu: "250m"
+  limits:
+    memory: "1Gi"
+    cpu: "1000m"
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: 8084
+  initialDelaySeconds: 120
+  periodSeconds: 30
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health/readiness
+    port: 8084
+  initialDelaySeconds: 60
+  periodSeconds: 10
+
+# Service Configuration
+service:
+  type: ClusterIP
+  port: 8084
+  targetPort: 8084
+
+# Database Configuration (MariaDB)
+database:
+  url: "jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/agencyservice"
+  username: "agencyservice"
+  password: "agencyservice"
+  driver: "org.mariadb.jdbc.Driver"
+  hikari:
+    maximumPoolSize: 10
+    minimumIdle: 8
+    idleTimeout: 500000
+    maxLifetime: 500000
+  hibernate:
+    dialect: "org.hibernate.dialect.MariaDB103Dialect"
+    showSql: true
+    formatSql: true
+    ddlAuto: "validate"
+  liquibase:
+    enabled: false  # Database schemas managed separately
+
+# MongoDB Configuration
+mongodb:
+  uri: "mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/agencyservice"
+
+# Keycloak Configuration
+keycloak:
+  authServerUrl: "http://oriso-platform-keycloak.caritas.svc.cluster.local:8080"
+  realm: "online-beratung"
+  bearerOnly: true
+  resource: "agency-service"
+  principalAttribute: "preferred_username"
+  cors: false
+  sslRequired: "none"
+  config:
+    adminUsername: "technical"
+    adminPassword: "technical"
+    adminClientId: "admin-cli"
+    appClientId: "app"
+  jwt:
+    # External URL for JWT validation (managed cluster requirement)
+    # Uses global.keycloak.jwt values if available, otherwise defaults below
+    issuerUri: "https://auth.oriso-dev.site/realms/online-beratung"
+    jwkSetUri: "https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs"
+
+# Matrix Synapse Configuration
+# Uses global.matrix values if available, otherwise defaults below
+matrix:
+  apiUrl: "http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008"
+  registrationSharedSecret: "caritas-registration-secret-2025"
+  serverName: "oriso-dev.site"  # Standardized to match global.matrix.serverName
+  adminUsername: "caritas_admin"
+  adminPassword: "@CaritasAdmin2025!"
+
+# Service URLs (Kubernetes DNS - Full FQDN for managed clusters)
+services:
+  consultingTypeService:
+    apiUrl: "http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083"
+  tenantService:
+    apiUrl: "http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081"
+  userAdminService:
+    apiUrl: "http://oriso-platform-userservice.caritas.svc.cluster.local:8082"
+  liveService:
+    apiUrl: ""
+  appointmentService:
+    apiUrl: ""
+
+# Rocket.Chat Configuration
+rocketchat:
+  baseUrl: "http://oriso-platform-rocketchat.caritas.svc.cluster.local:3000/api/v1"
+  mongoUrl: "mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false"
+  technical:
+    username: "rocket-chat-technical-user"
+    password: "technical"
+  credentialCron: "0 0 * * * ?"
+
+# Feature Flags
+features:
+  topics:
+    enabled: true
+
+# Spring Profile
+spring:
+  profiles:
+    active: "local"

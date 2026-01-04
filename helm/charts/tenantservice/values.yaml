@@ -1,0 +1,85 @@
+# TenantService Helm Chart - Values
+# All values from ACTUAL running cluster resources
+
+# Application Configuration
+image:
+  repository: oriso-tenantservice
+  tag: latest
+  pullPolicy: Never  # Use local image from k3s
+
+# Deployment Configuration
+replicas: 1
+namespace: caritas
+
+resources:
+  requests: {}
+  limits: {}
+
+livenessProbe: {}
+readinessProbe: {}
+
+# Service Configuration
+service:
+  type: ClusterIP
+  port: 8081
+  targetPort: 8081
+
+# Database Configuration (MariaDB) - Full DNS FQDN for managed clusters
+database:
+  url: "jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/tenantservice"
+  username: "tenantservice"
+  password: "tenantservice"
+  driver: "org.mariadb.jdbc.Driver"
+  hikari:
+    maximumPoolSize: 10
+    minimumIdle: 8
+    idleTimeout: 500000
+    maxLifetime: 500000
+  hibernate:
+    dialect: "org.hibernate.dialect.MariaDB103Dialect"
+    showSql: true
+    formatSql: true
+    ddlAuto: "validate"
+  liquibase:
+    enabled: false  # Database schemas managed separately
+
+# Keycloak Configuration - External URL for managed clusters
+keycloak:
+  authServerUrl: "http://oriso-platform-keycloak.caritas.svc.cluster.local:8080"
+  realm: "online-beratung"
+  bearerOnly: true
+  resource: "tenant-service"
+  principalAttribute: ""
+  cors: false
+  sslRequired: "none"
+  jwt:
+    # External URL for JWT validation (managed cluster requirement)
+    issuerUri: "https://auth.oriso-dev.site/realms/online-beratung"
+    jwkSetUri: "https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs"
+
+# RabbitMQ Configuration - Full DNS FQDN for managed clusters
+rabbitmq:
+  host: "oriso-platform-rabbitmq.caritas.svc.cluster.local"
+  port: 5672
+  username: "admin"
+  password: "admin"
+
+# Service URLs - Full DNS FQDN for managed clusters
+services:
+  consultingTypeService:
+    apiUrl: "http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083"
+  userService:
+    apiUrl: "http://oriso-platform-userservice.caritas.svc.cluster.local:8082"  # Will be overridden by global.services.userservice.url if available
+
+# Spring Profile
+spring:
+  profiles:
+    active: "local"
+
+# Feature Flags
+features:
+  multitenancy:
+    withSingleDomain:
+      enabled: false
+
+

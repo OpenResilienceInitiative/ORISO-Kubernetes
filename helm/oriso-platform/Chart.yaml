@@ -1,0 +1,116 @@
+apiVersion: v2
+name: oriso-platform
+description: Master Helm chart for the complete ORISO platform
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+
+dependencies:
+  # Infrastructure - Deploy First
+  - name: mariadb
+    version: "1.0.0"
+    repository: "file://../charts/mariadb"
+    condition: mariadb.enabled
+  - name: mongodb
+    version: "1.0.0"
+    repository: "file://../charts/mongodb"
+    condition: mongodb.enabled
+  - name: redis
+    version: "1.0.0"
+    repository: "file://../charts/redis"
+    condition: redis.enabled
+  - name: rabbitmq
+    version: "1.0.0"
+    repository: "file://../charts/rabbitmq"
+    condition: rabbitmq.enabled
+  
+  # Authentication & Communication
+  - name: keycloak
+    version: "1.0.0"
+    repository: "file://../charts/keycloak"
+    condition: keycloak.enabled
+  - name: matrix-synapse
+    version: "1.0.0"
+    repository: "file://../charts/matrix-synapse"
+    condition: matrix-synapse.enabled
+  - name: element
+    version: "1.0.0"
+    repository: "file://../charts/element"
+    condition: element.enabled
+  - name: element-call
+    version: "1.0.0"
+    repository: "file://../charts/element-call"
+    condition: element-call.enabled
+  
+  # WebRTC
+  - name: livekit
+    version: "1.0.0"
+    repository: "file://../charts/livekit"
+    condition: livekit.enabled
+  
+  # Backend Services
+  - name: tenantservice
+    version: "1.0.0"
+    repository: "file://../charts/tenantservice"
+    condition: tenantservice.enabled
+  - name: userservice
+    version: "1.0.0"
+    repository: "file://../charts/userservice"
+    condition: userservice.enabled
+  - name: agencyservice
+    version: "1.0.0"
+    repository: "file://../charts/agencyservice"
+    condition: agencyservice.enabled
+  - name: consultingtypeservice
+    version: "1.0.0"
+    repository: "file://../charts/consultingtypeservice"
+    condition: consultingtypeservice.enabled
+  
+  # Frontend Services
+  - name: frontend
+    version: "1.0.0"
+    repository: "file://../charts/frontend"
+    condition: frontend.enabled
+  - name: admin
+    version: "1.0.0"
+    repository: "file://../charts/admin"
+    condition: admin.enabled
+  
+  # Monitoring & Utilities
+  - name: clickhouse
+    version: "1.0.0"
+    repository: "file://../charts/clickhouse"
+    condition: clickhouse.enabled
+  - name: redis-commander
+    version: "1.0.0"
+    repository: "file://../charts/redis-commander"
+    condition: redis-commander.enabled
+  - name: redis-exporter
+    version: "1.0.0"
+    repository: "file://../charts/redis-exporter"
+    condition: redis-exporter.enabled
+  - name: status-page
+    version: "1.0.0"
+    repository: "file://../charts/status-page"
+    condition: status-page.enabled
+  - name: health-dashboard
+    version: "1.0.0"
+    repository: "file://../charts/health-dashboard"
+    condition: health-dashboard.enabled
+  - name: storybook
+    version: "1.0.0"
+    repository: "file://../charts/storybook"
+    condition: storybook.enabled
+  - name: signoz
+    version: "1.0.0"
+    repository: "file://../charts/signoz"
+    condition: signoz.enabled
+  - name: otel-collector
+    version: "1.0.0"
+    repository: "file://../charts/otel-collector"
+    condition: otel-collector.enabled
+  - name: service-health-exporter
+    version: "1.0.0"
+    repository: "file://../charts/service-health-exporter"
+    condition: service-health-exporter.enabled
+

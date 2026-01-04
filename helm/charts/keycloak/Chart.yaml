@@ -1,0 +1,9 @@
+apiVersion: v2
+name: keycloak
+description: A Helm chart for Keycloak Identity and Access Management
+type: application
+version: 1.0.0
+appVersion: "20.0.5"
+
+
+

@@ -1,0 +1,126 @@
+# ORISO Platform Master Chart - Values
+# This chart deploys the complete ORISO platform
+# All sub-charts inherit global values from ../values.yaml
+
+# Global values (inherited from parent values.yaml)
+# These are passed to all sub-charts
+global:
+  namespace: "caritas"
+  domains:
+    api: "api.oriso-dev.site"
+    app: "app.oriso-dev.site"
+    admin: "admin.oriso-dev.site"
+    auth: "auth.oriso-dev.site"
+    matrix: "matrix.oriso-dev.site"
+    element: "element.oriso-dev.site"
+    call: "call.oriso-dev.site"
+    livekit: "livekit.oriso-dev.site"
+    health: "health.oriso-dev.site"
+    status: "status.oriso-dev.site"
+    redis: "redis.oriso-dev.site"
+    signoz: "signoz.oriso-dev.site"
+    storybook: "storybook.oriso-dev.site"
+  keycloak:
+    internalUrl: "http://oriso-platform-keycloak.caritas.svc.cluster.local:8080"
+    externalUrl: "https://auth.oriso-dev.site"
+    realm: "online-beratung"
+    jwt:
+      issuerUri: "https://auth.oriso-dev.site/realms/online-beratung"
+      jwkSetUri: "https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs"
+  matrix:
+    serverName: "oriso-dev.site"
+    internalUrl: "http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008"
+    externalUrl: "https://matrix.oriso-dev.site"
+    registrationSharedSecret: "caritas-registration-secret-2025"
+  cors:
+    allowedOrigins:
+      - "https://app.oriso-dev.site"
+      - "https://admin.oriso-dev.site"
+      - "https://api.oriso-dev.site"
+  databases:
+    mariadb:
+      host: "oriso-platform-mariadb.caritas.svc.cluster.local"
+      port: 3306
+    mongodb:
+      host: "oriso-platform-mongodb.caritas.svc.cluster.local"
+      port: 27017
+    redis:
+      host: "oriso-platform-redis.caritas.svc.cluster.local"
+      port: 6379
+    rabbitmq:
+      host: "oriso-platform-rabbitmq.caritas.svc.cluster.local"
+      port: 5672
+      managementPort: 15672
+  services:
+    agencyservice:
+      url: "http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084"
+    userservice:
+      url: "http://oriso-platform-userservice.caritas.svc.cluster.local:8082"
+    tenantservice:
+      url: "http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081"
+    consultingtypeservice:
+      url: "http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083"
+
+# Enable/Disable Services
+# Set to false to skip deployment of a service
+
+# Infrastructure (Deploy First)
+mariadb:
+  enabled: true
+mongodb:
+  enabled: true
+redis:
+  enabled: true
+rabbitmq:
+  enabled: true
+
+# Authentication & Communication
+keycloak:
+  enabled: true
+matrix-synapse:
+  enabled: true
+element:
+  enabled: false  # Image not available - disable for now
+element-call:
+  enabled: true
+
+# WebRTC
+livekit:
+  enabled: true
+
+# Backend Services
+tenantservice:
+  enabled: true
+userservice:
+  enabled: true
+agencyservice:
+  enabled: true
+consultingtypeservice:
+  enabled: true
+
+# Frontend Services
+frontend:
+  enabled: true
+admin:
+  enabled: true
+
+# Monitoring & Utilities
+clickhouse:
+  enabled: true
+redis-commander:
+  enabled: true
+redis-exporter:
+  enabled: true
+status-page:
+  enabled: true
+health-dashboard:
+  enabled: true
+storybook:
+  enabled: true
+signoz:
+  enabled: true
+otel-collector:
+  enabled: true
+service-health-exporter:
+  enabled: true
+

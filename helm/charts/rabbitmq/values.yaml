@@ -1,0 +1,38 @@
+# RabbitMQ Helm Chart - Values
+# Based on actual running deployment
+
+image:
+  repository: rabbitmq
+  tag: "3-management"
+  pullPolicy: IfNotPresent
+
+replicas: 1
+namespace: caritas
+
+service:
+  type: ClusterIP
+  ports:
+    amqp: 5672
+    management: 15672
+
+# RabbitMQ Configuration
+rabbitmq:
+  # Credentials (should be in Secret)
+  defaultUser: ""  # Should reference Secret
+  defaultPass: ""  # Should reference Secret
+  secret:
+    name: rabbitmq-secrets
+    keys:
+      user: RABBITMQ_DEFAULT_USER
+      pass: RABBITMQ_DEFAULT_PASS
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+
+

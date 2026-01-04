@@ -1,0 +1,131 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "userservice.fullname" . }}-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "userservice.labels" . | nindent 4 }}
+data:
+  # Database Configuration - Use full Kubernetes DNS FQDN (required for managed clusters)
+  SPRING_DATASOURCE_URL: {{ .Values.database.url | quote }}
+  
+  # MongoDB Configuration - Use full Kubernetes DNS FQDN (required for managed clusters)
+  SPRING_DATA_MONGODB_URI: {{ .Values.mongodb.uri | quote }}
+  
+  # Keycloak Configuration - Use global values if available, otherwise chart values
+  KEYCLOAK_AUTH_SERVER_URL: {{ if and .Values.global .Values.global.keycloak .Values.global.keycloak.internalUrl }}{{ .Values.global.keycloak.internalUrl | quote }}{{ else }}{{ .Values.keycloak.authServerUrl | quote }}{{ end }}
+  KEYCLOAK_REALM: {{ if and .Values.global .Values.global.keycloak .Values.global.keycloak.realm }}{{ .Values.global.keycloak.realm | quote }}{{ else }}{{ .Values.keycloak.realm | quote }}{{ end }}
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: {{ if and .Values.global .Values.global.keycloak .Values.global.keycloak.jwt .Values.global.keycloak.jwt.issuerUri }}{{ .Values.global.keycloak.jwt.issuerUri | quote }}{{ else }}{{ .Values.keycloak.jwt.issuerUri | quote }}{{ end }}
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: {{ if and .Values.global .Values.global.keycloak .Values.global.keycloak.jwt .Values.global.keycloak.jwt.jwkSetUri }}{{ .Values.global.keycloak.jwt.jwkSetUri | quote }}{{ else }}{{ .Values.keycloak.jwt.jwkSetUri | quote }}{{ end }}
+  IDENTITY_OPENID_CONNECT_URL: {{ if and .Values.global .Values.global.keycloak .Values.global.keycloak.internalUrl }}{{ printf "%s/realms/%s/protocol/openid-connect" .Values.global.keycloak.internalUrl (default .Values.keycloak.realm .Values.global.keycloak.realm) | quote }}{{ else }}{{ .Values.keycloak.identity.openIdConnectUrl | quote }}{{ end }}
+  
+  # Matrix Configuration - Use global values if available, otherwise chart values
+  MATRIX_API_URL: {{ if and .Values.global .Values.global.matrix .Values.global.matrix.internalUrl }}{{ .Values.global.matrix.internalUrl | quote }}{{ else }}{{ .Values.matrix.apiUrl | quote }}{{ end }}
+  MATRIX_SERVER_NAME: {{ if and .Values.global .Values.global.matrix .Values.global.matrix.serverName }}{{ .Values.global.matrix.serverName | quote }}{{ else }}{{ .Values.matrix.serverName | quote }}{{ end }}
+  MATRIX_MIGRATION_ENABLED: {{ .Values.matrix.migrationEnabled | quote }}
+  
+  # RabbitMQ Configuration - Use full Kubernetes DNS FQDN (required for managed clusters)
+  SPRING_RABBITMQ_HOST: {{ .Values.rabbitmq.host | quote }}
+  SPRING_RABBITMQ_PORT: {{ .Values.rabbitmq.port | quote }}
+  SPRING_RABBITMQ_USERNAME: {{ .Values.rabbitmq.username | quote }}
+  SPRING_RABBITMQ_PASSWORD: {{ .Values.rabbitmq.password | quote }}
+  
+  # Rocket.Chat Configuration - Use full Kubernetes DNS FQDN (required for managed clusters)
+  ROCKET_CHAT_BASE_URL: {{ .Values.rocketchat.baseUrl | quote }}
+  ROCKET_CHAT_MONGO_URL: {{ .Values.rocketchat.mongoUrl | quote }}
+  
+  # Service URLs - Use full Kubernetes DNS FQDN (required for managed clusters)
+  TENANT_SERVICE_API_URL: {{ .Values.services.tenantService.apiUrl | quote }}
+  CONSULTING_TYPE_SERVICE_API_URL: {{ .Values.services.consultingTypeService.apiUrl | quote }}
+  AGENCY_SERVICE_API_URL: {{ .Values.services.agencyService.apiUrl | quote }}
+  
+  # Spring Profile
+  SPRING_PROFILES_ACTIVE: {{ .Values.spring.profiles.active | quote }}
+  
+  # Liquibase - Explicitly disabled (database schemas managed separately in ORISO-Database)
+  SPRING_LIQUIBASE_ENABLED: {{ .Values.database.liquibase.enabled | quote }}
+  
+  # Application Properties - Complete properties file as single environment variable
+  # This is required because UserService reads from application.properties
+  application.properties: |
+    # ---------------- General ----------------
+    spring.application.name=user-service
+    spring.profiles.active={{ .Values.spring.profiles.active }}
+    spring.main.allow-bean-definition-overriding=true
+    spring.jpa.open-in-view=true
+    spring.jpa.hibernate.ddl-auto=none
+    spring.data.jpa.repositories.bootstrap-mode=default
+    spring.main.banner-mode=off
+    spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+    
+    # ---------------- Server ----------------
+    server.port=8082
+    {{- if and .Values.global .Values.global.domains .Values.global.domains.api }}
+    server.host=https://{{ .Values.global.domains.api }}
+    app.base.url=https://{{ .Values.global.domains.api }}
+    {{- else }}
+    server.host=http://oriso-platform-userservice.caritas.svc.cluster.local:8082
+    app.base.url=http://oriso-platform-userservice.caritas.svc.cluster.local:8082
+    {{- end }}
+    
+    # Tomcat thread pool - Scaled for 5000 concurrent users
+    server.tomcat.threads.max=1000
+    server.tomcat.threads.min-spare=500
+    server.tomcat.max-connections=5000
+    server.tomcat.accept-count=1000
+    server.tomcat.connection-timeout=30000
+    
+    # ---------------- Database ----------------
+    spring.datasource.url={{ .Values.database.url }}
+    spring.datasource.username={{ .Values.database.username }}
+    spring.datasource.password={{ .Values.database.password }}
+    spring.liquibase.enabled={{ .Values.database.liquibase.enabled }}
+    
+    # ---------------- MongoDB ----------------
+    spring.data.mongodb.uri={{ .Values.mongodb.uri }}
+    
+    # ---------------- Keycloak ----------------
+    keycloak.auth-server-url={{ if and .Values.global .Values.global.keycloak .Values.global.keycloak.internalUrl }}{{ .Values.global.keycloak.internalUrl }}{{ else }}{{ .Values.keycloak.authServerUrl }}{{ end }}
+    keycloak.realm={{ if and .Values.global .Values.global.keycloak .Values.global.keycloak.realm }}{{ .Values.global.keycloak.realm }}{{ else }}{{ .Values.keycloak.realm }}{{ end }}
+    spring.security.oauth2.resourceserver.jwt.issuer-uri={{ if and .Values.global .Values.global.keycloak .Values.global.keycloak.jwt .Values.global.keycloak.jwt.issuerUri }}{{ .Values.global.keycloak.jwt.issuerUri }}{{ else }}{{ .Values.keycloak.jwt.issuerUri }}{{ end }}
+    spring.security.oauth2.resourceserver.jwt.jwk-set-uri={{ if and .Values.global .Values.global.keycloak .Values.global.keycloak.jwt .Values.global.keycloak.jwt.jwkSetUri }}{{ .Values.global.keycloak.jwt.jwkSetUri }}{{ else }}{{ .Values.keycloak.jwt.jwkSetUri }}{{ end }}
+    identity.openid-connect-url={{- if and .Values.global .Values.global.keycloak .Values.global.keycloak.internalUrl -}}{{ printf "%s/realms/%s/protocol/openid-connect" .Values.global.keycloak.internalUrl (default .Values.keycloak.realm .Values.global.keycloak.realm) }}{{- else -}}{{ .Values.keycloak.identity.openIdConnectUrl }}{{- end }}
+    
+    # ---------------- Matrix ----------------
+    matrix.apiUrl={{ if and .Values.global .Values.global.matrix .Values.global.matrix.internalUrl }}{{ .Values.global.matrix.internalUrl }}{{ else }}{{ .Values.matrix.apiUrl }}{{ end }}
+    matrix.serverName={{ if and .Values.global .Values.global.matrix .Values.global.matrix.serverName }}{{ .Values.global.matrix.serverName }}{{ else }}{{ .Values.matrix.serverName }}{{ end }}
+    matrix.migrationEnabled={{ .Values.matrix.migrationEnabled }}
+    matrix.registrationSharedSecret={{ if and .Values.global .Values.global.matrix .Values.global.matrix.registrationSharedSecret }}{{ .Values.global.matrix.registrationSharedSecret }}{{ else }}{{ .Values.matrix.registrationSharedSecret }}{{ end }}
+    
+    # ---------------- RabbitMQ ----------------
+    spring.rabbitmq.host={{ .Values.rabbitmq.host }}
+    spring.rabbitmq.port={{ .Values.rabbitmq.port }}
+    spring.rabbitmq.username={{ .Values.rabbitmq.username }}
+    spring.rabbitmq.password={{ .Values.rabbitmq.password }}
+    
+    # ---------------- Rocket.Chat ----------------
+    rocket-chat.base-url={{ .Values.rocketchat.baseUrl }}
+    rocket-chat.mongo-url={{ .Values.rocketchat.mongoUrl }}
+    rocket.technical.username={{ .Values.rocketchat.technical.username }}
+    rocket.technical.password={{ .Values.rocketchat.technical.password }}
+    
+    # ---------------- Service URLs ----------------
+    tenant.service.api.url={{ .Values.services.tenantService.apiUrl }}
+    consulting.type.service.api.url={{ .Values.services.consultingTypeService.apiUrl }}
+    agency.service.api.url={{ .Values.services.agencyService.apiUrl }}
+    agency.service.api.get.agencies=${agency.service.api.url}/
+    agency.admin.service.api.url=${app.base.url}
+    
+    # ---------------- CORS ----------------
+    {{- if and .Values.global .Values.global.domains .Values.global.domains.app }}
+    registration.cors.allowed.origins=https://{{ .Values.global.domains.app }}
+    {{- else }}
+    registration.cors.allowed.origins=https://app.oriso-dev.site
+    {{- end }}
+    registration.cors.allowed.paths=/service/users/askers/new,/service/users/consultants/languages
+    
+    # ---------------- Other Configuration ----------------
+    spring.web.locale=de_DE
+    spring.jackson.time-zone=Europe/Berlin
+    service.encryption.appkey={{ .Values.encryption.appKey }}
+

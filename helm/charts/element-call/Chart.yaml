@@ -1,0 +1,9 @@
+apiVersion: v2
+name: element-call
+description: A Helm chart for Element Call (video calling)
+type: application
+version: 1.0.0
+appVersion: "latest"
+
+
+

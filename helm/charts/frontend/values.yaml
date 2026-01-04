@@ -1,0 +1,59 @@
+# Frontend Helm Chart - Values
+# All values from ACTUAL running cluster resources
+
+# Application Configuration
+image:
+  repository: caritas-frontend
+  tag: latest
+  pullPolicy: Never  # Use local image from k3s
+
+# Deployment Configuration
+replicas: 1
+namespace: caritas
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: 80
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 1
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: 80
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 1
+
+# Service Configuration
+service:
+  type: LoadBalancer
+  port: 9001
+  targetPort: 80
+
+# Environment Variables - Will be populated from global values in deployment template
+# These are defaults, but deployment template uses global.domains if available
+env:
+  NODE_ENV: "production"
+  PORT: "80"
+  # URLs will be set from global.domains in deployment template
+  # Defaults below (will be overridden by global values)
+  REACT_APP_API_URL: "https://api.oriso-dev.site"
+  REACT_APP_MATRIX_URL: "https://matrix.oriso-dev.site"
+  REACT_APP_ELEMENT_CALL_URL: "https://call.oriso-dev.site"
+  REACT_APP_LIVEKIT_URL: "https://livekit.oriso-dev.site"
+  REACT_APP_KEYCLOAK_URL: "https://auth.oriso-dev.site"
+  VITE_API_URL: "https://api.oriso-dev.site"
+  REACT_APP_MATRIX_HOMESERVER_URL: "https://matrix.oriso-dev.site"
+  VITE_MATRIX_HOMESERVER_URL: "https://matrix.oriso-dev.site"
+

@@ -1,0 +1,96 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "service-health-exporter.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "service-health-exporter.labels" . | nindent 4 }}
+data:
+  service-health-exporter.py: |
+    #!/usr/bin/env python3
+    """
+    Caritas Service Health Monitor - Exports to SigNoz via OTEL Collector
+    Uses OpenTelemetry OTLP format (correct way)
+    """
+    import requests
+    import time
+    import os
+    from opentelemetry import metrics
+    from opentelemetry.sdk.metrics import MeterProvider
+    from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
+    from opentelemetry.exporter.otlp.proto.http import OTLPMetricExporter
+    from opentelemetry.sdk.resources import Resource
+
+    # Get configuration from environment
+    OTEL_ENDPOINT = os.getenv("OTEL_ENDPOINT", "{{ .Values.otel.endpoint }}")
+    CHECK_INTERVAL = int(os.getenv("CHECK_INTERVAL", "{{ .Values.monitoring.checkInterval }}"))
+    TIMEOUT = int(os.getenv("TIMEOUT", "{{ .Values.monitoring.timeout }}"))
+    print(f"Using OTEL endpoint: {OTEL_ENDPOINT}")
+
+    # Configure OTEL
+    resource = Resource.create({"service.name": "caritas-health-monitor"})
+    exporter = OTLPHTTPMetricExporter(endpoint=OTEL_ENDPOINT)
+    reader = PeriodicExportingMetricReader(exporter, export_interval_millis=CHECK_INTERVAL * 1000)
+    provider = MeterProvider(resource=resource, metric_readers=[reader])
+    metrics.set_meter_provider(provider)
+
+    meter = metrics.get_meter("caritas.monitoring")
+
+    # Create metrics
+    service_up = meter.create_up_down_counter(
+        "service.up",
+        description="Service availability (1=up, 0=down)"
+    )
+    response_time = meter.create_histogram(
+        "service.response_time",
+        unit="ms",
+        description="Service response time in milliseconds"
+    )
+
+    # Services configuration
+    SERVICES = {
+        {{- range $key, $value := .Values.services }}
+        "{{ $key }}": {
+            "url": "{{ $value.url }}",
+            "port": {{ $value.port }}
+        },
+        {{- end }}
+    }
+
+    def check_service(name, config):
+        try:
+            start = time.time()
+            response = requests.get(config["url"], timeout=TIMEOUT)
+            duration = (time.time() - start) * 1000
+            
+            status = 1 if response.status_code == 200 else 0
+            
+            attributes = {
+                "service.name": name,
+                "service.port": str(config["port"]),
+                "http.status_code": str(response.status_code)
+            }
+            
+            service_up.add(status, attributes)
+            response_time.record(duration, attributes)
+            
+            print(f"✓ {name}: {response.status_code} ({duration:.2f}ms)")
+            
+        except Exception as e:
+            attributes = {
+                "service.name": name,
+                "service.port": str(config["port"]),
+                "error": "true"
+            }
+            service_up.add(0, attributes)
+            print(f"✗ {name}: DOWN ({str(e)})")
+
+    print("🔍 Caritas Health Monitor for SigNoz")
+    print(f"Monitoring {len(SERVICES)} services and sending to {OTEL_ENDPOINT}...")
+    print("=" * 60)
+
+    while True:
+        for service_name, service_config in SERVICES.items():
+            check_service(service_name, service_config)
+        print("-" * 60)
+        time.sleep(CHECK_INTERVAL)

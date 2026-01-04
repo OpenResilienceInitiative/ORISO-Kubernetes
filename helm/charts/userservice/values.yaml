@@ -1,0 +1,98 @@
+# UserService Helm Chart - Values
+# All values from ACTUAL running cluster resources
+
+# Application Configuration
+image:
+  repository: oriso-userservice
+  tag: latest
+  pullPolicy: Never  # Use local image from k3s
+
+# Deployment Configuration
+replicas: 1
+namespace: caritas
+
+resources:
+  requests: {}
+  limits: {}
+
+livenessProbe: {}
+readinessProbe: {}
+
+# Service Configuration
+service:
+  type: ClusterIP
+  port: 8082
+  targetPort: 8082
+
+# Database Configuration (MariaDB) - Full DNS FQDN for managed clusters
+database:
+  url: "jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/userservice"
+  username: "userservice"
+  password: "userservice"
+  liquibase:
+    enabled: false  # Database schemas managed separately
+    user: "userservice"
+    password: "userservice"
+
+# MongoDB Configuration - Full DNS FQDN for managed clusters
+mongodb:
+  uri: "mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/userservice"
+
+# Keycloak Configuration - External URL for managed clusters
+keycloak:
+  authServerUrl: "http://oriso-platform-keycloak.caritas.svc.cluster.local:8080"
+  realm: "online-beratung"
+  config:
+    adminUsername: "technical"
+    adminPassword: "technical"
+  jwt:
+    # External URL for JWT validation (managed cluster requirement)
+    issuerUri: "https://auth.oriso-dev.site/realms/online-beratung"
+    jwkSetUri: "https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs"
+  identity:
+    openIdConnectUrl: "http://oriso-platform-keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect"
+
+# Matrix Configuration - Full DNS FQDN for managed clusters
+matrix:
+  apiUrl: "http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008"
+  serverName: "oriso-dev.site"
+  migrationEnabled: true
+  registrationSharedSecret: "caritas-registration-secret-2025"
+
+# RabbitMQ Configuration - Full DNS FQDN for managed clusters
+rabbitmq:
+  host: "oriso-platform-rabbitmq.caritas.svc.cluster.local"
+  port: 5672
+  username: "admin"
+  password: "admin"
+
+# Rocket.Chat Configuration - Full DNS FQDN for managed clusters
+rocketchat:
+  baseUrl: "http://oriso-platform-rocketchat.caritas.svc.cluster.local:3000/api/v1"
+  mongoUrl: "mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false"
+  technical:
+    username: "rocket-chat-technical-user"
+    password: "technical"
+  systemuser:
+    id: ""
+    username: ""
+    password: ""
+
+# Service URLs - Full DNS FQDN for managed clusters
+services:
+  tenantService:
+    apiUrl: "http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081"
+  consultingTypeService:
+    apiUrl: "http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083"
+  agencyService:
+    apiUrl: "http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084"
+
+# Spring Profile
+spring:
+  profiles:
+    active: "prod"
+
+# Service Encryption
+encryption:
+  appKey: ""
+

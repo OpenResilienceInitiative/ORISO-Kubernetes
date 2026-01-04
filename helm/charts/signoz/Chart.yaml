@@ -1,0 +1,9 @@
+apiVersion: v2
+name: signoz
+description: A Helm chart for SigNoz (observability platform)
+type: application
+version: 1.0.0
+appVersion: "v0.105.1"
+
+
+

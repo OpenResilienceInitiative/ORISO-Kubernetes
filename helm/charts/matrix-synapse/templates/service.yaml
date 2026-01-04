@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "matrix-synapse.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "matrix-synapse.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - port: {{ .Values.service.port }}
+    targetPort: {{ .Values.service.targetPort }}
+    protocol: TCP
+    name: http
+  - port: {{ .Values.service.federationPort }}
+    targetPort: {{ .Values.service.federationPort }}
+    protocol: TCP
+    name: federation
+  selector:
+    app: matrix-synapse
+
+
+

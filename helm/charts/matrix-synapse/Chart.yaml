@@ -1,0 +1,9 @@
+apiVersion: v2
+name: matrix-synapse
+description: A Helm chart for Matrix Synapse
+type: application
+version: 1.0.0
+appVersion: "latest"
+
+
+

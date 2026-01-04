@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "service-health-exporter.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "service-health-exporter.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicas }}
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: service-health-exporter
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: service-health-exporter
+    spec:
+      containers:
+      - name: service-health-exporter
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          pip install --no-cache-dir opentelemetry-api opentelemetry-sdk opentelemetry-exporter-otlp-proto-http requests && python3 /app/service-health-exporter.py
+        env:
+        - name: OTEL_ENDPOINT
+          value: {{ .Values.otel.endpoint | quote }}
+        - name: CHECK_INTERVAL
+          value: {{ .Values.monitoring.checkInterval | quote }}
+        - name: TIMEOUT
+          value: {{ .Values.monitoring.timeout | quote }}
+        volumeMounts:
+        - name: script
+          mountPath: /app/service-health-exporter.py
+          subPath: service-health-exporter.py
+          readOnly: true
+        {{- if .Values.resources }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        {{- end }}
+      volumes:
+      - name: script
+        configMap:
+          name: {{ include "service-health-exporter.fullname" . }}
+          defaultMode: 0755
+      terminationGracePeriodSeconds: 30
+

@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "clickhouse.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "clickhouse.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - name: http
+    port: {{ .Values.service.ports.http }}
+    targetPort: http
+    protocol: TCP
+  - name: native
+    port: {{ .Values.service.ports.native }}
+    targetPort: native
+    protocol: TCP
+  - name: interserver
+    port: {{ .Values.service.ports.interserver }}
+    targetPort: interserver
+    protocol: TCP
+  selector:
+    app: clickhouse
+
+
+

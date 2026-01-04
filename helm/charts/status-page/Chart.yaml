@@ -1,0 +1,7 @@
+apiVersion: v2
+name: status-page
+description: A Helm chart for the ORISO Status Page
+type: application
+version: 1.0.0
+appVersion: "2.0.0"
+

@@ -1,0 +1,53 @@
+# Admin Helm Chart - Values
+# All values from ACTUAL running cluster resources
+
+# Application Configuration
+image:
+  repository: caritas-admin
+  tag: latest
+  pullPolicy: IfNotPresent  # Use local image from k3s
+
+# Deployment Configuration
+replicas: 1
+namespace: caritas
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+livenessProbe:
+  httpGet:
+    path: /admin
+    port: 80
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 1
+
+readinessProbe:
+  httpGet:
+    path: /admin
+    port: 80
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 1
+
+# Service Configuration
+service:
+  type: LoadBalancer
+  port: 9000
+  targetPort: 80
+
+# Environment Variables - Will be populated from global values in deployment template
+# These are defaults, but deployment template uses global.domains if available
+env:
+  # URLs will be set from global.domains in deployment template
+  # Defaults below (will be overridden by global values)
+  REACT_APP_API_URL: "https://api.oriso-dev.site"
+  REACT_APP_MATRIX_URL: "https://matrix.oriso-dev.site"
+  REACT_APP_KEYCLOAK_URL: "https://auth.oriso-dev.site"
+  VITE_API_URL: "https://api.oriso-dev.site"
+

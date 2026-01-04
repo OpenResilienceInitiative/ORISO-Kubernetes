@@ -1,0 +1,9 @@
+apiVersion: v2
+name: redis-exporter
+description: A Helm chart for Redis Exporter (Redis metrics)
+type: application
+version: 1.0.0
+appVersion: "latest"
+
+
+

@@ -1,0 +1,50 @@
+# Keycloak Helm Chart - Values
+# Based on actual running deployment
+
+# Image Configuration
+image:
+  repository: quay.io/keycloak/keycloak
+  tag: "20.0.5"
+  pullPolicy: IfNotPresent
+
+# Deployment Configuration
+replicas: 1
+namespace: caritas
+
+resources: {}  # No limits set in original
+
+# Service Configuration
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: 8080
+
+# Keycloak Configuration
+keycloak:
+  # Admin credentials (should be in Secret, defaults here)
+  admin:
+    username: "admin"
+    password: "admin"  # Should be in Secret
+  
+  # Hostname configuration (uses global.domains.auth if available)
+  hostname: "auth.oriso-dev.site"
+  hostnameStrictHttps: true
+  httpEnabled: true
+  
+  # Proxy mode
+  proxy: "edge"
+  
+  # Additional environment variables
+  env:
+    KC_SPI_STICKY_SESSION_ENCODER_INFINISPAN_SHOULD_ATTACH_ROUTE: "false"
+
+# Network Configuration
+hostNetwork: true
+
+# Global values (will be passed from parent chart or values.yaml)
+global:
+  domains:
+    auth: "auth.oriso-dev.site"
+
+
+

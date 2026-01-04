@@ -1,0 +1,86 @@
+# SigNoz Helm Chart - Values
+# Based on actual running StatefulSet
+# Note: SigNoz is complex and includes ClickHouse, Zookeeper dependencies
+# This is a simplified chart - for production, consider using official SigNoz Helm chart
+
+image:
+  repository: signoz/signoz
+  tag: "v0.105.1"
+  pullPolicy: IfNotPresent
+
+replicas: 1
+namespace: caritas
+
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: 8080
+  internalPort: 8085
+  opampPort: 4320
+
+# ClickHouse Configuration
+clickhouse:
+  host: "oriso-platform-clickhouse"  # Use Helm-managed service name
+  port: 9000
+  httpPort: 8123
+  cluster: "cluster"
+  user: "default"  # ClickHouse default user
+  # Password should be in Secret
+  password: "clickhouse-password"  # From clickhouse-config ConfigMap
+  secret:
+    name: clickhouse-config
+    key: default-password
+
+# SigNoz Configuration
+signoz:
+  telemetryStore:
+    provider: "clickhouse"
+  prometheus:
+    activeQueryTracker:
+      enabled: false
+  emailing:
+    enabled: false
+  alertmanager:
+    provider: "signoz"
+    signozExternalUrl: "http://localhost:8080"
+  dotMetrics:
+    enabled: true
+
+resources:
+  requests:
+    cpu: 1000m
+    memory: 4Gi
+  limits:
+    cpu: 4000m
+    memory: 16Gi
+
+# Probes
+livenessProbe:
+  httpGet:
+    path: /api/v1/health
+    port: http
+    scheme: HTTP
+  failureThreshold: 6
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 5
+
+readinessProbe:
+  httpGet:
+    path: /api/v1/health?live=1
+    port: http
+    scheme: HTTP
+  failureThreshold: 6
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 5
+
+# Storage Configuration
+persistence:
+  enabled: true
+  storageClass: "local-path"
+  size: 20Gi
+  accessMode: ReadWriteOnce
+
