@@ -570,10 +570,10 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/realms/online-beratung/account/*"
+        "{{ .Values.global.keycloakAuthServerUrl }}/realms/online-beratung/account/*"
       ],
       "webOrigins": [
-        "https://admin.oriso.site/*",],
+        "https://{{ .Values.global.adminDomainName }}/*"],
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,
@@ -609,10 +609,10 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/realms/online-beratung/account/*"
+        "{{ .Values.global.keycloakAuthServerUrl }}/realms/online-beratung/account/*"
       ],
       "webOrigins": [
-        "https://admin.oriso.site/*",],
+        "https://{{ .Values.global.adminDomainName }}/*"],
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,
@@ -658,7 +658,7 @@
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [],
       "webOrigins": [
-        "https://admin.oriso.site/*",],
+        "https://{{ .Values.global.adminDomainName }}/*"],
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,
@@ -697,12 +697,12 @@
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
         "*",
-        "https://admin.oriso.site/*",
+        "https://{{ .Values.global.adminDomainName }}/*",
         "http://91.99.219.182:9000/*",
         "http://localhost:9000/*"
       ],
       "webOrigins": [
-        "https://admin.oriso.site/*",
+        "https://{{ .Values.global.adminDomainName }}/*",
         "*",
         "http://91.99.219.182:9000/*"
       ],
@@ -742,7 +742,7 @@
         "microprofile-jwt"
       ]
     },
-    {
+    {    
       "id": "cd33d226-22b5-4012-af97-c8cda04ddb0c",
       "clientId": "broker",
       "name": "${client_broker}",
@@ -752,7 +752,7 @@
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [],
       "webOrigins": [
-        "https://admin.oriso.site/*",],
+        "https://{{ .Values.global.adminDomainName }}/*"],
       "notBefore": 0,
       "bearerOnly": true,
       "consentRequired": false,
@@ -782,7 +782,7 @@
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [],
       "webOrigins": [
-        "https://admin.oriso.site/*",],
+        "https://{{ .Values.global.adminDomainName }}/*"],
       "notBefore": 0,
       "bearerOnly": true,
       "consentRequired": false,
@@ -813,10 +813,10 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/admin/online-beratung/console/*"
+        "{{ .Values.global.keycloakAuthServerUrl }}/admin/online-beratung/console/*"
       ],
       "webOrigins": [
-        "https://admin.oriso.site/*",
+        "https://{{ .Values.global.adminDomainName }}/*",
         "+"
       ],
       "notBefore": 0,

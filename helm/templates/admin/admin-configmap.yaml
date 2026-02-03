@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: admin-configmap
+data:
+  REACT_APP_MATRIX_URL: "{{ .Values.global.domains.matrix }}"
+  REACT_APP_KEYCLOAK_URL: "{{ .Values.global.domains.auth }}"
+

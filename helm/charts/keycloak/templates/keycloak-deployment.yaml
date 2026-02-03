@@ -32,6 +32,7 @@ spec:
             - start
             - --auto-build
           env:
+          
             - name: KC_DB
               valueFrom:
                 configMapKeyRef:
@@ -85,7 +86,7 @@ spec:
                 configMapKeyRef:
                   key: ROOT_LOGLEVEL
                   name: keycloak-configmap-env
-          {{- if .Values.global.initializeDummyData }}
+         # {{- if .Values.global.initializeDummyData }}
           readinessProbe:
             exec:
               command:
@@ -93,13 +94,13 @@ spec:
                 - -c
                 - |
                   if [[ ! -f /tmp/keycloak-initialized.lock ]]; then
-                    /opt/keycloak/bin/kc.sh import --file /data/import/keycloak-full-export.json
+                    /opt/keycloak/bin/kc.sh import --file /data/import/realm.json
                     touch /tmp/keycloak-initialized.lock
                   fi;
             timeoutSeconds: 30
             initialDelaySeconds: 30
             failureThreshold: 3
-          {{- end }}
+        #  {{- end }}
           volumeMounts:
             # --- LOGIN THEME MOUNTS ---
             # Hauptordner Login (inkl. ftl Dateien & theme.properties)

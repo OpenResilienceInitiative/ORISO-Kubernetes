@@ -12,3 +12,5 @@ data:
     # Supported log levels are ALL, DEBUG, ERROR, FATAL, INFO, OFF, TRACE and WARN.
     KEYCLOAK_LOGLEVEL: {{ .Values.keycloakLogLevel | quote }}
     ROOT_LOGLEVEL: {{ .Values.rootLogLevel | quote }}
+    KEYCLOAK_IMPORT: "/data/import"
+

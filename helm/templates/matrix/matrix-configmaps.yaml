@@ -65,7 +65,7 @@ data:
 kind: ConfigMap
 metadata: 
   name: matrix-backup-script
-  namespace: caritas 
+  namespace: {{ .Release.Namespace }}
 ---
 apiVersion: v1
 data:
@@ -87,7 +87,7 @@ data:
 kind: ConfigMap
 metadata: 
   name: matrix-discovery-config
-  namespace: caritas 
+  namespace: {{ .Release.Namespace }}
 ---
 apiVersion: v1
 data:
@@ -102,7 +102,7 @@ data:
 kind: ConfigMap
 metadata: 
   name: matrix-discovery-data
-  namespace: caritas 
+  namespace: {{ .Release.Namespace }}
 ---
 apiVersion: v1
 data:
@@ -218,7 +218,7 @@ data:
 kind: ConfigMap
 metadata:
   name: matrix-homeserver-oidc
-  namespace: caritas 
+  namespace: {{ .Release.Namespace }}
 ---
 apiVersion: v1
 data:
@@ -246,7 +246,7 @@ data:
 kind: ConfigMap
 metadata:
   name: matrix-oidc-config
-  namespace: caritas 
+  namespace: {{ .Release.Namespace }}
 ---  
 apiVersion: v1
 data:
@@ -302,7 +302,7 @@ data:
 kind: ConfigMap
 metadata:
   name: matrix-pitr-scripts
-  namespace: caritas 
+  namespace: {{ .Release.Namespace }}
 ---  
 apiVersion: v1
 data:
@@ -341,4 +341,4 @@ data:
 kind: ConfigMap
 metadata:
   name: matrix-postgres-config
-  namespace: caritas 
+  namespace: {{ .Release.Namespace }}

@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: admin
-  namespace: caritas
+  namespace: {{ .Release.Namespace }}
   labels:
     app: admin
 spec:
@@ -21,6 +21,9 @@ spec:
       - name: admin
         image: {{ .Values.admin.imageName }}:{{ .Values.admin.imageVersion }}     
         imagePullPolicy: Always  # Use local image from k3s
+        envFrom:
+          - configMapRef:
+              name: admin-configmap
         ports:
         - containerPort: 80
           name: http

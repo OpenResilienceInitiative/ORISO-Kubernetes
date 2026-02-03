@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: matrix-synapse
-  namespace: caritas
+  namespace: {{ .Release.Namespace }}
   labels:
     app: matrix-synapse
 spec:

@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: matrix-backup-cronjob-github
-  namespace: caritas
+  namespace: {{ .Release.Namespace }}
 spec:
   schedule: "0 2 * * *"
   concurrencyPolicy: Forbid

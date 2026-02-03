@@ -3,4 +3,10 @@ kind: ConfigMap
 metadata:
   name: frontend-configmap
 data: 
-  PORT: "8080"
+    PORT: "8080"
+    REACT_APP_API_URL: "{{ .Values.global.domains.api }}"
+    REACT_APP_ELEMENT_CALL_URL: "{{ .Values.global.domains.call }}"
+    REACT_APP_LIVEKIT_URL: "{{ .Values.global.domains.livekit }}"
+    VITE_API_URL: "{{ .Values.global.domains.api }}"
+    REACT_APP_MATRIX_HOMESERVER_URL: "{{ .Values.global.domains.matrix }}"
+    VITE_MATRIX_HOMESERVER_URL: "{{ .Values.global.domains.matrix }}"

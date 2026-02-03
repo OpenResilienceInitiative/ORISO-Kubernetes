@@ -1,15 +1,12 @@
-# Admin Service
 apiVersion: v1
 kind: Service
 metadata:
   name: admin
-  namespace: caritas
+  namespace: {{ .Release.Namespace }}
 spec:
-  type: LoadBalancer
   ports:
-  - name: http
-    port: 9000
-    targetPort: 80
-    protocol: TCP
+    - name: "80"
+      port: 80
+      targetPort: 80
   selector:
     app: admin
