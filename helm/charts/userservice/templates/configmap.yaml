@@ -39,6 +39,12 @@ data:
   CONSULTING_TYPE_SERVICE_API_URL: {{ .Values.services.consultingTypeService.apiUrl | quote }}
   AGENCY_SERVICE_API_URL: {{ .Values.services.agencyService.apiUrl | quote }}
   
+  # SMTP Configuration
+  SMTP_HOST: {{ .Values.smtp.host | quote }}
+  SMTP_PORT: {{ .Values.smtp.port | quote }}
+  SMTP_SECURE: {{ .Values.smtp.secure | quote }}
+  SMTP_FROM: {{ .Values.smtp.from | quote }}
+  
   # Spring Profile
   SPRING_PROFILES_ACTIVE: {{ .Values.spring.profiles.active | quote }}
   
@@ -115,6 +121,14 @@ data:
     agency.service.api.url={{ .Values.services.agencyService.apiUrl }}
     agency.service.api.get.agencies=${agency.service.api.url}/
     agency.admin.service.api.url=${app.base.url}
+    
+    # ---------------- SMTP ----------------
+    smtp.host={{ .Values.smtp.host }}
+    smtp.port={{ .Values.smtp.port }}
+    smtp.secure={{ .Values.smtp.secure }}
+    smtp.user=${SMTP_USER:}
+    smtp.password=${SMTP_PASSWORD:}
+    smtp.from={{ .Values.smtp.from }}
     
     # ---------------- CORS ----------------
     {{- if and .Values.global .Values.global.domains .Values.global.domains.app }}

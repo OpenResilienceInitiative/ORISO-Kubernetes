@@ -93,6 +93,13 @@ tenantservice:
   enabled: true
 userservice:
   enabled: true
+  smtp:
+    host: "smtp.titan.email"
+    port: "587"
+    secure: "false"
+    user: ""
+    password: ""
+    from: "ORISO <notifications@oriso-dev.site>"
 agencyservice:
   enabled: true
 consultingtypeservice:

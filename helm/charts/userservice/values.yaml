@@ -96,3 +96,12 @@ spring:
 encryption:
   appKey: ""
 
+# SMTP Configuration (for mail infrastructure integration)
+smtp:
+  host: "smtp.titan.email"
+  port: "587"
+  secure: "false"
+  user: ""
+  password: ""
+  from: "ORISO <notifications@oriso-dev.site>"
+
