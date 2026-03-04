@@ -43,7 +43,7 @@ service:
 database:
   url: "jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/agencyservice"
   username: "agencyservice"
-  password: "agencyservice"
+  password: ""  # set via private values/secret in CI
   driver: "org.mariadb.jdbc.Driver"
   hikari:
     maximumPoolSize: 10
@@ -73,7 +73,7 @@ keycloak:
   sslRequired: "none"
   config:
     adminUsername: "technical"
-    adminPassword: "technical"
+    adminPassword: ""  # set via private values/secret in CI
     adminClientId: "admin-cli"
     appClientId: "app"
   jwt:
@@ -86,10 +86,10 @@ keycloak:
 # Uses global.matrix values if available, otherwise defaults below
 matrix:
   apiUrl: "http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008"
-  registrationSharedSecret: "caritas-registration-secret-2025"
+  registrationSharedSecret: ""  # set via private values/secret in CI
   serverName: "oriso-dev.site"  # Standardized to match global.matrix.serverName
   adminUsername: "caritas_admin"
-  adminPassword: "@CaritasAdmin2025!"
+  adminPassword: ""  # set via private values/secret in CI
 
 # Service URLs (Kubernetes DNS - Full FQDN for managed clusters)
 services:
@@ -110,13 +110,17 @@ rocketchat:
   mongoUrl: "mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false"
   technical:
     username: "rocket-chat-technical-user"
-    password: "technical"
+    password: ""  # set via private values/secret in CI
   credentialCron: "0 0 * * * ?"
 
 # Feature Flags
 features:
   topics:
     enabled: true
+  multitenancy:
+    enabled: true
+    withSingleDomain:
+      enabled: true
 
 # Spring Profile
 spring:

@@ -24,7 +24,7 @@ keycloak:
   # Admin credentials (should be in Secret, defaults here)
   admin:
     username: "admin"
-    password: "admin"  # Should be in Secret
+    password: ""  # set via private values/secret in CI
   
   # Hostname configuration (uses global.domains.auth if available)
   hostname: "auth.oriso-dev.site"

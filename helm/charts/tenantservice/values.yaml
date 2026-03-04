@@ -28,7 +28,7 @@ service:
 database:
   url: "jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/tenantservice"
   username: "tenantservice"
-  password: "tenantservice"
+  password: ""  # set via private values/secret in CI
   driver: "org.mariadb.jdbc.Driver"
   hikari:
     maximumPoolSize: 10
@@ -62,7 +62,7 @@ rabbitmq:
   host: "oriso-platform-rabbitmq.caritas.svc.cluster.local"
   port: 5672
   username: "admin"
-  password: "admin"
+  password: ""  # set via private values/secret in CI
 
 # Service URLs - Full DNS FQDN for managed clusters
 services:
@@ -79,7 +79,8 @@ spring:
 # Feature Flags
 features:
   multitenancy:
+    enabled: true
     withSingleDomain:
-      enabled: false
+      enabled: true
 
 

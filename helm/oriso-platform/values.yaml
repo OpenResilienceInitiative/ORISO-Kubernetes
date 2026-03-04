@@ -31,7 +31,7 @@ global:
     serverName: "oriso-dev.site"
     internalUrl: "http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008"
     externalUrl: "https://matrix.oriso-dev.site"
-    registrationSharedSecret: "caritas-registration-secret-2025"
+    registrationSharedSecret: ""  # set via private values/secret in CI
   cors:
     allowedOrigins:
       - "https://app.oriso-dev.site"
@@ -91,8 +91,18 @@ livekit:
 # Backend Services
 tenantservice:
   enabled: true
+  features:
+    multitenancy:
+      enabled: true
+      withSingleDomain:
+        enabled: true
 userservice:
   enabled: true
+  features:
+    multitenancy:
+      enabled: true
+      withSingleDomain:
+        enabled: true
   smtp:
     host: "smtp.titan.email"
     port: "587"
@@ -102,8 +112,19 @@ userservice:
     from: "ORISO <notifications@oriso-dev.site>"
 agencyservice:
   enabled: true
+  features:
+    multitenancy:
+      enabled: true
+      withSingleDomain:
+        enabled: true
 consultingtypeservice:
   enabled: true
+  features:
+    multitenancy:
+      enabled: false
+      withSingleDomain:
+        enabled: true
+      mainTenantSubdomain: "caritas-berlin"
 
 # Frontend Services
 frontend:

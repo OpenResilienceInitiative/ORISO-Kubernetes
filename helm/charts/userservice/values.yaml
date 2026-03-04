@@ -28,11 +28,11 @@ service:
 database:
   url: "jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/userservice"
   username: "userservice"
-  password: "userservice"
+  password: ""  # set via private values/secret in CI
   liquibase:
     enabled: false  # Database schemas managed separately
     user: "userservice"
-    password: "userservice"
+    password: ""  # set via private values/secret in CI
 
 # MongoDB Configuration - Full DNS FQDN for managed clusters
 mongodb:
@@ -44,7 +44,7 @@ keycloak:
   realm: "online-beratung"
   config:
     adminUsername: "technical"
-    adminPassword: "technical"
+    adminPassword: ""  # set via private values/secret in CI
   jwt:
     # External URL for JWT validation (managed cluster requirement)
     issuerUri: "https://auth.oriso-dev.site/realms/online-beratung"
@@ -57,14 +57,14 @@ matrix:
   apiUrl: "http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008"
   serverName: "oriso-dev.site"
   migrationEnabled: true
-  registrationSharedSecret: "caritas-registration-secret-2025"
+  registrationSharedSecret: ""  # set via private values/secret in CI
 
 # RabbitMQ Configuration - Full DNS FQDN for managed clusters
 rabbitmq:
   host: "oriso-platform-rabbitmq.caritas.svc.cluster.local"
   port: 5672
   username: "admin"
-  password: "admin"
+  password: ""  # set via private values/secret in CI
 
 # Rocket.Chat Configuration - Full DNS FQDN for managed clusters
 rocketchat:
@@ -72,7 +72,7 @@ rocketchat:
   mongoUrl: "mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false"
   technical:
     username: "rocket-chat-technical-user"
-    password: "technical"
+    password: ""  # set via private values/secret in CI
   systemuser:
     id: ""
     username: ""
@@ -91,6 +91,13 @@ services:
 spring:
   profiles:
     active: "prod"
+
+# Feature Flags
+features:
+  multitenancy:
+    enabled: true
+    withSingleDomain:
+      enabled: true
 
 # Service Encryption
 encryption:

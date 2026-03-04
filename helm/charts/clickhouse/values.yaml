@@ -19,7 +19,7 @@ service:
 # ClickHouse Configuration
 clickhouse:
   user: "default"
-  password: "clickhouse-password"  # From ConfigMap
+  password: ""  # set via private values/secret in CI
   database: "default"
   maxMemoryUsage: 10000000000  # 10GB
   maxServerMemoryUsage: 20000000000  # 20GB

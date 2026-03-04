@@ -28,7 +28,7 @@ service:
 database:
   url: "jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/consultingtypeservice"
   username: "consultingtypeservice"
-  password: "consultingtypeservice"
+  password: ""  # set via private values/secret in CI
   driver: "org.mariadb.jdbc.Driver"
   liquibase:
     enabled: false  # Database schemas managed separately
@@ -51,7 +51,7 @@ rabbitmq:
   host: "oriso-platform-rabbitmq.caritas.svc.cluster.local"
   port: 5672
   username: "admin"
-  password: "admin"
+  password: ""  # set via private values/secret in CI
 
 # Service URLs - Full DNS FQDN for managed clusters
 services:
@@ -62,5 +62,13 @@ services:
 spring:
   profiles:
     active: "prod"
+
+# Feature Flags
+features:
+  multitenancy:
+    enabled: false
+    withSingleDomain:
+      enabled: true
+    mainTenantSubdomain: "caritas-berlin"
 
 

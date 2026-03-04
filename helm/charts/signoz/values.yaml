@@ -26,7 +26,7 @@ clickhouse:
   cluster: "cluster"
   user: "default"  # ClickHouse default user
   # Password should be in Secret
-  password: "clickhouse-password"  # From clickhouse-config ConfigMap
+  password: ""  # set via private values/secret in CI
   secret:
     name: clickhouse-config
     key: default-password

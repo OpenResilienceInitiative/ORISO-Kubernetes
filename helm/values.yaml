@@ -48,7 +48,7 @@ global:
     # External URL
     externalUrl: "https://matrix.oriso-dev.site"
     # Registration secret (should be in Secret)
-    registrationSharedSecret: "caritas-registration-secret-2025"
+    registrationSharedSecret: ""  # set via private values/secret in CI
   
   # CORS Configuration
   cors:
