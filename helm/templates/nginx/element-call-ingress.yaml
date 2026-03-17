@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/configuration-snippet: add_header Permissions-Policy
+      'camera=(self "https://{{ .Values.global.domainName }}"), microphone=(self "https://{{
+      .Values.global.domainName }}"), display-capture=(self "https://{{ .Values.global.domainName
+      }}")' always;
+    nginx.ingress.kubernetes.io/permanent-redirect: https://{{ .Values.global.domainName
+      }}/room/
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+  name: element-call-ingress
+spec:
+  rules:
+  - host: acme{{ .Values.global.domainName }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: element-call
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - acme{{ .Values.global.domainName }}
+    secretName: oriso-neusta-integrate-de-tls

@@ -6,7 +6,7 @@ spec:
   ports:
     - name: "8080"
       port: 8080
-      targetPort: 8080
+      targetPort: 8083
     - name: "5005"
       port: 5005
       targetPort: 5005

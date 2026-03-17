@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /tenant/public/oriso
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+  name: tenantservice-public-root-ingress
+spec:
+  rules:
+  - host: '{{ .Values.global.domainName }}'
+    http:
+      paths:
+      - backend:
+          service:
+            name: tenantservice
+            port:
+              number: 8081
+        path: /service/tenant/public/
+        pathType: Exact
