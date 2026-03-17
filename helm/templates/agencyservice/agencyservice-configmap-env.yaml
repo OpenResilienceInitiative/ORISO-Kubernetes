@@ -29,7 +29,7 @@ data:
   AGENCY_DELETEWORKFLOW_CRON: {{ .Values.agencyService.agencyDeleteworkflowCron | quote }}  
   MATRIX_API_URL: {{ .Values.matrix.matrixApiUrl }}  
   MATRIX_SERVER_NAME: {{ .Values.matrix.matrixServerName }}    
-  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: {{ .Values.global.springSecurityOAuth2ResourceserverJWTIssuerURI }}   
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI:  {{ .Values.global.springSecurityOAuth2ResourceserverJWTIssuerURI }}
   SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: {{ .Values.global.springSecurityOAuth2ResourceserverJWTJWKSETURI }}   
   SPRING_DATA_MONGODB_URI: {{ .Values.global.ServiceURL }} 
   {{- if .Values.global.enableTls }}

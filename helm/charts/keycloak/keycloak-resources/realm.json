@@ -697,14 +697,11 @@
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
         "*",
-        "https://{{ .Values.global.adminDomainName }}/*",
-        "http://91.99.219.182:9000/*",
-        "http://localhost:9000/*"
+        "https://{{ .Values.global.adminDomainName }}/*"
       ],
       "webOrigins": [
         "https://{{ .Values.global.adminDomainName }}/*",
-        "*",
-        "http://91.99.219.182:9000/*"
+        "*"
       ],
       "notBefore": 0,
       "bearerOnly": false,

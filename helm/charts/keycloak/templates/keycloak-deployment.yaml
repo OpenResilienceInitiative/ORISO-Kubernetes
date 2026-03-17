@@ -22,17 +22,14 @@ spec:
         - name: keycloak
           image: {{ .Values.imageName }}:{{ .Values.imageVersion }}
           imagePullPolicy: IfNotPresent
-
           ports:
             - containerPort: 8080
-
           command:
             - /opt/keycloak/bin/kc.sh
           args:
             - start
             - --auto-build
           env:
-          
             - name: KC_DB
               valueFrom:
                 configMapKeyRef:
@@ -86,49 +83,37 @@ spec:
                 configMapKeyRef:
                   key: ROOT_LOGLEVEL
                   name: keycloak-configmap-env
-         # {{- if .Values.global.initializeDummyData }}
-          readinessProbe:
-            exec:
-              command:
-                - /bin/bash
-                - -c
-                - |
-                  if [[ ! -f /tmp/keycloak-initialized.lock ]]; then
-                    /opt/keycloak/bin/kc.sh import --file /data/import/realm.json
-                    touch /tmp/keycloak-initialized.lock
-                  fi;
-            timeoutSeconds: 30
-            initialDelaySeconds: 30
-            failureThreshold: 3
-        #  {{- end }}
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    (
+                    sleep 300;
+                    if [ ! -f /tmp/keycloak-initialized.lock ]; then
+                      /opt/keycloak/bin/kc.sh import --file /data/import/realm.json && \
+                      touch /tmp/keycloak-initialized.lock;
+                    fi
+                    ) &
           volumeMounts:
-            # --- LOGIN THEME MOUNTS ---
-            # Hauptordner Login (inkl. ftl Dateien & theme.properties)
             - mountPath: /opt/keycloak/themes/custom-theme/login
               name: keycloak-theme-templates
-            # Messages
             - mountPath: /opt/keycloak/themes/custom-theme/login/messages
               name: keycloak-theme-templates-messages
-            # CSS Styles
             - mountPath: /opt/keycloak/themes/custom-theme/login/resources/css
               name: keycloak-theme-templates-styles
-            # Fonts
             - mountPath: /opt/keycloak/themes/custom-theme/login/resources/fonts/Nunito
               name: keycloak-theme-templates-fonts
-            # --- EMAIL THEME MOUNTS ---
-            # Messages
             - mountPath: /opt/keycloak/themes/custom-theme/email/messages
               name: keycloak-theme-email-messages
-            # HTML Templates
             - mountPath: /opt/keycloak/themes/custom-theme/email/html
               name: keycloak-theme-email-html
-            # Text Templates
             - mountPath: /opt/keycloak/themes/custom-theme/email/text
               name: keycloak-theme-email-text
-            # --- DATA IMPORT ---
             - mountPath: /data/import
               name: keycloak-full-dump
-
       volumes:
         - name: keycloak-theme-templates
           configMap:

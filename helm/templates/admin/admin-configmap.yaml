@@ -5,4 +5,4 @@ metadata:
 data:
   REACT_APP_MATRIX_URL: "{{ .Values.global.domains.matrix }}"
   REACT_APP_KEYCLOAK_URL: "{{ .Values.global.domains.auth }}"
-
+  VITE_API_URL: "{{ .Values.global.domainName }}"

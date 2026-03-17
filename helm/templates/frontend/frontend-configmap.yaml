@@ -4,9 +4,11 @@ metadata:
   name: frontend-configmap
 data: 
     PORT: "8080"
-    REACT_APP_API_URL: "{{ .Values.global.domains.api }}"
-    REACT_APP_ELEMENT_CALL_URL: "{{ .Values.global.domains.call }}"
+    REACT_APP_API_URL: "{{ .Values.global.domainName }}"
+    REACT_APP_ELEMENT_CALL_URL: "{{ .Values.global.domainName }}"
     REACT_APP_LIVEKIT_URL: "{{ .Values.global.domains.livekit }}"
-    VITE_API_URL: "{{ .Values.global.domains.api }}"
-    REACT_APP_MATRIX_HOMESERVER_URL: "{{ .Values.global.domains.matrix }}"
+    VITE_API_URL: "{{ .Values.global.domainName }}"
     VITE_MATRIX_HOMESERVER_URL: "{{ .Values.global.domains.matrix }}"
+    REACT_APP_KEYCLOAK_URL: "{{ .Values.global.external.keycloakURL }}"
+    REACT_APP_MATRIX_HOMESERVER_URL: "{{ .Values.global.domains.matrix }}"
+

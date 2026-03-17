@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: acme-challenge-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+    - host: {{ .Values.global.acmedomainName }}
+      http:
+        paths:
+          - path: /.well-known/acme-challenge(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: ingress-nginx
+                port:
+                  number: 80
