@@ -64,6 +64,7 @@ matrix:
 # Privacy / Notification Preview Policy
 privacy:
   notificationPreviewMode: "NONE"
+  ipMode: "STANDARD"
 
 # RabbitMQ Configuration - Full DNS FQDN for managed clusters
 rabbitmq:

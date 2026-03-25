@@ -25,6 +25,7 @@ data:
   MATRIX_MIGRATION_ENABLED: {{ .Values.matrix.migrationEnabled | quote }}
   MATRIX_ADMIN_USERNAME: {{ .Values.matrix.adminUsername | quote }}
   PRIVACY_NOTIFICATION_PREVIEW_MODE: {{ .Values.privacy.notificationPreviewMode | quote }}
+  PRIVACY_IP_MODE: {{ .Values.privacy.ipMode | quote }}
   
   # RabbitMQ Configuration - Use full Kubernetes DNS FQDN (required for managed clusters)
   SPRING_RABBITMQ_HOST: {{ .Values.rabbitmq.host | quote }}
@@ -111,6 +112,7 @@ data:
     matrix.adminUsername=${MATRIX_ADMIN_USERNAME:}
     matrix.adminPassword=${MATRIX_ADMIN_PASSWORD:}
     privacy.notificationPreviewMode=${PRIVACY_NOTIFICATION_PREVIEW_MODE:NONE}
+    privacy.ipMode=${PRIVACY_IP_MODE:STANDARD}
     
     # ---------------- RabbitMQ ----------------
     spring.rabbitmq.host={{ .Values.rabbitmq.host }}
