@@ -1,0 +1,239 @@
+[Deployment] caritas/oriso-mariadb-client :: container=phpmyadmin
+  env:
+    - PMA_HOST=oriso-platform-mariadb.caritas.svc.cluster.local
+    - PMA_PORT=3306
+    - PMA_USER=<secret:oriso-mariadb-client-db-credentials/PMA_USER>
+    - PMA_PASSWORD=<secret:oriso-mariadb-client-db-credentials/PMA_PASSWORD>
+    - PMA_BLOWFISH_SECRET=<secret:oriso-mariadb-client-db-credentials/PMA_BLOWFISH_SECRET>
+
+[Deployment] caritas/oriso-platform-admin :: container=admin
+  env:
+    - REACT_APP_API_URL=https://api.oriso-dev.site
+    - REACT_APP_KEYCLOAK_URL=https://auth.oriso-dev.site
+    - REACT_APP_MATRIX_URL=https://matrix.oriso-dev.site
+    - VITE_API_URL=https://api.oriso-dev.site
+    - REACT_APP_API_URL=https://api.oriso-dev.site
+    - REACT_APP_MATRIX_URL=https://matrix.oriso-dev.site
+    - REACT_APP_KEYCLOAK_URL=https://auth.oriso-dev.site
+    - VITE_API_URL=https://api.oriso-dev.site
+
+[Deployment] caritas/oriso-platform-agencyservice :: container=agencyservice
+  envFrom:
+    - configMapRef: oriso-platform-agencyservice-config
+    - secretRef: oriso-platform-agencyservice-secrets
+
+[Deployment] caritas/oriso-platform-consultingtypeservice :: container=consultingtypeservice
+  envFrom:
+    - configMapRef: oriso-platform-consultingtypeservice-config
+    - secretRef: oriso-platform-consultingtypeservice-secrets
+
+[Deployment] caritas/oriso-platform-element-call :: container=element-call
+  env: <none>
+
+[Deployment] caritas/oriso-platform-frontend :: container=frontend
+  env:
+    - NODE_ENV=production
+    - PORT=80
+    - REACT_APP_API_URL=https://api.oriso-dev.site
+    - REACT_APP_ELEMENT_CALL_URL=https://call.oriso-dev.site
+    - REACT_APP_KEYCLOAK_URL=https://auth.oriso-dev.site
+    - REACT_APP_LIVEKIT_URL=https://livekit.oriso-dev.site
+    - REACT_APP_MATRIX_HOMESERVER_URL=https://matrix.oriso-dev.site
+    - REACT_APP_MATRIX_URL=https://matrix.oriso-dev.site
+    - VITE_API_URL=https://api.oriso-dev.site
+    - VITE_MATRIX_HOMESERVER_URL=https://matrix.oriso-dev.site
+    - REACT_APP_API_URL=https://api.oriso-dev.site
+    - REACT_APP_MATRIX_URL=https://matrix.oriso-dev.site
+    - REACT_APP_ELEMENT_CALL_URL=https://call.oriso-dev.site
+    - REACT_APP_LIVEKIT_URL=https://livekit.oriso-dev.site
+    - REACT_APP_KEYCLOAK_URL=https://auth.oriso-dev.site
+    - VITE_API_URL=https://api.oriso-dev.site
+    - REACT_APP_MATRIX_HOMESERVER_URL=https://matrix.oriso-dev.site
+    - VITE_MATRIX_HOMESERVER_URL=https://matrix.oriso-dev.site
+
+[Deployment] caritas/oriso-platform-health-dashboard :: container=health-dashboard
+  env:
+    - PORT=9100
+
+[Deployment] caritas/oriso-platform-keycloak :: container=keycloak
+  env:
+    - KEYCLOAK_ADMIN=admin
+    - KEYCLOAK_ADMIN_PASSWORD=admin
+    - KC_PROXY=edge
+    - KC_HOSTNAME=auth.oriso-dev.site
+    - KC_HOSTNAME_STRICT_HTTPS=true
+    - KC_HTTP_ENABLED=true
+    - KC_SPI_STICKY_SESSION_ENCODER_INFINISPAN_SHOULD_ATTACH_ROUTE=false
+
+[Deployment] caritas/oriso-platform-livekit :: container=livekit
+  env: <none>
+
+[Deployment] caritas/oriso-platform-livekit-token-service :: container=livekit-token-service
+  env: <none>
+
+[Deployment] caritas/oriso-platform-matrix-synapse :: container=synapse
+  env:
+    - SYNAPSE_SERVER_NAME=oriso-dev.site
+    - SYNAPSE_REPORT_STATS=no
+    - SYNAPSE_ENABLE_AUTHENTICATED_MEDIA=false
+
+[Deployment] caritas/oriso-platform-matrix-synapse :: initContainer=fix-permissions
+  env: <none>
+
+[Deployment] caritas/oriso-platform-mongodb :: container=mongodb
+  env: <none>
+
+[Deployment] caritas/oriso-platform-otel-collector :: container=otel-collector
+  env: <none>
+
+[Deployment] caritas/oriso-platform-rabbitmq :: container=rabbitmq
+  env:
+    - RABBITMQ_DEFAULT_USER=<secret:rabbitmq-secrets/RABBITMQ_DEFAULT_USER>
+    - RABBITMQ_DEFAULT_PASS=<secret:rabbitmq-secrets/RABBITMQ_DEFAULT_PASS>
+
+[Deployment] caritas/oriso-platform-redis :: container=redis
+  env:
+    - REDIS_PASSWORD=<secret:redis-secret/password>
+
+[Deployment] caritas/oriso-platform-redis-commander :: container=redis-commander
+  env:
+    - REDIS_PASSWORD=<secret:redis-secret/password>
+    - REDIS_HOSTS=local:redis:6379:0:$(REDIS_PASSWORD)
+    - HTTP_USER=<secret:redis-secret/HTTP_USER>
+    - HTTP_PASSWORD=<secret:redis-secret/HTTP_PASSWORD>
+
+[Deployment] caritas/oriso-platform-redis-exporter :: container=redis-exporter
+  env:
+    - REDIS_ADDR=redis:6379
+    - REDIS_PASSWORD=<secret:redis-secret/password>
+
+[Deployment] caritas/oriso-platform-service-health-exporter :: container=service-health-exporter
+  env:
+    - OTEL_ENDPOINT=http://oriso-platform-otel-collector.caritas.svc.cluster.local:4318
+    - CHECK_INTERVAL=10
+    - TIMEOUT=5
+
+[Deployment] caritas/oriso-platform-status-page :: container=status-page
+  env:
+    - PORT=9200
+    - STATUS_AUTH_URL=http://oriso-platform-keycloak.caritas.svc.cluster.local:8080
+    - STATUS_API_URL=http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084/actuator/health
+    - STATUS_DATABASE_URL=http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084/actuator/health
+    - STATUS_MESSAGING_URL=http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008/health
+    - STATUS_UPLOADS_URL=http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008/_matrix/media/v3/upload
+
+[Deployment] caritas/oriso-platform-storybook :: container=storybook
+  env:
+    - NODE_ENV=production
+    - PORT=80
+
+[Deployment] caritas/oriso-platform-tenantservice :: container=tenantservice
+  envFrom:
+    - configMapRef: oriso-platform-tenantservice-config
+    - secretRef: oriso-platform-tenantservice-secrets
+
+[Deployment] caritas/oriso-platform-userservice :: container=userservice
+  envFrom:
+    - configMapRef: oriso-platform-userservice-config
+    - secretRef: oriso-platform-userservice-secrets
+
+[StatefulSet] caritas/oriso-platform-clickhouse :: container=clickhouse
+  env:
+    - CLICKHOUSE_DB=default
+    - CLICKHOUSE_USER=default
+    - CLICKHOUSE_PASSWORD=clickhouse-password
+
+[StatefulSet] caritas/oriso-platform-mariadb :: container=mariadb
+  env:
+    - MYSQL_ROOT_PASSWORD=<secret:mariadb-secrets/MYSQL_ROOT_PASSWORD>
+    - MYSQL_DATABASE=<secret:mariadb-secrets/MYSQL_DATABASE>
+
+[StatefulSet] caritas/oriso-platform-signoz :: container=signoz
+  env:
+    - CLICKHOUSE_HOST=oriso-platform-clickhouse
+    - CLICKHOUSE_PORT=9000
+    - CLICKHOUSE_HTTP_PORT=8123
+    - CLICKHOUSE_CLUSTER=cluster
+    - CLICKHOUSE_USER=default
+    - CLICKHOUSE_PASSWORD=<configmap:clickhouse-config/default-password>
+    - CLICKHOUSE_SECURE=false
+    - SIGNOZ_TELEMETRYSTORE_PROVIDER=clickhouse
+    - SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_DSN=tcp://oriso-platform-clickhouse:9000/?username=$(CLICKHOUSE_USER)&password=$(CLICKHOUSE_PASSWORD)
+    - SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_CLUSTER=cluster
+    - SIGNOZ_PROMETHEUS_ACTIVE_QUERY_TRACKER_ENABLED=false
+    - SIGNOZ_EMAILING_ENABLED=false
+    - SIGNOZ_ALERTMANAGER_SIGNOZ_EXTERNAL__URL=http://localhost:8080
+    - SIGNOZ_ALERTMANAGER_PROVIDER=signoz
+    - DOT_METRICS_ENABLED=true
+
+[StatefulSet] caritas/oriso-platform-signoz :: initContainer=wait-for-clickhouse
+  env: <none>
+
+[Job] caritas/signoz-schema-migrator-async :: container=schema-migrator
+  env:
+    - CLICKHOUSE_HOST=signoz-clickhouse
+    - CLICKHOUSE_PORT=9000
+    - CLICKHOUSE_HTTP_PORT=8123
+    - CLICKHOUSE_CLUSTER=cluster
+    - CLICKHOUSE_USER=admin
+    - CLICKHOUSE_PASSWORD=27ff0399-0d3a-4bd8-919d-17c2181e6fb9
+    - CLICKHOUSE_SECURE=false
+
+[Job] caritas/signoz-schema-migrator-async :: initContainer=schema-migrator-async-init
+  env:
+    - CLICKHOUSE_HOST=signoz-clickhouse
+    - CLICKHOUSE_PORT=9000
+    - CLICKHOUSE_HTTP_PORT=8123
+    - CLICKHOUSE_CLUSTER=cluster
+    - CLICKHOUSE_USER=admin
+    - CLICKHOUSE_PASSWORD=27ff0399-0d3a-4bd8-919d-17c2181e6fb9
+    - CLICKHOUSE_SECURE=false
+
+[Job] caritas/signoz-schema-migrator-async :: initContainer=schema-migrator-async-ch-ready
+  env:
+    - CLICKHOUSE_HOST=signoz-clickhouse
+    - CLICKHOUSE_PORT=9000
+    - CLICKHOUSE_HTTP_PORT=8123
+    - CLICKHOUSE_CLUSTER=cluster
+    - CLICKHOUSE_USER=admin
+    - CLICKHOUSE_PASSWORD=27ff0399-0d3a-4bd8-919d-17c2181e6fb9
+    - CLICKHOUSE_SECURE=false
+    - CLICKHOUSE_VERSION=25.5.6
+    - CLICKHOUSE_SHARDS=1
+    - CLICKHOUSE_REPLICAS=1
+
+[Job] caritas/signoz-schema-migrator-async :: initContainer=schema-migrator-async-wait-for-sync
+  env: <none>
+
+[Job] caritas/signoz-schema-migrator-sync :: container=schema-migrator
+  env:
+    - CLICKHOUSE_HOST=signoz-clickhouse
+    - CLICKHOUSE_PORT=9000
+    - CLICKHOUSE_HTTP_PORT=8123
+    - CLICKHOUSE_CLUSTER=cluster
+    - CLICKHOUSE_USER=admin
+    - CLICKHOUSE_PASSWORD=27ff0399-0d3a-4bd8-919d-17c2181e6fb9
+    - CLICKHOUSE_SECURE=false
+
+[Job] caritas/signoz-schema-migrator-sync :: initContainer=schema-migrator-sync-init
+  env:
+    - CLICKHOUSE_HOST=signoz-clickhouse
+    - CLICKHOUSE_PORT=9000
+    - CLICKHOUSE_HTTP_PORT=8123
+    - CLICKHOUSE_CLUSTER=cluster
+    - CLICKHOUSE_USER=admin
+    - CLICKHOUSE_PASSWORD=27ff0399-0d3a-4bd8-919d-17c2181e6fb9
+    - CLICKHOUSE_SECURE=false
+
+[Job] caritas/signoz-schema-migrator-sync :: initContainer=schema-migrator-sync-ch-ready
+  env:
+    - CLICKHOUSE_HOST=signoz-clickhouse
+    - CLICKHOUSE_PORT=9000
+    - CLICKHOUSE_HTTP_PORT=8123
+    - CLICKHOUSE_CLUSTER=cluster
+    - CLICKHOUSE_USER=admin
+    - CLICKHOUSE_PASSWORD=27ff0399-0d3a-4bd8-919d-17c2181e6fb9
+    - CLICKHOUSE_SECURE=false
+    - CLICKHOUSE_VERSION=25.5.6
+    - CLICKHOUSE_SHARDS=1
+    - CLICKHOUSE_REPLICAS=1

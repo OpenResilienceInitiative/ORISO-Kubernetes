@@ -117,6 +117,10 @@ rocketchat:
 features:
   topics:
     enabled: true
+  multitenancy:
+    enabled: true
+    withSingleDomain:
+      enabled: true
 
 # Spring Profile
 spring:

@@ -1,0 +1,3036 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"oriso-mariadb-client"},"name":"oriso-mariadb-client","namespace":"caritas"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"oriso-mariadb-client"}},"template":{"metadata":{"labels":{"app":"oriso-mariadb-client"}},"spec":{"containers":[{"env":[{"name":"PMA_HOST","value":"oriso-platform-mariadb.caritas.svc.cluster.local"},{"name":"PMA_PORT","value":"3306"},{"name":"PMA_USER","valueFrom":{"secretKeyRef":{"key":"PMA_USER","name":"oriso-mariadb-client-db-credentials"}}},{"name":"PMA_PASSWORD","valueFrom":{"secretKeyRef":{"key":"PMA_PASSWORD","name":"oriso-mariadb-client-db-credentials"}}},{"name":"PMA_BLOWFISH_SECRET","valueFrom":{"secretKeyRef":{"key":"PMA_BLOWFISH_SECRET","name":"oriso-mariadb-client-db-credentials"}}}],"image":"phpmyadmin:5.2-apache","imagePullPolicy":"IfNotPresent","livenessProbe":{"httpGet":{"path":"/","port":"http"},"initialDelaySeconds":15,"periodSeconds":20},"name":"phpmyadmin","ports":[{"containerPort":80,"name":"http"}],"readinessProbe":{"httpGet":{"path":"/","port":"http"},"initialDelaySeconds":5,"periodSeconds":10},"volumeMounts":[{"mountPath":"/etc/phpmyadmin/config.user.inc.php","name":"config","readOnly":true,"subPath":"config.user.inc.php"}]}],"volumes":[{"configMap":{"name":"oriso-mariadb-client-config"},"name":"config"}]}}}}
+    creationTimestamp: "2026-02-12T01:07:22Z"
+    generation: 1
+    labels:
+      app: oriso-mariadb-client
+    name: oriso-mariadb-client
+    namespace: caritas
+    resourceVersion: "4767910"
+    uid: ad835559-3867-4bbb-9b69-e6bfa2f5bc61
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: oriso-mariadb-client
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: oriso-mariadb-client
+      spec:
+        containers:
+        - env:
+          - name: PMA_HOST
+            value: oriso-platform-mariadb.caritas.svc.cluster.local
+          - name: PMA_PORT
+            value: "3306"
+          - name: PMA_USER
+            valueFrom:
+              secretKeyRef:
+                key: PMA_USER
+                name: oriso-mariadb-client-db-credentials
+          - name: PMA_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: PMA_PASSWORD
+                name: oriso-mariadb-client-db-credentials
+          - name: PMA_BLOWFISH_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: PMA_BLOWFISH_SECRET
+                name: oriso-mariadb-client-db-credentials
+          image: phpmyadmin:5.2-apache
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: phpmyadmin
+          ports:
+          - containerPort: 80
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/phpmyadmin/config.user.inc.php
+            name: config
+            readOnly: true
+            subPath: config.user.inc.php
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: oriso-mariadb-client-config
+          name: config
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-02-12T01:07:22Z"
+      lastUpdateTime: "2026-02-12T01:07:48Z"
+      message: ReplicaSet "oriso-mariadb-client-7548f7858" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-03-06T06:57:20Z"
+      lastUpdateTime: "2026-03-06T06:57:20Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "45"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:40Z"
+    generation: 45
+    labels:
+      app: admin
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: admin
+      app.kubernetes.io/version: 1.0.0
+      helm.sh/chart: admin-1.0.0
+      tier: frontend
+    name: oriso-platform-admin
+    namespace: caritas
+    resourceVersion: "4833832"
+    uid: 17898bc1-b8c7-4733-8618-7d0627e22c5f
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: admin
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-03-07T11:05:06Z"
+        creationTimestamp: null
+        labels:
+          app: admin
+          tier: frontend
+      spec:
+        containers:
+        - env:
+          - name: REACT_APP_API_URL
+            value: https://api.oriso-dev.site
+          - name: REACT_APP_KEYCLOAK_URL
+            value: https://auth.oriso-dev.site
+          - name: REACT_APP_MATRIX_URL
+            value: https://matrix.oriso-dev.site
+          - name: VITE_API_URL
+            value: https://api.oriso-dev.site
+          - name: REACT_APP_API_URL
+            value: https://api.oriso-dev.site
+          - name: REACT_APP_MATRIX_URL
+            value: https://matrix.oriso-dev.site
+          - name: REACT_APP_KEYCLOAK_URL
+            value: https://auth.oriso-dev.site
+          - name: VITE_API_URL
+            value: https://api.oriso-dev.site
+          image: caritas-admin:latest
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /admin
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: admin
+          ports:
+          - containerPort: 80
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /admin
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-03-06T06:57:21Z"
+      lastUpdateTime: "2026-03-06T06:57:21Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2025-12-27T01:47:40Z"
+      lastUpdateTime: "2026-03-07T11:05:20Z"
+      message: ReplicaSet "oriso-platform-admin-74d95c7f59" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 45
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "24"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:40Z"
+    generation: 24
+    labels:
+      app: agencyservice
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: agencyservice
+      app.kubernetes.io/version: 1.0.0
+      helm.sh/chart: agencyservice-1.0.0
+    name: oriso-platform-agencyservice
+    namespace: caritas
+    resourceVersion: "4888765"
+    uid: 017dd291-fa40-4acb-aba4-7cecddac91ec
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: agencyservice
+        app.kubernetes.io/instance: oriso-platform
+        app.kubernetes.io/name: agencyservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-03-08T11:20:09Z"
+        creationTimestamp: null
+        labels:
+          app: agencyservice
+          app.kubernetes.io/instance: oriso-platform
+          app.kubernetes.io/name: agencyservice
+          tier: backend
+      spec:
+        containers:
+        - envFrom:
+          - configMapRef:
+              name: oriso-platform-agencyservice-config
+          - secretRef:
+              name: oriso-platform-agencyservice-secrets
+          image: oriso-agencyservice:latest
+          imagePullPolicy: Never
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8084
+              scheme: HTTP
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: agencyservice
+          ports:
+          - containerPort: 8084
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8084
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-03-06T06:57:26Z"
+      lastUpdateTime: "2026-03-06T06:57:26Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2025-12-27T05:50:10Z"
+      lastUpdateTime: "2026-03-08T11:21:19Z"
+      message: ReplicaSet "oriso-platform-agencyservice-69d978c4c4" has successfully
+        progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 24
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "16"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:40Z"
+    generation: 16
+    labels:
+      app: consultingtypeservice
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: consultingtypeservice
+      app.kubernetes.io/version: 1.0.0
+      helm.sh/chart: consultingtypeservice-1.0.0
+    name: oriso-platform-consultingtypeservice
+    namespace: caritas
+    resourceVersion: "4658287"
+    uid: 075ab140-49b5-4e1e-96b1-f09fdb1120ba
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: consultingtypeservice
+        app.kubernetes.io/instance: oriso-platform
+        app.kubernetes.io/name: consultingtypeservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: consultingtypeservice
+          app.kubernetes.io/instance: oriso-platform
+          app.kubernetes.io/name: consultingtypeservice
+          tier: backend
+      spec:
+        containers:
+        - envFrom:
+          - configMapRef:
+              name: oriso-platform-consultingtypeservice-config
+          - secretRef:
+              name: oriso-platform-consultingtypeservice-secrets
+          image: oriso-consultingtypeservice:latest
+          imagePullPolicy: Never
+          name: consultingtypeservice
+          ports:
+          - containerPort: 8083
+            name: http
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-01-19T17:15:26Z"
+      lastUpdateTime: "2026-01-19T17:15:26Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2025-12-27T01:47:41Z"
+      lastUpdateTime: "2026-03-04T06:32:38Z"
+      message: ReplicaSet "oriso-platform-consultingtypeservice-677f8f79c8" has successfully
+        progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 16
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "38"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:40Z"
+    generation: 38
+    labels:
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: element-call
+      helm.sh/chart: element-call-1.0.0
+    name: oriso-platform-element-call
+    namespace: caritas
+    resourceVersion: "4767983"
+    uid: 08d78931-b765-4c30-8b67-c9afc72ee730
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: element-call
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: element-call
+      spec:
+        containers:
+        - image: element-call:latest
+          imagePullPolicy: Never
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: element-call
+          ports:
+          - containerPort: 80
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /app/config.json
+            name: element-call-config
+            readOnly: true
+            subPath: config.json
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: element-call-config
+          name: element-call-config
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-12-27T01:47:40Z"
+      lastUpdateTime: "2026-03-04T06:32:43Z"
+      message: ReplicaSet "oriso-platform-element-call-654cb65775" has successfully
+        progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-03-06T06:57:21Z"
+      lastUpdateTime: "2026-03-06T06:57:21Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 38
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "164"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:40Z"
+    generation: 164
+    labels:
+      app: frontend
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: frontend
+      app.kubernetes.io/version: 1.0.0
+      helm.sh/chart: frontend-1.0.0
+    name: oriso-platform-frontend
+    namespace: caritas
+    resourceVersion: "4768000"
+    uid: ee0903f8-4ffe-436c-a704-d832954b3415
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 1
+    selector:
+      matchLabels:
+        app: frontend
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: frontend
+      spec:
+        containers:
+        - env:
+          - name: NODE_ENV
+            value: production
+          - name: PORT
+            value: "80"
+          - name: REACT_APP_API_URL
+            value: https://api.oriso-dev.site
+          - name: REACT_APP_ELEMENT_CALL_URL
+            value: https://call.oriso-dev.site
+          - name: REACT_APP_KEYCLOAK_URL
+            value: https://auth.oriso-dev.site
+          - name: REACT_APP_LIVEKIT_URL
+            value: https://livekit.oriso-dev.site
+          - name: REACT_APP_MATRIX_HOMESERVER_URL
+            value: https://matrix.oriso-dev.site
+          - name: REACT_APP_MATRIX_URL
+            value: https://matrix.oriso-dev.site
+          - name: VITE_API_URL
+            value: https://api.oriso-dev.site
+          - name: VITE_MATRIX_HOMESERVER_URL
+            value: https://matrix.oriso-dev.site
+          - name: REACT_APP_API_URL
+            value: https://api.oriso-dev.site
+          - name: REACT_APP_MATRIX_URL
+            value: https://matrix.oriso-dev.site
+          - name: REACT_APP_ELEMENT_CALL_URL
+            value: https://call.oriso-dev.site
+          - name: REACT_APP_LIVEKIT_URL
+            value: https://livekit.oriso-dev.site
+          - name: REACT_APP_KEYCLOAK_URL
+            value: https://auth.oriso-dev.site
+          - name: VITE_API_URL
+            value: https://api.oriso-dev.site
+          - name: REACT_APP_MATRIX_HOMESERVER_URL
+            value: https://matrix.oriso-dev.site
+          - name: VITE_MATRIX_HOMESERVER_URL
+            value: https://matrix.oriso-dev.site
+          image: caritas-frontend:latest
+          imagePullPolicy: Never
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: frontend
+          ports:
+          - containerPort: 80
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-12-27T01:47:40Z"
+      lastUpdateTime: "2026-03-04T06:32:48Z"
+      message: ReplicaSet "oriso-platform-frontend-7f47d4b485" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-03-06T06:57:22Z"
+      lastUpdateTime: "2026-03-06T06:57:22Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 164
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "9"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:40Z"
+    generation: 9
+    labels:
+      app: health-dashboard
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: health-dashboard
+      app.kubernetes.io/version: 1.0.0
+      helm.sh/chart: health-dashboard-1.0.0
+    name: oriso-platform-health-dashboard
+    namespace: caritas
+    resourceVersion: "4658288"
+    uid: 96218e22-02a3-4fc8-bc37-3e86dbc11337
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: health-dashboard
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: health-dashboard
+      spec:
+        containers:
+        - env:
+          - name: PORT
+            value: "9100"
+          image: health-dashboard:latest
+          imagePullPolicy: Never
+          name: health-dashboard
+          ports:
+          - containerPort: 9100
+            name: http
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-01-19T16:46:32Z"
+      lastUpdateTime: "2026-01-19T16:46:32Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2025-12-27T01:47:40Z"
+      lastUpdateTime: "2026-03-04T06:32:38Z"
+      message: ReplicaSet "oriso-platform-health-dashboard-74b7ddc98b" has successfully
+        progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 9
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:40Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: keycloak
+      app.kubernetes.io/version: 20.0.5
+      helm.sh/chart: keycloak-1.0.0
+    name: oriso-platform-keycloak
+    namespace: caritas
+    resourceVersion: "4658118"
+    uid: 42093303-1353-4225-ac86-5f4b723ffa14
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: keycloak
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: keycloak
+      spec:
+        containers:
+        - args:
+          - start-dev
+          env:
+          - name: KEYCLOAK_ADMIN
+            value: admin
+          - name: KEYCLOAK_ADMIN_PASSWORD
+            value: admin
+          - name: KC_PROXY
+            value: edge
+          - name: KC_HOSTNAME
+            value: auth.oriso-dev.site
+          - name: KC_HOSTNAME_STRICT_HTTPS
+            value: "true"
+          - name: KC_HTTP_ENABLED
+            value: "true"
+          - name: KC_SPI_STICKY_SESSION_ENCODER_INFINISPAN_SHOULD_ATTACH_ROUTE
+            value: "false"
+          image: quay.io/keycloak/keycloak:20.0.5
+          imagePullPolicy: IfNotPresent
+          name: keycloak
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        hostNetwork: true
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-12-27T01:47:41Z"
+      lastUpdateTime: "2025-12-27T01:47:44Z"
+      message: ReplicaSet "oriso-platform-keycloak-58cd5f56cc" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-01-19T17:14:31Z"
+      lastUpdateTime: "2026-01-19T17:14:31Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "4"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T04:12:55Z"
+    generation: 4
+    labels:
+      app: livekit
+      app.kubernetes.io/managed-by: Helm
+      helm.sh/chart: livekit-1.0.0
+    name: oriso-platform-livekit
+    namespace: caritas
+    resourceVersion: "4932966"
+    uid: cc3c1dc2-ff1b-4089-9efc-79bd87b19bd2
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: livekit
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: livekit
+      spec:
+        containers:
+        - image: livekit/livekit-server:latest
+          imagePullPolicy: IfNotPresent
+          name: livekit
+          ports:
+          - containerPort: 7880
+            name: http
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2025-12-27T04:23:44Z"
+      lastUpdateTime: "2026-03-04T10:44:19Z"
+      message: ReplicaSet "oriso-platform-livekit-7f9f5fd899" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-03-09T07:00:52Z"
+      lastUpdateTime: "2026-03-09T07:00:52Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    observedGeneration: 4
+    replicas: 1
+    unavailableReplicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T04:12:55Z"
+    generation: 2
+    labels:
+      app: livekit-token-service
+      app.kubernetes.io/managed-by: Helm
+      helm.sh/chart: livekit-1.0.0
+    name: oriso-platform-livekit-token-service
+    namespace: caritas
+    resourceVersion: "4658122"
+    uid: 92bf2a66-7ea3-4b6c-afde-21811cd86932
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: livekit-token-service
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: livekit-token-service
+      spec:
+        containers:
+        - image: livekit-token-service:latest
+          imagePullPolicy: Never
+          name: livekit-token-service
+          ports:
+          - containerPort: 3010
+            name: http
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-12-27T04:12:55Z"
+      lastUpdateTime: "2025-12-27T04:12:55Z"
+      message: ReplicaSet "oriso-platform-livekit-token-service-5876d65cf4" has successfully
+        progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-01-19T16:46:32Z"
+      lastUpdateTime: "2026-01-19T16:46:32Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:40Z"
+    generation: 6
+    labels:
+      app: matrix-synapse
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: matrix-synapse
+      helm.sh/chart: matrix-synapse-1.0.0
+    name: oriso-platform-matrix-synapse
+    namespace: caritas
+    resourceVersion: "4768054"
+    uid: 7b4e8018-13a4-44b8-9a07-b81ef0aa5a5a
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: matrix-synapse
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: matrix-synapse
+      spec:
+        containers:
+        - env:
+          - name: SYNAPSE_SERVER_NAME
+            value: oriso-dev.site
+          - name: SYNAPSE_REPORT_STATS
+            value: "no"
+          - name: SYNAPSE_ENABLE_AUTHENTICATED_MEDIA
+            value: "false"
+          image: matrixdotorg/synapse:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /_matrix/client/versions
+              port: 8008
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: synapse
+          ports:
+          - containerPort: 8008
+            name: http
+            protocol: TCP
+          - containerPort: 8009
+            name: federation
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /_matrix/client/versions
+              port: 8008
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: "3"
+              memory: 6Gi
+            requests:
+              cpu: 1500m
+              memory: 3Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /data
+            name: synapse-data
+          - mountPath: /data/homeserver.yaml
+            name: homeserver-config
+            subPath: homeserver.yaml
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - |
+            chown -R 991:991 /data || true
+            chmod -R u+w /data || true
+          image: busybox:latest
+          imagePullPolicy: Always
+          name: fix-permissions
+          resources: {}
+          securityContext:
+            runAsUser: 0
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /data
+            name: synapse-data
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext:
+          fsGroup: 991
+          runAsGroup: 991
+          runAsUser: 991
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: synapse-data
+          persistentVolumeClaim:
+            claimName: matrix-synapse-data
+        - configMap:
+            defaultMode: 420
+            name: matrix-homeserver-oidc
+          name: homeserver-config
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-12-27T02:04:26Z"
+      lastUpdateTime: "2025-12-27T02:04:26Z"
+      message: ReplicaSet "oriso-platform-matrix-synapse-57bc749b97" has successfully
+        progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-03-06T06:57:26Z"
+      lastUpdateTime: "2026-03-06T06:57:26Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 6
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "28"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:40Z"
+    generation: 30
+    labels:
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: mongodb
+      helm.sh/chart: mongodb-1.0.0
+    name: oriso-platform-mongodb
+    namespace: caritas
+    resourceVersion: "4658322"
+    uid: 6819972f-cb8b-463e-b0ca-2e909b71c00d
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: mongodb
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: mongodb
+      spec:
+        containers:
+        - image: mongo:5.0
+          imagePullPolicy: IfNotPresent
+          name: mongodb
+          ports:
+          - containerPort: 27017
+            name: mongodb
+            protocol: TCP
+          resources:
+            limits:
+              cpu: "1"
+              memory: 2Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /data/db
+            name: mongodb-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: mongodb-data
+          persistentVolumeClaim:
+            claimName: mongodb-storage
+  status:
+    availableReplicas: 1
+    collisionCount: 2
+    conditions:
+    - lastTransitionTime: "2025-12-27T10:50:42Z"
+      lastUpdateTime: "2026-03-04T06:32:37Z"
+      message: ReplicaSet "oriso-platform-mongodb-6bf76fdbfb" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-03-04T06:32:39Z"
+      lastUpdateTime: "2026-03-04T06:32:39Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 30
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "2"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T20:28:51Z"
+    generation: 3
+    labels:
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: otel-collector
+      helm.sh/chart: otel-collector-1.0.0
+    name: oriso-platform-otel-collector
+    namespace: caritas
+    resourceVersion: "4768067"
+    uid: 8e3dc1bb-90e8-4097-b21c-feda6affd49a
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: otel-collector
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: otel-collector
+      spec:
+        containers:
+        - command:
+          - /otelcol
+          - --config=/etc/otel-collector-config.yaml
+          image: otel/opentelemetry-collector:0.100.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /metrics
+              port: 8888
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 10
+          name: otel-collector
+          ports:
+          - containerPort: 4317
+            name: otlpgrpc
+            protocol: TCP
+          - containerPort: 4318
+            name: otlphttp
+            protocol: TCP
+          - containerPort: 8888
+            name: metrics
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /metrics
+              port: 8888
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/otel-collector-config.yaml
+            name: config
+            readOnly: true
+            subPath: otel-collector-config.yaml
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: oriso-platform-otel-collector
+          name: config
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-12-27T21:03:57Z"
+      lastUpdateTime: "2025-12-27T21:07:32Z"
+      message: ReplicaSet "oriso-platform-otel-collector-766bf96f9" has successfully
+        progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-03-06T06:57:26Z"
+      lastUpdateTime: "2026-03-06T06:57:26Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 3
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:40Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: rabbitmq
+      helm.sh/chart: rabbitmq-1.0.0
+    name: oriso-platform-rabbitmq
+    namespace: caritas
+    resourceVersion: "4658150"
+    uid: 466f1301-9e93-4553-ab6e-5c280b9607a4
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: rabbitmq
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: rabbitmq
+      spec:
+        containers:
+        - env:
+          - name: RABBITMQ_DEFAULT_USER
+            valueFrom:
+              secretKeyRef:
+                key: RABBITMQ_DEFAULT_USER
+                name: rabbitmq-secrets
+          - name: RABBITMQ_DEFAULT_PASS
+            valueFrom:
+              secretKeyRef:
+                key: RABBITMQ_DEFAULT_PASS
+                name: rabbitmq-secrets
+          image: rabbitmq:3-management
+          imagePullPolicy: IfNotPresent
+          name: rabbitmq
+          ports:
+          - containerPort: 5672
+            name: amqp
+            protocol: TCP
+          - containerPort: 15672
+            name: management
+            protocol: TCP
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-12-27T01:47:40Z"
+      lastUpdateTime: "2025-12-27T01:47:43Z"
+      message: ReplicaSet "oriso-platform-rabbitmq-6c84795787" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-01-19T16:42:49Z"
+      lastUpdateTime: "2026-01-19T16:42:49Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:40Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: redis
+      helm.sh/chart: redis-1.0.0
+    name: oriso-platform-redis
+    namespace: caritas
+    resourceVersion: "4767990"
+    uid: 24ded9ed-17a6-4045-9661-6f4ffd7af5fd
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: redis
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: redis
+      spec:
+        containers:
+        - command:
+          - redis-server
+          - /etc/redis/redis.conf
+          env:
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: redis-secret
+          image: redis:7-alpine
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - redis-cli --no-auth-warning -a $REDIS_PASSWORD ping
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: redis
+          ports:
+          - containerPort: 6379
+            name: redis
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - redis-cli --no-auth-warning -a $REDIS_PASSWORD ping
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/redis
+            name: redis-config
+          - mountPath: /data
+            name: redis-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: redis-config
+          name: redis-config
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: redis-pvc
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-12-27T01:47:40Z"
+      lastUpdateTime: "2025-12-27T01:47:48Z"
+      message: ReplicaSet "oriso-platform-redis-85b76b7d89" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-03-06T06:57:21Z"
+      lastUpdateTime: "2026-03-06T06:57:21Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:40Z"
+    generation: 2
+    labels:
+      app: redis-commander
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: redis-commander
+      helm.sh/chart: redis-commander-1.0.0
+    name: oriso-platform-redis-commander
+    namespace: caritas
+    resourceVersion: "4767928"
+    uid: 5b0d6b4c-8082-498e-9762-37b443e03f5b
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: redis-commander
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: redis-commander
+      spec:
+        containers:
+        - env:
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: redis-secret
+          - name: REDIS_HOSTS
+            value: local:redis:6379:0:$(REDIS_PASSWORD)
+          - name: HTTP_USER
+            valueFrom:
+              secretKeyRef:
+                key: HTTP_USER
+                name: redis-secret
+          - name: HTTP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: HTTP_PASSWORD
+                name: redis-secret
+          image: rediscommander/redis-commander:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8081
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: redis-commander
+          ports:
+          - containerPort: 8081
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8081
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-12-27T01:47:40Z"
+      lastUpdateTime: "2025-12-27T01:47:55Z"
+      message: ReplicaSet "oriso-platform-redis-commander-bd4b4d549" has successfully
+        progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-03-06T06:57:20Z"
+      lastUpdateTime: "2026-03-06T06:57:20Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:40Z"
+    generation: 2
+    labels:
+      app: redis-exporter
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: redis-exporter
+      helm.sh/chart: redis-exporter-1.0.0
+    name: oriso-platform-redis-exporter
+    namespace: caritas
+    resourceVersion: "4658164"
+    uid: e63b45b7-ebbd-44ad-99dd-8070b4fe5d3c
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: redis-exporter
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: redis-exporter
+      spec:
+        containers:
+        - env:
+          - name: REDIS_ADDR
+            value: redis:6379
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: redis-secret
+          image: oliver006/redis_exporter:latest
+          imagePullPolicy: Always
+          name: redis-exporter
+          ports:
+          - containerPort: 9121
+            name: metrics
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-12-27T01:47:40Z"
+      lastUpdateTime: "2025-12-27T01:47:43Z"
+      message: ReplicaSet "oriso-platform-redis-exporter-8554ff797d" has successfully
+        progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-01-19T16:42:43Z"
+      lastUpdateTime: "2026-01-19T16:42:43Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "10"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T19:42:57Z"
+    generation: 11
+    labels:
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: service-health-exporter
+      app.kubernetes.io/version: 1.0.0
+      helm.sh/chart: service-health-exporter-1.0.0
+    name: oriso-platform-service-health-exporter
+    namespace: caritas
+    resourceVersion: "4933668"
+    uid: daab91a0-380c-4d73-805c-53c842971a46
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: service-health-exporter
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: service-health-exporter
+      spec:
+        containers:
+        - args:
+          - |
+            pip install --no-cache-dir opentelemetry-api opentelemetry-sdk opentelemetry-exporter-otlp-proto-http requests && python3 /app/service-health-exporter.py
+          command:
+          - /bin/sh
+          - -c
+          env:
+          - name: OTEL_ENDPOINT
+            value: http://oriso-platform-otel-collector.caritas.svc.cluster.local:4318
+          - name: CHECK_INTERVAL
+            value: "10"
+          - name: TIMEOUT
+            value: "5"
+          image: python:3.11-slim
+          imagePullPolicy: IfNotPresent
+          name: service-health-exporter
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /app/service-health-exporter.py
+            name: script
+            readOnly: true
+            subPath: service-health-exporter.py
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 493
+            name: oriso-platform-service-health-exporter
+          name: script
+  status:
+    conditions:
+    - lastTransitionTime: "2025-12-27T19:42:57Z"
+      lastUpdateTime: "2025-12-27T23:59:18Z"
+      message: ReplicaSet "oriso-platform-service-health-exporter-5558cc96d" has successfully
+        progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-03-09T07:19:37Z"
+      lastUpdateTime: "2026-03-09T07:19:37Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    observedGeneration: 11
+    replicas: 1
+    unavailableReplicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "14"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:40Z"
+    generation: 14
+    labels:
+      app: status-page
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: status-page
+      app.kubernetes.io/version: 2.0.0
+      helm.sh/chart: status-page-1.0.0
+    name: oriso-platform-status-page
+    namespace: caritas
+    resourceVersion: "4658266"
+    uid: 4734b763-a2ac-4666-8d96-79ee540d2275
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: status-page
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: status-page
+      spec:
+        containers:
+        - env:
+          - name: PORT
+            value: "9200"
+          - name: STATUS_AUTH_URL
+            value: http://oriso-platform-keycloak.caritas.svc.cluster.local:8080
+          - name: STATUS_API_URL
+            value: http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084/actuator/health
+          - name: STATUS_DATABASE_URL
+            value: http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084/actuator/health
+          - name: STATUS_MESSAGING_URL
+            value: http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008/health
+          - name: STATUS_UPLOADS_URL
+            value: http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008/_matrix/media/v3/upload
+          image: oriso-status:v2
+          imagePullPolicy: Never
+          name: status-page
+          ports:
+          - containerPort: 9200
+            name: http
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-01-19T16:44:22Z"
+      lastUpdateTime: "2026-01-19T16:44:22Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2025-12-27T01:47:41Z"
+      lastUpdateTime: "2026-03-04T06:32:37Z"
+      message: ReplicaSet "oriso-platform-status-page-6bc4779c8f" has successfully
+        progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 14
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:40Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: storybook
+      helm.sh/chart: storybook-1.0.0
+    name: oriso-platform-storybook
+    namespace: caritas
+    resourceVersion: "4767892"
+    uid: 9f0fac95-1431-47a5-a602-b8993bd9e285
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: storybook
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: storybook
+      spec:
+        containers:
+        - env:
+          - name: NODE_ENV
+            value: production
+          - name: PORT
+            value: "80"
+          image: caritas-storybook:latest
+          imagePullPolicy: Never
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: storybook
+          ports:
+          - containerPort: 80
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-12-27T01:47:41Z"
+      lastUpdateTime: "2025-12-27T01:47:55Z"
+      message: ReplicaSet "oriso-platform-storybook-6b7775c77c" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-03-06T06:57:19Z"
+      lastUpdateTime: "2026-03-06T06:57:19Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "53"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:40Z"
+    generation: 53
+    labels:
+      app: tenantservice
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: tenantservice
+      app.kubernetes.io/version: 1.0.0
+      helm.sh/chart: tenantservice-1.0.0
+    name: oriso-platform-tenantservice
+    namespace: caritas
+    resourceVersion: "4833347"
+    uid: 0a2c0b07-2fc2-45f8-aa10-7aff0c8e7274
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: tenantservice
+        app.kubernetes.io/instance: oriso-platform
+        app.kubernetes.io/name: tenantservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-03-07T10:53:38Z"
+        creationTimestamp: null
+        labels:
+          app: tenantservice
+          app.kubernetes.io/instance: oriso-platform
+          app.kubernetes.io/name: tenantservice
+          tier: backend
+      spec:
+        containers:
+        - envFrom:
+          - configMapRef:
+              name: oriso-platform-tenantservice-config
+          - secretRef:
+              name: oriso-platform-tenantservice-secrets
+          image: oriso-tenantservice:latest
+          imagePullPolicy: Never
+          name: tenantservice
+          ports:
+          - containerPort: 8081
+            name: http
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-01-19T16:44:21Z"
+      lastUpdateTime: "2026-01-19T16:44:21Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2025-12-27T01:47:40Z"
+      lastUpdateTime: "2026-03-07T10:53:39Z"
+      message: ReplicaSet "oriso-platform-tenantservice-84b8bf89c5" has successfully
+        progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 53
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "14"
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2026-03-04T06:32:50Z"
+    generation: 14
+    labels:
+      app: userservice
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: userservice
+      app.kubernetes.io/version: 1.0.0
+      helm.sh/chart: userservice-1.0.0
+    name: oriso-platform-userservice
+    namespace: caritas
+    resourceVersion: "4888704"
+    uid: 6ca8417d-f447-4eaf-8e0a-aafd5a304d9d
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: userservice
+        app.kubernetes.io/instance: oriso-platform
+        app.kubernetes.io/name: userservice
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-03-08T11:20:09Z"
+        creationTimestamp: null
+        labels:
+          app: userservice
+          app.kubernetes.io/instance: oriso-platform
+          app.kubernetes.io/name: userservice
+          tier: backend
+      spec:
+        containers:
+        - envFrom:
+          - configMapRef:
+              name: oriso-platform-userservice-config
+          - secretRef:
+              name: oriso-platform-userservice-secrets
+          image: oriso-userservice:latest
+          imagePullPolicy: Never
+          name: userservice
+          ports:
+          - containerPort: 8082
+            name: http
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-03-04T06:32:51Z"
+      lastUpdateTime: "2026-03-04T06:32:51Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-03-04T06:32:50Z"
+      lastUpdateTime: "2026-03-08T11:20:13Z"
+      message: ReplicaSet "oriso-platform-userservice-755f878cf8" has successfully
+        progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 14
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T18:25:07Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: clickhouse
+      app.kubernetes.io/version: "23.8"
+      helm.sh/chart: clickhouse-1.0.0
+    name: oriso-platform-clickhouse
+    namespace: caritas
+    resourceVersion: "4767962"
+    uid: afc3734b-7311-4b06-a0a0-b7fc83c579e7
+  spec:
+    persistentVolumeClaimRetentionPolicy:
+      whenDeleted: Retain
+      whenScaled: Retain
+    podManagementPolicy: OrderedReady
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: clickhouse
+    serviceName: oriso-platform-clickhouse
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: clickhouse
+      spec:
+        containers:
+        - env:
+          - name: CLICKHOUSE_DB
+            value: default
+          - name: CLICKHOUSE_USER
+            value: default
+          - name: CLICKHOUSE_PASSWORD
+            value: clickhouse-password
+          image: clickhouse/clickhouse-server:23.8
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: native
+            timeoutSeconds: 1
+          name: clickhouse
+          ports:
+          - containerPort: 8123
+            name: http
+            protocol: TCP
+          - containerPort: 9000
+            name: native
+            protocol: TCP
+          - containerPort: 9009
+            name: interserver
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ping
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: "2"
+              memory: 8Gi
+            requests:
+              cpu: 500m
+              memory: 2Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/clickhouse
+            name: clickhouse-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    updateStrategy:
+      rollingUpdate:
+        partition: 0
+      type: RollingUpdate
+    volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        creationTimestamp: null
+        name: clickhouse-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 50Gi
+        storageClassName: local-path
+        volumeMode: Filesystem
+      status:
+        phase: Pending
+  status:
+    availableReplicas: 1
+    collisionCount: 0
+    currentReplicas: 1
+    currentRevision: oriso-platform-clickhouse-6df7648dd8
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updateRevision: oriso-platform-clickhouse-6df7648dd8
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:40Z"
+    generation: 3
+    labels:
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: mariadb
+      app.kubernetes.io/version: "10.11"
+      helm.sh/chart: mariadb-1.0.0
+    name: oriso-platform-mariadb
+    namespace: caritas
+    resourceVersion: "4768024"
+    uid: c4a75e0a-43a2-48ad-9b11-b3bf024de975
+  spec:
+    persistentVolumeClaimRetentionPolicy:
+      whenDeleted: Retain
+      whenScaled: Retain
+    podManagementPolicy: OrderedReady
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: mariadb
+    serviceName: mariadb
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: mariadb
+      spec:
+        containers:
+        - env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: MYSQL_ROOT_PASSWORD
+                name: mariadb-secrets
+          - name: MYSQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                key: MYSQL_DATABASE
+                name: mariadb-secrets
+          image: mariadb:10.11
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - mysqladmin ping -uroot -proot
+            failureThreshold: 6
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: mariadb
+          ports:
+          - containerPort: 3306
+            name: mysql
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - mysql -uroot -proot -e 'SELECT 1;'
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              cpu: "1"
+              memory: 2Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/mysql
+            name: mariadb-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    updateStrategy:
+      rollingUpdate:
+        partition: 0
+      type: RollingUpdate
+    volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        creationTimestamp: null
+        name: mariadb-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+        storageClassName: local-path
+        volumeMode: Filesystem
+      status:
+        phase: Pending
+  status:
+    availableReplicas: 1
+    collisionCount: 0
+    currentReplicas: 1
+    currentRevision: oriso-platform-mariadb-5f557b4d4d
+    observedGeneration: 3
+    readyReplicas: 1
+    replicas: 1
+    updateRevision: oriso-platform-mariadb-5f557b4d4d
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T18:59:34Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/component: signoz
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: signoz
+      helm.sh/chart: signoz-1.0.0
+    name: oriso-platform-signoz
+    namespace: caritas
+    resourceVersion: "4768009"
+    uid: 0048a9ac-8c02-41a5-9376-4b3cb5136687
+  spec:
+    persistentVolumeClaimRetentionPolicy:
+      whenDeleted: Retain
+      whenScaled: Retain
+    podManagementPolicy: OrderedReady
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app.kubernetes.io/component: signoz
+        app.kubernetes.io/instance: oriso-platform
+        app.kubernetes.io/name: signoz
+    serviceName: oriso-platform-signoz
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/component: signoz
+          app.kubernetes.io/instance: oriso-platform
+          app.kubernetes.io/name: signoz
+      spec:
+        containers:
+        - env:
+          - name: CLICKHOUSE_HOST
+            value: oriso-platform-clickhouse
+          - name: CLICKHOUSE_PORT
+            value: "9000"
+          - name: CLICKHOUSE_HTTP_PORT
+            value: "8123"
+          - name: CLICKHOUSE_CLUSTER
+            value: cluster
+          - name: CLICKHOUSE_USER
+            value: default
+          - name: CLICKHOUSE_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                key: default-password
+                name: clickhouse-config
+          - name: CLICKHOUSE_SECURE
+            value: "false"
+          - name: SIGNOZ_TELEMETRYSTORE_PROVIDER
+            value: clickhouse
+          - name: SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_DSN
+            value: tcp://oriso-platform-clickhouse:9000/?username=$(CLICKHOUSE_USER)&password=$(CLICKHOUSE_PASSWORD)
+          - name: SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_CLUSTER
+            value: cluster
+          - name: SIGNOZ_PROMETHEUS_ACTIVE_QUERY_TRACKER_ENABLED
+            value: "false"
+          - name: SIGNOZ_EMAILING_ENABLED
+            value: "false"
+          - name: SIGNOZ_ALERTMANAGER_SIGNOZ_EXTERNAL__URL
+            value: http://localhost:8080
+          - name: SIGNOZ_ALERTMANAGER_PROVIDER
+            value: signoz
+          - name: DOT_METRICS_ENABLED
+            value: "true"
+          image: signoz/signoz:v0.105.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: /api/v1/health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: signoz
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 8085
+            name: http-internal
+            protocol: TCP
+          - containerPort: 4320
+            name: opamp-internal
+            protocol: TCP
+          - containerPort: 4317
+            name: otel-grpc
+            protocol: TCP
+          - containerPort: 4318
+            name: otel-http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: /api/v1/health?live=1
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "4"
+              memory: 16Gi
+            requests:
+              cpu: "1"
+              memory: 4Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/signoz
+            name: signoz-data
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - |
+            until nc -z oriso-platform-clickhouse 9000; do
+              echo "Waiting for ClickHouse at oriso-platform-clickhouse:9000..."
+              sleep 2
+            done
+            echo "ClickHouse is ready!"
+          command:
+          - sh
+          - -c
+          image: busybox:1.35
+          imagePullPolicy: IfNotPresent
+          name: wait-for-clickhouse
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    updateStrategy:
+      rollingUpdate:
+        partition: 0
+      type: RollingUpdate
+    volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        creationTimestamp: null
+        name: signoz-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 20Gi
+        storageClassName: local-path
+        volumeMode: Filesystem
+      status:
+        phase: Pending
+  status:
+    availableReplicas: 1
+    collisionCount: 0
+    currentReplicas: 1
+    currentRevision: oriso-platform-signoz-85566c9bfc
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updateRevision: oriso-platform-signoz-85566c9bfc
+    updatedReplicas: 1
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    annotations:
+      argocd.argoproj.io/hook: PostSync
+      argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+      helm.sh/hook: post-upgrade
+      helm.sh/hook-delete-policy: before-hook-creation
+    creationTimestamp: "2025-12-21T09:29:09Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/name: signoz
+    name: signoz-schema-migrator-async
+    namespace: caritas
+    resourceVersion: "711311"
+    uid: bea216b2-7329-41a1-ac83-b7844135789c
+  spec:
+    backoffLimit: 6
+    completionMode: NonIndexed
+    completions: 1
+    manualSelector: false
+    parallelism: 1
+    podReplacementPolicy: TerminatingOrFailed
+    selector:
+      matchLabels:
+        batch.kubernetes.io/controller-uid: bea216b2-7329-41a1-ac83-b7844135789c
+    suspend: false
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/instance: signoz
+          app.kubernetes.io/name: signoz
+          batch.kubernetes.io/controller-uid: bea216b2-7329-41a1-ac83-b7844135789c
+          batch.kubernetes.io/job-name: signoz-schema-migrator-async
+          controller-uid: bea216b2-7329-41a1-ac83-b7844135789c
+          job-name: signoz-schema-migrator-async
+      spec:
+        containers:
+        - args:
+          - async
+          - --cluster-name
+          - $(CLICKHOUSE_CLUSTER)
+          - --dsn
+          - tcp://$(CLICKHOUSE_USER):$(CLICKHOUSE_PASSWORD)@signoz-clickhouse:9000
+          - --up=
+          env:
+          - name: CLICKHOUSE_HOST
+            value: signoz-clickhouse
+          - name: CLICKHOUSE_PORT
+            value: "9000"
+          - name: CLICKHOUSE_HTTP_PORT
+            value: "8123"
+          - name: CLICKHOUSE_CLUSTER
+            value: cluster
+          - name: CLICKHOUSE_USER
+            value: admin
+          - name: CLICKHOUSE_PASSWORD
+            value: 27ff0399-0d3a-4bd8-919d-17c2181e6fb9
+          - name: CLICKHOUSE_SECURE
+            value: "false"
+          image: docker.io/signoz/signoz-schema-migrator:v0.129.12
+          imagePullPolicy: IfNotPresent
+          name: schema-migrator
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - until wget --user "$(CLICKHOUSE_USER):$(CLICKHOUSE_PASSWORD)" --spider
+            -q signoz-clickhouse:8123/ping; do echo -e "waiting for clickhouseDB";
+            sleep 5; done; echo -e "clickhouse ready, starting schema migrator now";
+          env:
+          - name: CLICKHOUSE_HOST
+            value: signoz-clickhouse
+          - name: CLICKHOUSE_PORT
+            value: "9000"
+          - name: CLICKHOUSE_HTTP_PORT
+            value: "8123"
+          - name: CLICKHOUSE_CLUSTER
+            value: cluster
+          - name: CLICKHOUSE_USER
+            value: admin
+          - name: CLICKHOUSE_PASSWORD
+            value: 27ff0399-0d3a-4bd8-919d-17c2181e6fb9
+          - name: CLICKHOUSE_SECURE
+            value: "false"
+          image: docker.io/busybox:1.35
+          imagePullPolicy: IfNotPresent
+          name: schema-migrator-async-init
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - command:
+          - sh
+          - -c
+          - |
+            echo "Running clickhouse ready check"
+            while true
+            do
+              version="$(CLICKHOUSE_VERSION)"
+              shards="$(CLICKHOUSE_SHARDS)"
+              replicas="$(CLICKHOUSE_REPLICAS)"
+              current_version="$(clickhouse client --host ${CLICKHOUSE_HOST} --port ${CLICKHOUSE_PORT} --user "${CLICKHOUSE_USER}" --password "${CLICKHOUSE_PASSWORD}" -q "SELECT version()")"
+              if [ -z "$current_version" ]; then
+                echo "waiting for clickhouse to be ready"
+                sleep 5
+                continue
+              fi
+              if [ -z "$(echo "$current_version" | grep "$version")" ]; then
+                echo "expected version: $version, current version: $current_version"
+                echo "waiting for clickhouse with correct version"
+                sleep 5
+                continue
+              fi
+              current_shards="$(clickhouse client --host ${CLICKHOUSE_HOST} --port ${CLICKHOUSE_PORT} --user "${CLICKHOUSE_USER}" --password "${CLICKHOUSE_PASSWORD}" -q "SELECT count(DISTINCT(shard_num)) FROM system.clusters WHERE cluster = '${CLICKHOUSE_CLUSTER}'")"
+              if [ -z "$current_shards" ]; then
+                echo "waiting for clickhouse to be ready"
+                sleep 5
+                continue
+              fi
+              if [ "$current_shards" -ne "$shards" ]; then
+                echo "expected shard count: $shards, current shard count: $current_shards"
+                echo "waiting for clickhouse with correct shard count"
+                sleep 5
+                continue
+              fi
+              current_replicas="$(clickhouse client --host ${CLICKHOUSE_HOST} --port ${CLICKHOUSE_PORT} --user "${CLICKHOUSE_USER}" --password "${CLICKHOUSE_PASSWORD}" -q "SELECT count(DISTINCT(replica_num)) FROM system.clusters WHERE cluster = '${CLICKHOUSE_CLUSTER}'")"
+              if [ -z "$current_replicas" ]; then
+                echo "waiting for clickhouse to be ready"
+                sleep 5
+                continue
+              fi
+              if [ "$current_replicas" -ne "$replicas" ]; then
+                echo "expected replica count: $replicas, current replica count: $current_replicas"
+                echo "waiting for clickhouse with correct replica count"
+                sleep 5
+                continue
+              fi
+              break
+            done
+            echo "clickhouse ready, starting schema migrator now"
+          env:
+          - name: CLICKHOUSE_HOST
+            value: signoz-clickhouse
+          - name: CLICKHOUSE_PORT
+            value: "9000"
+          - name: CLICKHOUSE_HTTP_PORT
+            value: "8123"
+          - name: CLICKHOUSE_CLUSTER
+            value: cluster
+          - name: CLICKHOUSE_USER
+            value: admin
+          - name: CLICKHOUSE_PASSWORD
+            value: 27ff0399-0d3a-4bd8-919d-17c2181e6fb9
+          - name: CLICKHOUSE_SECURE
+            value: "false"
+          - name: CLICKHOUSE_VERSION
+            value: 25.5.6
+          - name: CLICKHOUSE_SHARDS
+            value: "1"
+          - name: CLICKHOUSE_REPLICAS
+            value: "1"
+          image: docker.io/clickhouse/clickhouse-server:25.5.6
+          imagePullPolicy: IfNotPresent
+          name: schema-migrator-async-ch-ready
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - args:
+          - job
+          - signoz-schema-migrator-sync
+          image: docker.io/groundnuty/k8s-wait-for:v2.0
+          imagePullPolicy: IfNotPresent
+          name: schema-migrator-async-wait-for-sync
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        restartPolicy: OnFailure
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: signoz-schema-migrator-async
+        serviceAccountName: signoz-schema-migrator-async
+        terminationGracePeriodSeconds: 30
+  status:
+    completionTime: "2025-12-21T09:29:34Z"
+    conditions:
+    - lastProbeTime: "2025-12-21T09:29:34Z"
+      lastTransitionTime: "2025-12-21T09:29:34Z"
+      message: Reached expected number of succeeded pods
+      reason: CompletionsReached
+      status: "True"
+      type: SuccessCriteriaMet
+    - lastProbeTime: "2025-12-21T09:29:34Z"
+      lastTransitionTime: "2025-12-21T09:29:34Z"
+      message: Reached expected number of succeeded pods
+      reason: CompletionsReached
+      status: "True"
+      type: Complete
+    ready: 0
+    startTime: "2025-12-21T09:29:09Z"
+    succeeded: 1
+    terminating: 0
+    uncountedTerminatedPods: {}
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    annotations:
+      argocd.argoproj.io/hook: Sync
+      argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+      helm.sh/hook: pre-upgrade
+      helm.sh/hook-delete-policy: before-hook-creation
+    creationTimestamp: "2025-12-21T09:27:43Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/name: signoz
+    name: signoz-schema-migrator-sync
+    namespace: caritas
+    resourceVersion: "711195"
+    uid: 81d11916-e97f-431d-a916-12504adca572
+  spec:
+    backoffLimit: 6
+    completionMode: NonIndexed
+    completions: 1
+    manualSelector: false
+    parallelism: 1
+    podReplacementPolicy: TerminatingOrFailed
+    selector:
+      matchLabels:
+        batch.kubernetes.io/controller-uid: 81d11916-e97f-431d-a916-12504adca572
+    suspend: false
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/instance: signoz
+          app.kubernetes.io/name: signoz
+          batch.kubernetes.io/controller-uid: 81d11916-e97f-431d-a916-12504adca572
+          batch.kubernetes.io/job-name: signoz-schema-migrator-sync
+          controller-uid: 81d11916-e97f-431d-a916-12504adca572
+          job-name: signoz-schema-migrator-sync
+      spec:
+        containers:
+        - args:
+          - sync
+          - --cluster-name
+          - $(CLICKHOUSE_CLUSTER)
+          - --dsn
+          - tcp://$(CLICKHOUSE_USER):$(CLICKHOUSE_PASSWORD)@signoz-clickhouse:9000
+          - --up=
+          env:
+          - name: CLICKHOUSE_HOST
+            value: signoz-clickhouse
+          - name: CLICKHOUSE_PORT
+            value: "9000"
+          - name: CLICKHOUSE_HTTP_PORT
+            value: "8123"
+          - name: CLICKHOUSE_CLUSTER
+            value: cluster
+          - name: CLICKHOUSE_USER
+            value: admin
+          - name: CLICKHOUSE_PASSWORD
+            value: 27ff0399-0d3a-4bd8-919d-17c2181e6fb9
+          - name: CLICKHOUSE_SECURE
+            value: "false"
+          image: docker.io/signoz/signoz-schema-migrator:v0.129.12
+          imagePullPolicy: IfNotPresent
+          name: schema-migrator
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - until wget --user "$(CLICKHOUSE_USER):$(CLICKHOUSE_PASSWORD)" --spider
+            -q signoz-clickhouse:8123/ping; do echo -e "waiting for clickhouseDB";
+            sleep 5; done; echo -e "clickhouse ready, starting schema migrator now";
+          env:
+          - name: CLICKHOUSE_HOST
+            value: signoz-clickhouse
+          - name: CLICKHOUSE_PORT
+            value: "9000"
+          - name: CLICKHOUSE_HTTP_PORT
+            value: "8123"
+          - name: CLICKHOUSE_CLUSTER
+            value: cluster
+          - name: CLICKHOUSE_USER
+            value: admin
+          - name: CLICKHOUSE_PASSWORD
+            value: 27ff0399-0d3a-4bd8-919d-17c2181e6fb9
+          - name: CLICKHOUSE_SECURE
+            value: "false"
+          image: docker.io/busybox:1.35
+          imagePullPolicy: IfNotPresent
+          name: schema-migrator-sync-init
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - command:
+          - sh
+          - -c
+          - |
+            echo "Running clickhouse ready check"
+            while true
+            do
+              version="$(CLICKHOUSE_VERSION)"
+              shards="$(CLICKHOUSE_SHARDS)"
+              replicas="$(CLICKHOUSE_REPLICAS)"
+              current_version="$(clickhouse client --host ${CLICKHOUSE_HOST} --port ${CLICKHOUSE_PORT} --user "${CLICKHOUSE_USER}" --password "${CLICKHOUSE_PASSWORD}" -q "SELECT version()")"
+              if [ -z "$current_version" ]; then
+                echo "waiting for clickhouse to be ready"
+                sleep 5
+                continue
+              fi
+              if [ -z "$(echo "$current_version" | grep "$version")" ]; then
+                echo "expected version: $version, current version: $current_version"
+                echo "waiting for clickhouse with correct version"
+                sleep 5
+                continue
+              fi
+              current_shards="$(clickhouse client --host ${CLICKHOUSE_HOST} --port ${CLICKHOUSE_PORT} --user "${CLICKHOUSE_USER}" --password "${CLICKHOUSE_PASSWORD}" -q "SELECT count(DISTINCT(shard_num)) FROM system.clusters WHERE cluster = '${CLICKHOUSE_CLUSTER}'")"
+              if [ -z "$current_shards" ]; then
+                echo "waiting for clickhouse to be ready"
+                sleep 5
+                continue
+              fi
+              if [ "$current_shards" -ne "$shards" ]; then
+                echo "expected shard count: $shards, current shard count: $current_shards"
+                echo "waiting for clickhouse with correct shard count"
+                sleep 5
+                continue
+              fi
+              current_replicas="$(clickhouse client --host ${CLICKHOUSE_HOST} --port ${CLICKHOUSE_PORT} --user "${CLICKHOUSE_USER}" --password "${CLICKHOUSE_PASSWORD}" -q "SELECT count(DISTINCT(replica_num)) FROM system.clusters WHERE cluster = '${CLICKHOUSE_CLUSTER}'")"
+              if [ -z "$current_replicas" ]; then
+                echo "waiting for clickhouse to be ready"
+                sleep 5
+                continue
+              fi
+              if [ "$current_replicas" -ne "$replicas" ]; then
+                echo "expected replica count: $replicas, current replica count: $current_replicas"
+                echo "waiting for clickhouse with correct replica count"
+                sleep 5
+                continue
+              fi
+              break
+            done
+            echo "clickhouse ready, starting schema migrator now"
+          env:
+          - name: CLICKHOUSE_HOST
+            value: signoz-clickhouse
+          - name: CLICKHOUSE_PORT
+            value: "9000"
+          - name: CLICKHOUSE_HTTP_PORT
+            value: "8123"
+          - name: CLICKHOUSE_CLUSTER
+            value: cluster
+          - name: CLICKHOUSE_USER
+            value: admin
+          - name: CLICKHOUSE_PASSWORD
+            value: 27ff0399-0d3a-4bd8-919d-17c2181e6fb9
+          - name: CLICKHOUSE_SECURE
+            value: "false"
+          - name: CLICKHOUSE_VERSION
+            value: 25.5.6
+          - name: CLICKHOUSE_SHARDS
+            value: "1"
+          - name: CLICKHOUSE_REPLICAS
+            value: "1"
+          image: docker.io/clickhouse/clickhouse-server:25.5.6
+          imagePullPolicy: IfNotPresent
+          name: schema-migrator-sync-ch-ready
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        restartPolicy: OnFailure
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    completionTime: "2025-12-21T09:29:08Z"
+    conditions:
+    - lastProbeTime: "2025-12-21T09:29:08Z"
+      lastTransitionTime: "2025-12-21T09:29:08Z"
+      message: Reached expected number of succeeded pods
+      reason: CompletionsReached
+      status: "True"
+      type: SuccessCriteriaMet
+    - lastProbeTime: "2025-12-21T09:29:08Z"
+      lastTransitionTime: "2025-12-21T09:29:08Z"
+      message: Reached expected number of succeeded pods
+      reason: CompletionsReached
+      status: "True"
+      type: Complete
+    ready: 0
+    startTime: "2025-12-21T09:27:43Z"
+    succeeded: 1
+    terminating: 0
+    uncountedTerminatedPods: {}
+kind: List
+metadata:
+  resourceVersion: ""

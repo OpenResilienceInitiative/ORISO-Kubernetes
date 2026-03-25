@@ -63,4 +63,12 @@ spring:
   profiles:
     active: "prod"
 
+# Feature Flags
+features:
+  multitenancy:
+    enabled: false
+    withSingleDomain:
+      enabled: true
+    mainTenantSubdomain: "caritas-berlin"
+
 

@@ -35,6 +35,8 @@ data:
   
   # Feature Flags
   FEATURE_TOPICS_ENABLED: {{ .Values.features.topics.enabled | quote }}
+  MULTITENANCY_ENABLED: {{ .Values.features.multitenancy.enabled | quote }}
+  FEATURE_MULTITENANCY_WITH_SINGLE_DOMAIN_ENABLED: {{ .Values.features.multitenancy.withSingleDomain.enabled | quote }}
   
   # Spring Profile
   SPRING_PROFILES_ACTIVE: {{ .Values.spring.profiles.active | quote }}

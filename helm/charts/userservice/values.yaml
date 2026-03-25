@@ -58,6 +58,12 @@ matrix:
   serverName: "oriso-dev.site"
   migrationEnabled: true
   registrationSharedSecret: "caritas-registration-secret-2025"
+  adminUsername: "caritas_admin"
+  adminPassword: "@CaritasAdmin2025!"
+
+# Privacy / Notification Preview Policy
+privacy:
+  notificationPreviewMode: "NONE"
 
 # RabbitMQ Configuration - Full DNS FQDN for managed clusters
 rabbitmq:
@@ -91,6 +97,13 @@ services:
 spring:
   profiles:
     active: "prod"
+
+# Feature Flags
+features:
+  multitenancy:
+    enabled: true
+    withSingleDomain:
+      enabled: true
 
 # Service Encryption
 encryption:
