@@ -1,56 +1,10 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: ingress-nginx
-  namespace: {{ .Release.Namespace }}
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: ingress-nginx
-rules:
-  - apiGroups: [""]
-    resources:
-      - configmaps
-      - endpoints
-      - nodes
-      - pods
-      - secrets
-      - services
-    verbs: ["get", "list", "watch"]
-  - apiGroups: ["discovery.k8s.io"]
-    resources: ["endpointslices"]
-    verbs: ["get", "list", "watch"]
-  - apiGroups: ["networking.k8s.io"]
-    resources: ["ingresses", "ingressclasses"]
-    verbs: ["get", "list", "watch"]
-  - apiGroups: [""]
-    resources: ["events"]
-    verbs: ["create", "patch"]
-  - apiGroups: ["networking.k8s.io"]
-    resources: ["ingresses/status"]
-    verbs: ["update", "patch"]
-  - apiGroups: ["networking.k8s.io"]
-    resources: ["ingresses/finalizers"]
-    verbs: ["update", "patch"]
-  - apiGroups: ["coordination.k8s.io"]
-    resources: ["leases"]
-    verbs: ["get", "list", "watch", "create", "update", "patch"]
-  - apiGroups: [""]
-    resources: ["namespaces"]
-    verbs: ["get", "list", "watch"]
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: ingress-nginx
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: ingress-nginx
-subjects:
-  - kind: ServiceAccount
-    name: ingress-nginx
-    namespace: {{ .Release.Namespace }}
+# ClusterRole and ClusterRoleBinding for ingress-nginx have been moved to
+# ORISO-Infra/bootstrap/manifests/ingress-nginx-rbac.yaml
+#
+# Reason: ClusterRole and ClusterRoleBinding are cluster-scoped resources.
+# Developer kubeconfigs have namespace-admin access only and cannot create
+# them. Moving these to bootstrap lets developers deploy this chart with
+# their own credentials.
+#
+# The ingress-nginx ServiceAccount (namespace-scoped) remains in
+# helm/templates/nginx/serviceaccount.yaml.
