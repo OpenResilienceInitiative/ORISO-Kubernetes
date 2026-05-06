@@ -33,7 +33,7 @@ spec:
               name: {{ .Values.redis.secret.name }}
               key: {{ .Values.redis.secret.keys.password }}
         - name: REDIS_HOSTS
-          value: local:{{ .Values.redis.host }}:{{ .Values.redis.port }}:0:$(REDIS_PASSWORD)
+          value: {{ default "local" .Values.redis.connectionName }}:{{ .Values.redis.host }}:{{ .Values.redis.port }}:0:$(REDIS_PASSWORD)
         - name: HTTP_USER
           valueFrom:
             secretKeyRef:

@@ -30,6 +30,12 @@ spec:
             name: {{ include "userservice.fullname" . }}-config
         - secretRef:
             name: {{ include "userservice.fullname" . }}-secrets
+        env:
+        - name: SPRING_REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: password
         {{- if .Values.resources.requests }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}

@@ -66,6 +66,19 @@ privacy:
   notificationPreviewMode: "NONE"
   ipMode: "STANDARD"
 
+# Redis (debug mirror only; does not affect DB services)
+redis:
+  host: "oriso-platform-redis.caritas.svc.cluster.local"
+  port: 6379
+
+# Debug feature flags
+debug:
+  redisMessageMirror:
+    enabled: true
+    ttlSeconds: 900
+    maxBodyLength: 500
+    keyPrefix: "debug:msgmirror"
+
 # RabbitMQ Configuration - Full DNS FQDN for managed clusters
 rabbitmq:
   host: "oriso-platform-rabbitmq.caritas.svc.cluster.local"

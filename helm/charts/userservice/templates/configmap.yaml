@@ -26,6 +26,12 @@ data:
   MATRIX_ADMIN_USERNAME: {{ .Values.matrix.adminUsername | quote }}
   PRIVACY_NOTIFICATION_PREVIEW_MODE: {{ .Values.privacy.notificationPreviewMode | quote }}
   PRIVACY_IP_MODE: {{ .Values.privacy.ipMode | quote }}
+  DEBUG_REDIS_MESSAGE_MIRROR_ENABLED: {{ .Values.debug.redisMessageMirror.enabled | quote }}
+  DEBUG_REDIS_MESSAGE_MIRROR_TTL_SECONDS: {{ .Values.debug.redisMessageMirror.ttlSeconds | quote }}
+  DEBUG_REDIS_MESSAGE_MIRROR_MAX_BODY_LENGTH: {{ .Values.debug.redisMessageMirror.maxBodyLength | quote }}
+  DEBUG_REDIS_MESSAGE_MIRROR_KEY_PREFIX: {{ .Values.debug.redisMessageMirror.keyPrefix | quote }}
+  SPRING_REDIS_HOST: {{ .Values.redis.host | quote }}
+  SPRING_REDIS_PORT: {{ .Values.redis.port | quote }}
   
   # RabbitMQ Configuration - Use full Kubernetes DNS FQDN (required for managed clusters)
   SPRING_RABBITMQ_HOST: {{ .Values.rabbitmq.host | quote }}
@@ -111,6 +117,12 @@ data:
     matrix.registrationSharedSecret={{ if and .Values.global .Values.global.matrix .Values.global.matrix.registrationSharedSecret }}{{ .Values.global.matrix.registrationSharedSecret }}{{ else }}{{ .Values.matrix.registrationSharedSecret }}{{ end }}
     matrix.adminUsername=${MATRIX_ADMIN_USERNAME:}
     matrix.adminPassword=${MATRIX_ADMIN_PASSWORD:}
+    debug.redis.message.mirror.enabled=${DEBUG_REDIS_MESSAGE_MIRROR_ENABLED:false}
+    debug.redis.message.mirror.ttlSeconds=${DEBUG_REDIS_MESSAGE_MIRROR_TTL_SECONDS:900}
+    debug.redis.message.mirror.maxBodyLength=${DEBUG_REDIS_MESSAGE_MIRROR_MAX_BODY_LENGTH:500}
+    debug.redis.message.mirror.keyPrefix=${DEBUG_REDIS_MESSAGE_MIRROR_KEY_PREFIX:debug:msgmirror}
+    spring.redis.host=${SPRING_REDIS_HOST:}
+    spring.redis.port=${SPRING_REDIS_PORT:6379}
     privacy.notificationPreviewMode=${PRIVACY_NOTIFICATION_PREVIEW_MODE:NONE}
     privacy.ipMode=${PRIVACY_IP_MODE:STANDARD}
     
