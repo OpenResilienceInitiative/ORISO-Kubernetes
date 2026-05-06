@@ -24,8 +24,11 @@ redis:
       httpUser: HTTP_USER
       httpPassword: HTTP_PASSWORD
   # Redis host (Kubernetes service name)
-  host: "redis"
+  # NOTE: In this platform release, Redis service is named `oriso-platform-redis`.
+  host: "oriso-platform-redis.caritas.svc.cluster.local"
   port: 6379
+  # Display name used in Redis Commander UI for this connection.
+  connectionName: "oriso-dev-redis"
 
 resources:
   requests:

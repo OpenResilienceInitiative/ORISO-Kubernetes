@@ -19,7 +19,7 @@ spec:
           service:
             name: oriso-platform-redis-commander
             port:
-              number: 9021
+              number: 8081
   tls:
   - hosts:
     - redis.oriso-dev.site

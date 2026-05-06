@@ -156,7 +156,9 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-origin: $http_origin
     nginx.ingress.kubernetes.io/cors-max-age: '86400'
     nginx.ingress.kubernetes.io/enable-cors: 'true'
+    nginx.ingress.kubernetes.io/rewrite-target: /settingsadmin
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/use-regex: 'true'
   name: consultingtypeservice-settingsadmin-ingress
   namespace: caritas
 spec:
@@ -170,8 +172,8 @@ spec:
             name: oriso-platform-consultingtypeservice
             port:
               number: 8083
-        path: /service/settingsadmin
-        pathType: Exact
+        path: /service/settingsadmin(/|$)(.*)
+        pathType: ImplementationSpecific
   tls:
   - hosts:
     - api.oriso-dev.site

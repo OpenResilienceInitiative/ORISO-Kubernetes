@@ -23,6 +23,15 @@ data:
   MATRIX_API_URL: {{ if and .Values.global .Values.global.matrix .Values.global.matrix.internalUrl }}{{ .Values.global.matrix.internalUrl | quote }}{{ else }}{{ .Values.matrix.apiUrl | quote }}{{ end }}
   MATRIX_SERVER_NAME: {{ if and .Values.global .Values.global.matrix .Values.global.matrix.serverName }}{{ .Values.global.matrix.serverName | quote }}{{ else }}{{ .Values.matrix.serverName | quote }}{{ end }}
   MATRIX_MIGRATION_ENABLED: {{ .Values.matrix.migrationEnabled | quote }}
+  MATRIX_ADMIN_USERNAME: {{ .Values.matrix.adminUsername | quote }}
+  PRIVACY_NOTIFICATION_PREVIEW_MODE: {{ .Values.privacy.notificationPreviewMode | quote }}
+  PRIVACY_IP_MODE: {{ .Values.privacy.ipMode | quote }}
+  DEBUG_REDIS_MESSAGE_MIRROR_ENABLED: {{ .Values.debug.redisMessageMirror.enabled | quote }}
+  DEBUG_REDIS_MESSAGE_MIRROR_TTL_SECONDS: {{ .Values.debug.redisMessageMirror.ttlSeconds | quote }}
+  DEBUG_REDIS_MESSAGE_MIRROR_MAX_BODY_LENGTH: {{ .Values.debug.redisMessageMirror.maxBodyLength | quote }}
+  DEBUG_REDIS_MESSAGE_MIRROR_KEY_PREFIX: {{ .Values.debug.redisMessageMirror.keyPrefix | quote }}
+  SPRING_REDIS_HOST: {{ .Values.redis.host | quote }}
+  SPRING_REDIS_PORT: {{ .Values.redis.port | quote }}
   
   # RabbitMQ Configuration - Use full Kubernetes DNS FQDN (required for managed clusters)
   SPRING_RABBITMQ_HOST: {{ .Values.rabbitmq.host | quote }}
@@ -47,6 +56,10 @@ data:
   
   # Spring Profile
   SPRING_PROFILES_ACTIVE: {{ .Values.spring.profiles.active | quote }}
+
+  # Feature Flags
+  MULTITENANCY_ENABLED: {{ .Values.features.multitenancy.enabled | quote }}
+  FEATURE_MULTITENANCY_WITH_SINGLE_DOMAIN_ENABLED: {{ .Values.features.multitenancy.withSingleDomain.enabled | quote }}
   
   # Liquibase - Explicitly disabled (database schemas managed separately in ORISO-Database)
   SPRING_LIQUIBASE_ENABLED: {{ .Values.database.liquibase.enabled | quote }}
@@ -102,6 +115,16 @@ data:
     matrix.serverName={{ if and .Values.global .Values.global.matrix .Values.global.matrix.serverName }}{{ .Values.global.matrix.serverName }}{{ else }}{{ .Values.matrix.serverName }}{{ end }}
     matrix.migrationEnabled={{ .Values.matrix.migrationEnabled }}
     matrix.registrationSharedSecret={{ if and .Values.global .Values.global.matrix .Values.global.matrix.registrationSharedSecret }}{{ .Values.global.matrix.registrationSharedSecret }}{{ else }}{{ .Values.matrix.registrationSharedSecret }}{{ end }}
+    matrix.adminUsername=${MATRIX_ADMIN_USERNAME:}
+    matrix.adminPassword=${MATRIX_ADMIN_PASSWORD:}
+    debug.redis.message.mirror.enabled=${DEBUG_REDIS_MESSAGE_MIRROR_ENABLED:false}
+    debug.redis.message.mirror.ttlSeconds=${DEBUG_REDIS_MESSAGE_MIRROR_TTL_SECONDS:900}
+    debug.redis.message.mirror.maxBodyLength=${DEBUG_REDIS_MESSAGE_MIRROR_MAX_BODY_LENGTH:500}
+    debug.redis.message.mirror.keyPrefix=${DEBUG_REDIS_MESSAGE_MIRROR_KEY_PREFIX:debug:msgmirror}
+    spring.redis.host=${SPRING_REDIS_HOST:}
+    spring.redis.port=${SPRING_REDIS_PORT:6379}
+    privacy.notificationPreviewMode=${PRIVACY_NOTIFICATION_PREVIEW_MODE:NONE}
+    privacy.ipMode=${PRIVACY_IP_MODE:STANDARD}
     
     # ---------------- RabbitMQ ----------------
     spring.rabbitmq.host={{ .Values.rabbitmq.host }}
@@ -141,5 +164,7 @@ data:
     # ---------------- Other Configuration ----------------
     spring.web.locale=de_DE
     spring.jackson.time-zone=Europe/Berlin
+    multitenancy.enabled={{ .Values.features.multitenancy.enabled }}
+    feature.multitenancy.with.single.domain.enabled={{ .Values.features.multitenancy.withSingleDomain.enabled }}
     service.encryption.appkey={{ .Values.encryption.appKey }}
 

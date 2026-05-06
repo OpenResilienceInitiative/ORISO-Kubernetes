@@ -58,6 +58,26 @@ matrix:
   serverName: "oriso-dev.site"
   migrationEnabled: true
   registrationSharedSecret: "caritas-registration-secret-2025"
+  adminUsername: "caritas_admin"
+  adminPassword: "@CaritasAdmin2025!"
+
+# Privacy / Notification Preview Policy
+privacy:
+  notificationPreviewMode: "NONE"
+  ipMode: "STANDARD"
+
+# Redis (debug mirror only; does not affect DB services)
+redis:
+  host: "oriso-platform-redis.caritas.svc.cluster.local"
+  port: 6379
+
+# Debug feature flags
+debug:
+  redisMessageMirror:
+    enabled: true
+    ttlSeconds: 900
+    maxBodyLength: 500
+    keyPrefix: "debug:msgmirror"
 
 # RabbitMQ Configuration - Full DNS FQDN for managed clusters
 rabbitmq:
@@ -91,6 +111,13 @@ services:
 spring:
   profiles:
     active: "prod"
+
+# Feature Flags
+features:
+  multitenancy:
+    enabled: true
+    withSingleDomain:
+      enabled: true
 
 # Service Encryption
 encryption:

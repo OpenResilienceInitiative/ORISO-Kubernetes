@@ -25,7 +25,7 @@ metadata:
       \       add_header Access-Control-Allow-Methods \"GET, POST, PUT, PATCH, DELETE,\
       \ OPTIONS\" always;\n        add_header Access-Control-Allow-Headers \"Authorization,\
       \ Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token,\
-      \ X-Requested-With, X-WHITELIST-HEADER, rcToken, rcUserId, rctoken, rcuserid\"\
+      \ X-Requested-With, X-WHITELIST-HEADER, rcToken, rcUserId, rctoken, rcuserid, agencyId, agencyid\"\
       \ always;\n        add_header Access-Control-Allow-Credentials \"true\" always;\n\
       \        add_header Access-Control-Max-Age 86400 always;\n        add_header\
       \ Content-Type \"text/plain charset=UTF-8\" always;\n        add_header Content-Length\
@@ -90,7 +90,7 @@ metadata:
       \       add_header Access-Control-Allow-Methods \"GET, POST, PUT, PATCH, DELETE,\
       \ OPTIONS\" always;\n        add_header Access-Control-Allow-Headers \"Authorization,\
       \ Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token,\
-      \ X-Requested-With, X-WHITELIST-HEADER, rcToken, rcUserId, rctoken, rcuserid\"\
+      \ X-Requested-With, X-WHITELIST-HEADER, rcToken, rcUserId, rctoken, rcuserid, agencyId, agencyid\"\
       \ always;\n        add_header Access-Control-Allow-Credentials \"true\" always;\n\
       \        add_header Access-Control-Max-Age 86400 always;\n        add_header\
       \ Content-Type \"text/plain charset=UTF-8\" always;\n        add_header Content-Length\
@@ -99,7 +99,7 @@ metadata:
       true\" always;"
     nginx.ingress.kubernetes.io/cors-allow-credentials: 'true'
     nginx.ingress.kubernetes.io/cors-allow-headers: Authorization, Content-Type, Cache-Control,
-      Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER, rcToken, rcUserId, rctoken, rcuserid
+      Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER, rcToken, rcUserId, rctoken, rcuserid, agencyId, agencyid
     nginx.ingress.kubernetes.io/cors-allow-methods: GET, POST, PUT, PATCH, DELETE,
       OPTIONS
     nginx.ingress.kubernetes.io/cors-allow-origin: $http_origin

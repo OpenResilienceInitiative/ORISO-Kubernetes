@@ -1,0 +1,1661 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  data:
+    config.json: ""
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"config.json":""},"kind":"ConfigMap","metadata":{"annotations":{},"creationTimestamp":null,"name":"admin-config","namespace":"caritas"}}
+    creationTimestamp: "2025-12-20T22:54:14Z"
+    name: admin-config
+    namespace: caritas
+    resourceVersion: "685441"
+    uid: a35cffd9-e452-4fe7-acab-dba433cc4061
+- apiVersion: v1
+  data:
+    01-clickhouse-01-listen.xml: |
+      <yandex>
+          <!-- Listen wildcard address to allow accepting connections from other containers and host network. -->
+          <listen_host>::</listen_host>
+          <listen_host>0.0.0.0</listen_host>
+          <listen_try>1</listen_try>
+      </yandex>
+    01-clickhouse-02-logger.xml: |
+      <yandex>
+          <logger>
+              <!-- Possible levels: https://github.com/pocoproject/poco/blob/devel/Foundation/include/Poco/Logger.h#L105 -->
+              <level>information</level>
+              <formatting>
+                <type>json</type>
+              </formatting>
+              <log>/var/log/clickhouse-server/clickhouse-server.log</log>
+              <errorlog>/var/log/clickhouse-server/clickhouse-server.err.log</errorlog>
+              <size>1000M</size>
+              <count>10</count>
+              <!-- Default behavior is autodetection (log to console if not daemon mode and is tty) -->
+              <console>1</console>
+          </logger>
+      </yandex>
+    01-clickhouse-03-query_log.xml: |
+      <yandex>
+          <query_log replace="1">
+              <database>system</database>
+              <table>query_log</table>
+              <engine>Engine = MergeTree PARTITION BY event_date ORDER BY event_time TTL event_date + interval 30 day</engine>
+              <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+          </query_log>
+      </yandex>
+    01-clickhouse-04-part_log.xml: |
+      <yandex>
+          <part_log replace="1">
+              <database>system</database>
+              <table>part_log</table>
+              <engine>Engine = MergeTree PARTITION BY event_date ORDER BY event_time TTL event_date + interval 30 day</engine>
+              <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+          </part_log>
+      </yandex>
+    01-clickhouse-05-trace_log.xml: |-
+      <yandex>
+          <trace_log replace="1">
+              <database>system</database>
+              <table>trace_log</table>
+              <engine>Engine = MergeTree PARTITION BY event_date ORDER BY event_time TTL event_date + interval 7 day</engine>
+              <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+          </trace_log>
+      </yandex>
+    01-clickhouse-06-asynchronous_insert_log.xml: |
+      <yandex>
+          <asynchronous_insert_log replace="1">
+              <database>system</database>
+              <table>asynchronous_insert_log</table>
+              <engine>Engine = MergeTree PARTITION BY event_date ORDER BY event_time TTL event_date + interval 7 day</engine>
+              <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+          </asynchronous_insert_log>
+      </yandex>
+    01-clickhouse-07-asynchronous_metric_log.xml: |
+      <yandex>
+          <asynchronous_metric_log replace="1">
+              <database>system</database>
+              <table>asynchronous_metric_log</table>
+              <engine>Engine = MergeTree PARTITION BY event_date ORDER BY event_time TTL event_date + interval 30 day</engine>
+              <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+          </asynchronous_metric_log>
+      </yandex>
+    01-clickhouse-08-backup_log.xml: |
+      <yandex>
+          <backup_log replace="1">
+              <database>system</database>
+              <table>backup_log</table>
+              <engine>Engine = MergeTree PARTITION BY event_date ORDER BY event_time TTL event_date + interval 7 day</engine>
+              <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+          </backup_log>
+      </yandex>
+    01-clickhouse-09-blob_storage_log.xml: |
+      <yandex>
+          <blob_storage_log replace="1">
+              <database>system</database>
+              <table>blob_storage_log</table>
+              <engine>Engine = MergeTree PARTITION BY event_date ORDER BY event_time TTL event_date + interval 30 day</engine>
+              <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+          </blob_storage_log>
+      </yandex>
+    01-clickhouse-10-crash_log.xml: |
+      <yandex>
+          <crash_log replace="1">
+              <database>system</database>
+              <table>crash_log</table>
+              <engine>Engine = MergeTree PARTITION BY event_date ORDER BY event_time TTL event_date + interval 30 day</engine>
+              <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+          </crash_log>
+      </yandex>
+    01-clickhouse-11-metric_log.xml: |
+      <yandex>
+          <metric_log replace="1">
+              <database>system</database>
+              <table>metric_log</table>
+              <engine>Engine = MergeTree PARTITION BY event_date ORDER BY event_time TTL event_date + interval 30 day</engine>
+              <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+          </metric_log>
+      </yandex>
+    01-clickhouse-12-query_thread_log.xml: |
+      <yandex>
+          <query_thread_log replace="1">
+              <database>system</database>
+              <table>query_thread_log</table>
+              <engine>Engine = MergeTree PARTITION BY event_date ORDER BY event_time TTL event_date + interval 7 day</engine>
+              <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+          </query_thread_log>
+      </yandex>
+    01-clickhouse-13-query_views_log.xml: |
+      <yandex>
+          <query_views_log replace="1">
+              <database>system</database>
+              <table>query_views_log</table>
+              <engine>Engine = MergeTree PARTITION BY event_date ORDER BY event_time TTL event_date + interval 15 day</engine>
+              <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+          </query_views_log>
+      </yandex>
+    01-clickhouse-14-session_log.xml: |
+      <yandex>
+          <session_log replace="1">
+              <database>system</database>
+              <table>session_log</table>
+              <engine>Engine = MergeTree PARTITION BY event_date ORDER BY event_time TTL event_date + interval 30 day</engine>
+              <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+          </session_log>
+      </yandex>
+    01-clickhouse-15-zookeeper_log.xml: |
+      <yandex>
+          <zookeeper_log replace="1">
+              <database>system</database>
+              <table>zookeeper_log</table>
+              <engine>Engine = MergeTree PARTITION BY event_date ORDER BY event_time TTL event_date + interval 30 day</engine>
+              <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+          </zookeeper_log>
+      </yandex>
+    01-clickhouse-16-processors_profile_log.xml: |
+      <yandex>
+          <processors_profile_log replace="1">
+              <database>system</database>
+              <table>processors_profile_log</table>
+              <engine>Engine = MergeTree PARTITION BY event_date ORDER BY event_time TTL event_date + interval 7 day</engine>
+              <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+          </processors_profile_log>
+      </yandex>
+    chop-generated-remote_servers.xml: |
+      <yandex>
+          <remote_servers>
+              <!-- User-specified clusters -->
+              <cluster>
+                  <shard>
+                      <internal_replication>False</internal_replication>
+                      <replica>
+                          <host>chi-signoz-clickhouse-cluster-0-0</host>
+                          <port>9000</port>
+                          <secure>0</secure>
+                      </replica>
+                  </shard>
+              </cluster>
+              <!-- Autogenerated clusters -->
+              <all-replicated>
+                  <shard>
+                      <internal_replication>true</internal_replication>
+                      <replica>
+                          <host>chi-signoz-clickhouse-cluster-0-0</host>
+                          <port>9000</port>
+                          <secure>0</secure>
+                      </replica>
+                  </shard>
+              </all-replicated>
+              <all-sharded>
+                  <shard>
+                      <internal_replication>false</internal_replication>
+                      <replica>
+                          <host>chi-signoz-clickhouse-cluster-0-0</host>
+                          <port>9000</port>
+                          <secure>0</secure>
+                      </replica>
+                  </shard>
+              </all-sharded>
+          </remote_servers>
+      </yandex>
+    chop-generated-settings.xml: |
+      <yandex>
+          <format_schema_path>/etc/clickhouse-server/config.d/</format_schema_path>
+          <prometheus>
+              <endpoint>/metrics</endpoint>
+              <port>9363</port>
+          </prometheus>
+          <user_defined_executable_functions_config>/etc/clickhouse-server/functions/custom-functions.xml</user_defined_executable_functions_config>
+          <user_scripts_path>/var/lib/clickhouse/user_scripts/</user_scripts_path>
+      </yandex>
+    crash.xml: |
+      <clickhouse>
+        <send_crash_reports replace="replace">
+          <enabled>false</enabled>
+        </send_crash_reports>
+      </clickhouse>
+    events.proto: "syntax = \"proto3\";\nmessage Event {\n  string uuid = 1;\n  string
+      event = 2;\n  string properties = 3;\n  string timestamp = 4;\n  uint64 team_id
+      = 5;\n  string distinct_id = 6;\n  string created_at = 7;\n  string elements_chain
+      = 8;\n}\n    \n"
+    formatting.xml: |
+      <clickhouse>
+        <logger>
+          <formatting replace="replace">
+            <type>json</type>
+            <names>
+              <date_time>date_time</date_time>
+              <thread_name>thread_name</thread_name>
+              <thread_id>thread_id</thread_id>
+              <level>level</level>
+              <query_id>query_id</query_id>
+              <logger_name>logger_name</logger_name>
+              <message>message</message>
+              <source_file>source_file</source_file>
+              <source_line>source_line</source_line>
+            </names>
+          </formatting>
+        </logger>
+      </clickhouse>
+    load.xml: |
+      <clickhouse>
+        <async_load_databases replace="replace">false</async_load_databases>
+      </clickhouse>
+    system_log.xml: |
+      <clickhouse>
+        <text_log>
+          <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>
+        </text_log>
+        <latency_log>
+          <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>
+        </latency_log>
+        <error_log>
+          <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
+        </error_log>
+        <query_metric_log>
+          <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>
+        </query_metric_log>
+      </clickhouse>
+  kind: ConfigMap
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: signoz
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-21T09:26:13Z"
+    labels:
+      app.kubernetes.io/component: clickhouse
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: clickhouse
+      app.kubernetes.io/version: 24.1.2
+      clickhouse.altinity.com/ConfigMap: ChiCommon
+      clickhouse.altinity.com/app: chop
+      clickhouse.altinity.com/chi: signoz-clickhouse
+      clickhouse.altinity.com/namespace: caritas
+      clickhouse.altinity.com/object-version: e2b39520949e158adf5a3dc3c0825c71cd25892d
+      helm.sh/chart: clickhouse-24.1.18
+    name: chi-signoz-clickhouse-common-configd
+    namespace: caritas
+    ownerReferences:
+    - apiVersion: clickhouse.altinity.com/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ClickHouseInstallation
+      name: signoz-clickhouse
+      uid: ebf34004-4561-4a8a-969a-ccbea120dc16
+    resourceVersion: "710923"
+    uid: ca70978a-5de9-4f79-8738-be6074f32162
+- apiVersion: v1
+  data:
+    01-clickhouse-user.xml: |
+      <yandex>
+          <users>
+              <clickhouse_operator>
+                  <networks>
+                      <ip>127.0.0.1</ip>
+                  </networks>
+                  <password_sha256_hex>716b36073a90c6fe1d445ac1af85f4777c5b7a155cea359961826a030513e448</password_sha256_hex>
+                  <profile>clickhouse_operator</profile>
+                  <quota>default</quota>
+              </clickhouse_operator>
+          </users>
+          <profiles>
+              <clickhouse_operator>
+                  <log_queries>0</log_queries>
+                  <skip_unavailable_shards>1</skip_unavailable_shards>
+                  <http_connection_timeout>10</http_connection_timeout>
+              </clickhouse_operator>
+          </profiles>
+      </yandex>
+    02-clickhouse-default-profile.xml: |
+      <yandex>
+        <profiles>
+          <default>
+            <log_queries>1</log_queries>
+            <connect_timeout_with_failover_ms>1000</connect_timeout_with_failover_ms>
+            <distributed_aggregation_memory_efficient>1</distributed_aggregation_memory_efficient>
+            <parallel_view_processing>1</parallel_view_processing>
+          </default>
+        </profiles>
+      </yandex>
+    03-database-ordinary.xml: |
+      <yandex>
+          <profiles>
+              <default>
+                  <default_database_engine>Ordinary</default_database_engine>
+              </default>
+          </profiles>
+      </yandex>
+    chop-generated-profiles.xml: |
+      <yandex>
+          <profiles>
+              <admin>
+                  <query_plan_max_limit_for_lazy_materialization>0</query_plan_max_limit_for_lazy_materialization>
+                  <secondary_indices_enable_bulk_filtering>0</secondary_indices_enable_bulk_filtering>
+              </admin>
+              <default>
+                  <allow_experimental_window_functions>1</allow_experimental_window_functions>
+                  <allow_nondeterministic_mutations>1</allow_nondeterministic_mutations>
+                  <query_plan_max_limit_for_lazy_materialization>0</query_plan_max_limit_for_lazy_materialization>
+                  <secondary_indices_enable_bulk_filtering>0</secondary_indices_enable_bulk_filtering>
+              </default>
+          </profiles>
+      </yandex>
+    chop-generated-users.xml: |
+      <yandex>
+          <users>
+              <admin>
+                  <networks>
+                      <host_regexp>(chi-signoz-clickhouse-[^.]+\d+-\d+|clickhouse\-signoz-clickhouse)\.caritas\.svc\.cluster\.local$</host_regexp>
+                      <ip>::1</ip>
+                      <ip>127.0.0.1</ip>
+                      <ip>10.0.0.0/8</ip>
+                      <ip>100.64.0.0/10</ip>
+                      <ip>172.16.0.0/12</ip>
+                      <ip>192.0.0.0/24</ip>
+                      <ip>198.18.0.0/15</ip>
+                      <ip>192.168.0.0/16</ip>
+                  </networks>
+                  <password_sha256_hex>da90cf0836f8ac8f8a298293eafe856634b622df0c1ac2c82538f2cbe5406a6c</password_sha256_hex>
+                  <profile>default</profile>
+                  <quota>default</quota>
+              </admin>
+              <clickhouse_operator>
+                  <networks>
+                      <ip>10.42.0.88</ip>
+                  </networks>
+                  <password_sha256_hex>716b36073a90c6fe1d445ac1af85f4777c5b7a155cea359961826a030513e448</password_sha256_hex>
+                  <profile>clickhouse_operator</profile>
+              </clickhouse_operator>
+              <default>
+                  <networks>
+                      <host_regexp>(chi-signoz-clickhouse-[^.]+\d+-\d+|clickhouse\-signoz-clickhouse)\.caritas\.svc\.cluster\.local$</host_regexp>
+                      <ip>::1</ip>
+                      <ip>127.0.0.1</ip>
+                      <ip>10.42.0.178</ip>
+                  </networks>
+                  <profile>default</profile>
+                  <quota>default</quota>
+              </default>
+          </users>
+      </yandex>
+  kind: ConfigMap
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: signoz
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-21T09:26:13Z"
+    labels:
+      app.kubernetes.io/component: clickhouse
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: clickhouse
+      app.kubernetes.io/version: 24.1.2
+      clickhouse.altinity.com/ConfigMap: ChiCommonUsers
+      clickhouse.altinity.com/app: chop
+      clickhouse.altinity.com/chi: signoz-clickhouse
+      clickhouse.altinity.com/namespace: caritas
+      clickhouse.altinity.com/object-version: d524db4f33a78264e32f05c8239859b13df2ab84
+      helm.sh/chart: clickhouse-24.1.18
+    name: chi-signoz-clickhouse-common-usersd
+    namespace: caritas
+    ownerReferences:
+    - apiVersion: clickhouse.altinity.com/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ClickHouseInstallation
+      name: signoz-clickhouse
+      uid: ebf34004-4561-4a8a-969a-ccbea120dc16
+    resourceVersion: "973396"
+    uid: 281b7bff-0c24-4f2d-9dc0-1274ef1c4432
+- apiVersion: v1
+  data:
+    chop-generated-hostname-ports.xml: |
+      <yandex>
+          <tcp_port_secure>0</tcp_port_secure>
+          <https_port>0</https_port>
+          <interserver_http_host>chi-signoz-clickhouse-cluster-0-0</interserver_http_host>
+      </yandex>
+    chop-generated-macros.xml: |
+      <yandex>
+          <macros>
+              <installation>signoz-clickhouse</installation>
+              <all-sharded-shard>0</all-sharded-shard>
+              <cluster>cluster</cluster>
+              <shard>0</shard>
+              <replica>chi-signoz-clickhouse-cluster-0-0</replica>
+          </macros>
+      </yandex>
+    chop-generated-zookeeper.xml: |
+      <yandex>
+          <zookeeper>
+              <node>
+                  <host>signoz-zookeeper-0.signoz-zookeeper-headless</host>
+                  <port>2181</port>
+              </node>
+          </zookeeper>
+          <distributed_ddl>
+              <path>/clickhouse/signoz-clickhouse/task_queue/ddl</path>
+          </distributed_ddl>
+      </yandex>
+  kind: ConfigMap
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: signoz
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-21T09:26:14Z"
+    labels:
+      app.kubernetes.io/component: clickhouse
+      app.kubernetes.io/instance: signoz
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: clickhouse
+      app.kubernetes.io/version: 24.1.2
+      clickhouse.altinity.com/ConfigMap: Host
+      clickhouse.altinity.com/app: chop
+      clickhouse.altinity.com/chi: signoz-clickhouse
+      clickhouse.altinity.com/cluster: cluster
+      clickhouse.altinity.com/namespace: caritas
+      clickhouse.altinity.com/object-version: 9a121c92cb2ab3fb421aafabc14cbaf329660c32
+      clickhouse.altinity.com/replica: "0"
+      clickhouse.altinity.com/shard: "0"
+      helm.sh/chart: clickhouse-24.1.18
+    name: chi-signoz-clickhouse-deploy-confd-cluster-0-0
+    namespace: caritas
+    ownerReferences:
+    - apiVersion: clickhouse.altinity.com/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ClickHouseInstallation
+      name: signoz-clickhouse
+      uid: ebf34004-4561-4a8a-969a-ccbea120dc16
+    resourceVersion: "710935"
+    uid: eebed03d-2771-4ae1-a66d-200b58655d7e
+- apiVersion: v1
+  data:
+    default-password: clickhouse-password
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"default-password":"clickhouse-password"},"kind":"ConfigMap","metadata":{"annotations":{},"creationTimestamp":null,"name":"clickhouse-config","namespace":"caritas"}}
+    creationTimestamp: "2025-12-27T06:08:03Z"
+    name: clickhouse-config
+    namespace: caritas
+    resourceVersion: "985153"
+    uid: 8f6c5187-f6ae-4447-9791-c1014cf39ef3
+- apiVersion: v1
+  data:
+    cors-headers.conf: |
+      add_header Access-Control-Allow-Origin "$http_origin" always;
+      add_header Access-Control-Allow-Methods "GET, POST, OPTIONS" always;
+      add_header Access-Control-Allow-Headers "Authorization, Content-Type, Accept" always;
+      add_header Access-Control-Allow-Credentials "true" always;
+      add_header Vary "Origin" always;
+
+      if ($request_method = OPTIONS) {
+        add_header Access-Control-Allow-Origin "$http_origin" always;
+        add_header Access-Control-Allow-Methods "GET, POST, OPTIONS" always;
+        add_header Access-Control-Allow-Headers "Authorization, Content-Type, Accept" always;
+        add_header Access-Control-Allow-Credentials "true" always;
+        add_header Access-Control-Max-Age 86400 always;
+        return 204;
+      }
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"cors-headers.conf":"add_header Access-Control-Allow-Origin \"$http_origin\" always;\nadd_header Access-Control-Allow-Methods \"GET, POST, OPTIONS\" always;\nadd_header Access-Control-Allow-Headers \"Authorization, Content-Type, Accept\" always;\nadd_header Access-Control-Allow-Credentials \"true\" always;\nadd_header Vary \"Origin\" always;\n\nif ($request_method = OPTIONS) {\n  add_header Access-Control-Allow-Origin \"$http_origin\" always;\n  add_header Access-Control-Allow-Methods \"GET, POST, OPTIONS\" always;\n  add_header Access-Control-Allow-Headers \"Authorization, Content-Type, Accept\" always;\n  add_header Access-Control-Allow-Credentials \"true\" always;\n  add_header Access-Control-Max-Age 86400 always;\n  return 204;\n}\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"cors-headers","namespace":"caritas"}}
+    creationTimestamp: "2025-12-21T03:53:29Z"
+    name: cors-headers
+    namespace: caritas
+    resourceVersion: "699569"
+    uid: e3a70ddf-daa9-4a65-a923-76165882c96a
+- apiVersion: v1
+  data:
+    config.json: '{"default_server_config": {"m.homeserver": {"base_url": "https://matrix.oriso-dev.site",
+      "server_name": "oriso-dev.site"}}, "livekit": {"livekit_service_url": "https://livekit.oriso-dev.site/livekit/jwt"},
+      "features": {"feature_use_device_session_member_events": true}, "ssla": "https://static.element.io/legal/element-software-and-services-license-agreement-uk-1.pdf",
+      "matrix_rtc_session": {"wait_for_key_rotation_ms": 3000, "membership_event_expiry_ms":
+      180000000, "delayed_leave_event_delay_ms": 18000, "delayed_leave_event_restart_ms":
+      4000, "network_error_retry_ms": 100}}'
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"config.json":"{\"default_server_config\": {\"m.homeserver\": {\"base_url\": \"https://matrix.oriso-dev.site\", \"server_name\": \"91.99.183.160\"}}, \"livekit\": {\"livekit_service_url\": \"https://livekit.oriso-dev.site/livekit/jwt\"}, \"features\": {\"feature_use_device_session_member_events\": true}, \"ssla\": \"https://static.element.io/legal/element-software-and-services-license-agreement-uk-1.pdf\", \"matrix_rtc_session\": {\"wait_for_key_rotation_ms\": 3000, \"membership_event_expiry_ms\": 180000000, \"delayed_leave_event_delay_ms\": 18000, \"delayed_leave_event_restart_ms\": 4000, \"network_error_retry_ms\": 100}}"},"kind":"ConfigMap","metadata":{"annotations":{},"creationTimestamp":"2025-12-20T21:21:21Z","name":"element-call-config","namespace":"caritas","resourceVersion":"701818","uid":"2125b1d6-559d-4eaf-b8a5-9a2ff91e2251"}}
+    creationTimestamp: "2025-12-20T21:21:21Z"
+    name: element-call-config
+    namespace: caritas
+    resourceVersion: "985912"
+    uid: 2125b1d6-559d-4eaf-b8a5-9a2ff91e2251
+- apiVersion: v1
+  data:
+    ca.crt: |
+      -----BEGIN CERTIFICATE-----
+      MIIBeDCCAR2gAwIBAgIBADAKBggqhkjOPQQDAjAjMSEwHwYDVQQDDBhrM3Mtc2Vy
+      dmVyLWNhQDE3NjQzMTI1MjEwHhcNMjUxMTI4MDY0ODQxWhcNMzUxMTI2MDY0ODQx
+      WjAjMSEwHwYDVQQDDBhrM3Mtc2VydmVyLWNhQDE3NjQzMTI1MjEwWTATBgcqhkjO
+      PQIBBggqhkjOPQMBBwNCAATb2fZhHs5WFiX3QLZN3M5qRjZSqU7auEeVKDAYQSDm
+      BnCYfP9PJSsfQ0TIJFf2vWVQNj0DEfHre/MKAw2uSLqUo0IwQDAOBgNVHQ8BAf8E
+      BAMCAqQwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUzPkb5+dGwXfr0/4OZN34
+      y/YfncswCgYIKoZIzj0EAwIDSQAwRgIhANdIcrLrETa8yca9IZXB87WgWXK80oR8
+      VGNzGlmJW/yoAiEAucTrFbEo7gmM/HcuYV7tns8IWlBbrq15xV8Igl4qRGM=
+      -----END CERTIFICATE-----
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubernetes.io/description: Contains a CA bundle that can be used to verify the
+        kube-apiserver when using internal endpoints such as the internal service
+        IP or kubernetes.default.svc. No other usage is guaranteed across distributions
+        of Kubernetes clusters.
+    creationTimestamp: "2025-12-20T00:16:31Z"
+    name: kube-root-ca.crt
+    namespace: caritas
+    resourceVersion: "619011"
+    uid: e39aeffc-71c6-4b34-a1ea-99fe6f0b44bf
+- apiVersion: v1
+  data:
+    99-max-connections.cnf: |
+      [mysqld]
+      max_connections=500
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"99-max-connections.cnf":"[mysqld]\nmax_connections=500\n"},"kind":"ConfigMap","metadata":{"annotations":{},"creationTimestamp":null,"name":"mariadb-custom-config","namespace":"caritas"}}
+    creationTimestamp: "2026-02-11T10:16:59Z"
+    name: mariadb-custom-config
+    namespace: caritas
+    resourceVersion: "3547438"
+    uid: 6e0f73e0-1211-4b17-872c-1f1f08d5c208
+- apiVersion: v1
+  data:
+    homeserver.yaml: |
+      server_name: "91.99.183.160"
+      pid_file: /data/homeserver.pid
+
+      listeners:
+        - port: 8008
+          tls: false
+          type: http
+          x_forwarded: true
+          bind_addresses: ["0.0.0.0"]
+          resources:
+            - names: [client, federation]
+              compress: false
+
+      database:
+        name: sqlite3
+        args:
+          database: /data/homeserver.db
+
+      redis:
+        enabled: true
+        host: redis
+        port: 6379
+        password: caritas123
+        dbid: 0
+
+      caches:
+        global_factor: 1.0
+        per_cache_factors:
+          get_users_in_room: 10.0
+          get_remote_users_in_room: 10.0
+
+      media_store_path: /data/media_store
+
+      # Disable authenticated media requirement
+      enable_authenticated_media: false
+      matrix_synapse_enable_authenticated_media: false
+
+      registration_shared_secret: "caritas-registration-secret-2025"
+      report_stats: false
+      enable_registration: true
+      enable_registration_without_verification: true
+      public_baseurl: "https://matrix.oriso-dev.site"
+
+      suppress_key_validation_warnings: true
+      trusted_key_servers:
+        - server_name: "matrix.org"
+          accept_keys_insecurely: true
+
+      # TURN/STUN configuration for WebRTC calls
+      turn_uris:
+        - "stun:stun.l.google.com:19302"
+        - "stun:stun1.l.google.com:19302"
+      turn_allow_guests: true
+
+      # Rate limiting - set to 100000 to effectively never hit limits
+      rc_message:
+        per_second: 100000
+        burst_count: 100000
+
+      rc_registration:
+        per_second: 100000
+        burst_count: 100000
+
+      rc_login:
+        address:
+          per_second: 100000
+          burst_count: 100000
+        account:
+          per_second: 100000
+          burst_count: 100000
+        failed_attempts:
+          per_second: 100000
+          burst_count: 100000
+
+      rc_admin_redaction:
+        per_second: 100000
+        burst_count: 100000
+
+      rc_joins:
+        local:
+          per_second: 100000
+          burst_count: 100000
+        remote:
+          per_second: 100000
+          burst_count: 100000
+
+      rc_3pid_validation:
+        per_second: 100000
+        burst_count: 100000
+
+      rc_invites:
+        per_room:
+          per_second: 100000
+          burst_count: 100000
+        per_user:
+          per_second: 100000
+          burst_count: 100000
+
+      # Exempt internal network from rate limiting
+      exempt_from_ratelimiting:
+        - "10.42.0.0/16"
+        - "91.99.183.160"
+        - "127.0.0.1"
+
+      # Enable Sliding Sync (Matrix 2.0) for INSTANT real-time synchronization
+      experimental_features:
+        msc3575_enabled: true
+        msc3575_for_workers: true
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"homeserver.yaml":"server_name: \"91.99.183.160\"\npid_file: /data/homeserver.pid\n\nlisteners:\n  - port: 8008\n    tls: false\n    type: http\n    x_forwarded: true\n    bind_addresses: [\"0.0.0.0\"]\n    resources:\n      - names: [client, federation]\n        compress: false\n\ndatabase:\n  name: sqlite3\n  args:\n    database: /data/homeserver.db\n\nredis:\n  enabled: true\n  host: redis\n  port: 6379\n  password: caritas123\n  dbid: 0\n\ncaches:\n  global_factor: 1.0\n  per_cache_factors:\n    get_users_in_room: 10.0\n    get_remote_users_in_room: 10.0\n\nmedia_store_path: /data/media_store\n\n# Disable authenticated media requirement\nenable_authenticated_media: false\nmatrix_synapse_enable_authenticated_media: false\n\nregistration_shared_secret: \"caritas-registration-secret-2025\"\nreport_stats: false\nenable_registration: true\nenable_registration_without_verification: true\npublic_baseurl: \"https://matrix.oriso-dev.site\"\n\nsuppress_key_validation_warnings: true\ntrusted_key_servers:\n  - server_name: \"matrix.org\"\n    accept_keys_insecurely: true\n\n# TURN/STUN configuration for WebRTC calls\nturn_uris:\n  - \"stun:stun.l.google.com:19302\"\n  - \"stun:stun1.l.google.com:19302\"\nturn_allow_guests: true\n\n# Rate limiting - set to 100000 to effectively never hit limits\nrc_message:\n  per_second: 100000\n  burst_count: 100000\n\nrc_registration:\n  per_second: 100000\n  burst_count: 100000\n\nrc_login:\n  address:\n    per_second: 100000\n    burst_count: 100000\n  account:\n    per_second: 100000\n    burst_count: 100000\n  failed_attempts:\n    per_second: 100000\n    burst_count: 100000\n\nrc_admin_redaction:\n  per_second: 100000\n  burst_count: 100000\n\nrc_joins:\n  local:\n    per_second: 100000\n    burst_count: 100000\n  remote:\n    per_second: 100000\n    burst_count: 100000\n\nrc_3pid_validation:\n  per_second: 100000\n  burst_count: 100000\n\nrc_invites:\n  per_room:\n    per_second: 100000\n    burst_count: 100000\n  per_user:\n    per_second: 100000\n    burst_count: 100000\n\n# Exempt internal network from rate limiting\nexempt_from_ratelimiting:\n  - \"10.42.0.0/16\"\n  - \"91.99.183.160\"\n  - \"127.0.0.1\"\n\n# Enable Sliding Sync (Matrix 2.0) for INSTANT real-time synchronization\nexperimental_features:\n  msc3575_enabled: true\n  msc3575_for_workers: true\n"},"kind":"ConfigMap","metadata":{"annotations":{},"creationTimestamp":"2025-12-20T00:56:05Z","name":"matrix-homeserver-oidc","namespace":"caritas","resourceVersion":"702741","uid":"32808119-c439-4ae3-8913-2621b897bf91"}}
+    creationTimestamp: "2025-12-20T00:56:05Z"
+    name: matrix-homeserver-oidc
+    namespace: caritas
+    resourceVersion: "702882"
+    uid: 32808119-c439-4ae3-8913-2621b897bf91
+- apiVersion: v1
+  data:
+    config.user.inc.php: |
+      <?php
+      $i = 1;
+      $cfg['Servers'][$i]['auth_type'] = 'config';
+      $cfg['Servers'][$i]['host'] = getenv('PMA_HOST') ?: 'oriso-platform-mariadb.caritas.svc.cluster.local';
+      $cfg['Servers'][$i]['port'] = getenv('PMA_PORT') ?: '3306';
+      $cfg['Servers'][$i]['user'] = getenv('PMA_USER') ?: '';
+      $cfg['Servers'][$i]['password'] = getenv('PMA_PASSWORD') ?: '';
+      $cfg['Servers'][$i]['AllowNoPassword'] = false;
+      $cfg['Servers'][$i]['compress'] = false;
+      // Hide internal/system databases from navigation.
+      $cfg['Servers'][$i]['hide_db'] = '^(information_schema|performance_schema|mysql|sys|RECOVER_YOUR_DATA)$';
+
+      // Required for phpMyAdmin, provided via env var from a Secret.
+      $cfg['blowfish_secret'] = getenv('PMA_BLOWFISH_SECRET') ?: 'change-me';
+
+      // Reduce unnecessary outbound reporting.
+      $cfg['SendErrorReports'] = 'never';
+      $cfg['CheckConfigurationPermissions'] = false;
+      ?>
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"config.user.inc.php":"\u003c?php\n$i = 1;\n$cfg['Servers'][$i]['auth_type'] = 'config';\n$cfg['Servers'][$i]['host'] = getenv('PMA_HOST') ?: 'oriso-platform-mariadb.caritas.svc.cluster.local';\n$cfg['Servers'][$i]['port'] = getenv('PMA_PORT') ?: '3306';\n$cfg['Servers'][$i]['user'] = getenv('PMA_USER') ?: '';\n$cfg['Servers'][$i]['password'] = getenv('PMA_PASSWORD') ?: '';\n$cfg['Servers'][$i]['AllowNoPassword'] = false;\n$cfg['Servers'][$i]['compress'] = false;\n// Hide internal/system databases from navigation.\n$cfg['Servers'][$i]['hide_db'] = '^(information_schema|performance_schema|mysql|sys|RECOVER_YOUR_DATA)$';\n\n// Required for phpMyAdmin, provided via env var from a Secret.\n$cfg['blowfish_secret'] = getenv('PMA_BLOWFISH_SECRET') ?: 'change-me';\n\n// Reduce unnecessary outbound reporting.\n$cfg['SendErrorReports'] = 'never';\n$cfg['CheckConfigurationPermissions'] = false;\n?\u003e\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"oriso-mariadb-client-config","namespace":"caritas"}}
+    creationTimestamp: "2026-02-12T01:07:22Z"
+    name: oriso-mariadb-client-config
+    namespace: caritas
+    resourceVersion: "3580360"
+    uid: df18eb87-1d0f-47fd-b017-3345aeb6f49e
+- apiVersion: v1
+  data:
+    nginx.conf: "events {\n    worker_connections 1024;\n}\n\nhttp {\n    resolver
+      10.43.0.10 valid=10s;\n    resolver_timeout 5s;\n    include /etc/nginx/mime.types;\n
+      \   default_type application/octet-stream;\n    sendfile on;\n    keepalive_timeout
+      65;\n\nserver {\n    listen 8089;\n    server_name localhost;\n\n    # Keycloak
+      on host 8080 (modern Keycloak runs at root path, no /auth)\n    # We keep /auth
+      on the proxy so the frontend URLs stay the same\n    # and strip the prefix
+      when forwarding upstream.\n    location /auth/ {\n        # Avoid duplicate
+      CORS headers from upstream\n        proxy_hide_header Access-Control-Allow-Origin;\n
+      \       proxy_hide_header Access-Control-Allow-Credentials;\n        # CORS
+      for Keycloak endpoints\n        if ($request_method = OPTIONS) {\n            add_header
+      'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary'
+      'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET,
+      POST, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers'
+      'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token,
+      x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age'
+      86400 always;\n            return 204;\n        }\n\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        # Strip /auth prefix
+      and forward to Keycloak\n        rewrite ^/auth/(.*)$ /$1 break;\n        proxy_pass
+      http://127.0.0.1:8080/;\n        # Force consistent issuer and frontend URL
+      resolution in Keycloak\n        proxy_set_header Host localhost:8080;\n        proxy_set_header
+      X-Forwarded-Host localhost:8080;\n        proxy_set_header X-Forwarded-Proto
+      http;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header
+      X-Forwarded-For $proxy_add_x_forwarded_for;\n    }\n\n    # AgencyService admin
+      endpoints (8084)\n    location /service/agencyadmin/ {\n        if ($request_method
+      = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin
+      always;\n            add_header 'Vary' 'Origin' always;\n            add_header
+      'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n
+      \           add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type,
+      Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With,
+      X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n
+      \           return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8084/agencyadmin/;\n
+      \       proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n
+      \       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header
+      X-Forwarded-Proto $scheme;\n    }\n\n    # Appointment endpoints (routed via
+      AgencyService 8084)\n    location /service/appointmentservice/ {\n        if
+      ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header
+      'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n
+      \           add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type,
+      Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With,
+      X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n
+      \           return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8084;\n
+      \       proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n
+      \       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header
+      X-Forwarded-Proto $scheme;\n    }\n\n    # ConsultingTypeService endpoints (8083)\n
+      \   location /service/consultingtypes/ {\n        if ($request_method = OPTIONS)
+      {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n
+      \           add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods'
+      'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers'
+      'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token,
+      x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age'
+      86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8083/consultingtypes/;\n
+      \       proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n
+      \       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header
+      X-Forwarded-Proto $scheme;\n    }\n    # TenantService on host 8081 - direct
+      public endpoints\n    location /tenant/ {\n        if ($request_method = OPTIONS)
+      {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n
+      \           add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods'
+      'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers'
+      'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token,
+      x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age'
+      86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8081/tenant/;\n
+      \       proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n
+      \       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header
+      X-Forwarded-Proto $scheme;\n    }\n\n    # TenantService access endpoint comes
+      as /service/tenant/* from UI; rewrite to /tenant/*\n    location /service/tenant/
+      {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header
+      'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n
+      \           add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type,
+      Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With,
+      X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n
+      \           return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        rewrite ^/service/tenant/(.*)$
+      /tenant/$1 break;\n        proxy_pass http://127.0.0.1:8081;\n        proxy_set_header
+      Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header
+      X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto
+      $scheme;\n    }\n\n    # Map admin's /service/settings to ConsultingTypeService
+      /settings with CORS\n    location = /service/settings {\n        if ($request_method
+      = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin
+      always;\n            add_header 'Vary' 'Origin' always;\n            add_header
+      'Access-Control-Allow-Methods' 'GET, OPTIONS' always;\n            add_header
+      'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control,
+      Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER'
+      always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n
+      \           add_header 'Access-Control-Max-Age' 86400 always;\n            return
+      204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin
+      always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n\n        proxy_pass http://127.0.0.1:8083/settings;\n        proxy_set_header
+      Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header
+      X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto
+      $scheme;\n    }\n\n    # Map admin's /service/settingsadmin to ConsultingTypeService
+      /settingsadmin with CORS\n    location = /service/settingsadmin {\n        if
+      ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header
+      'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n
+      \           add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type,
+      Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With,
+      X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n
+      \           return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8083/settingsadmin;\n
+      \       proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n
+      \       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header
+      X-Forwarded-Proto $scheme;\n    }\n\n    # SIMPLE MOCK - Only mock the specific
+      problematic endpoint\n    \n    # Mock tenant service to prevent redirects\n
+      \   location ~ ^/service/tenant/.*$ {\n        if ($request_method = OPTIONS)
+      {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n
+      \           add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods'
+      'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers'
+      'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token,
+      x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age'
+      86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n        add_header 'Content-Type'
+      'application/json' always;\n        return 200 '{\"id\":\"demo-tenant\",\"name\":\"Demo
+      Tenant\",\"active\":true}';\n    }\n\n    # Mock agency service to prevent redirects\n
+      \   location ~ ^/service/agency/.*$ {\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n        add_header 'Content-Type'
+      'application/json' always;\n        return 200 '{\"id\":\"demo-agency\",\"name\":\"Demo
+      Agency\",\"active\":true}';\n    }\n    \n    # Mock consulting type service
+      to prevent redirects\n    location ~ ^/service/consultingtype/.*$ {\n        add_header
+      'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary'
+      'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true'
+      always;\n        add_header 'Content-Type' 'application/json' always;\n        return
+      200 '{\"id\":\"demo-consulting-type\",\"name\":\"Demo Consulting Type\",\"active\":true}';\n
+      \   }\n    \n    # Mock statistics service to prevent redirects\n    location
+      ~ ^/service/statistics/.*$ {\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n        add_header 'Content-Type'
+      'application/json' always;\n        return 200 '{\"success\":true,\"data\":[]}';\n
+      \   }\n    \n    # Mock message service to prevent redirects\n    location ~
+      ^/service/message/.*$ {\n        add_header 'Access-Control-Allow-Origin' $http_origin
+      always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n        add_header 'Content-Type' 'application/json' always;\n
+      \       return 200 '{\"success\":true,\"messages\":[]}';\n    }\n    \n    #
+      Mock appointment service to prevent redirects\n    location ~ ^/service/appointment/.*$
+      {\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header
+      'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n        add_header 'Content-Type' 'application/json' always;\n
+      \       return 200 '{\"success\":true,\"appointments\":[]}';\n    }\n    \n
+      \   # ULTIMATE MOCK - Mock ALL remaining endpoints that could cause redirects\n
+      \   location ~ ^/service/users/(user|userdata|profile|me|current|info)(/.*)?$
+      {\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header
+      'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n        add_header 'Content-Type' 'application/json' always;\n
+      \       return 200 '{\"id\":\"demo-user\",\"username\":\"demo\",\"email\":\"demo@example.com\",\"authenticated\":true}';\n
+      \   }\n    \n    # ConversationController endpoints -> UserService (8082)\n
+      \   \n    # ConversationController endpoints -> UserService (8082)\n    location
+      /service/conversations/ {\n        if ($request_method = OPTIONS) {\n            add_header
+      'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary'
+      'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET,
+      POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers'
+      'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token,
+      x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age'
+      86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        rewrite ^/service/conversations/(.*)$
+      /conversations/$1 break;\n        proxy_pass http://127.0.0.1:8082;\n        proxy_set_header
+      Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header
+      X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto
+      $scheme;\n    }\n    \n    \n    # Mock ALL message endpoints with CORS preflight
+      support AND rcgroupid header\n    location ~ ^/service/messages(/.*)?$ {\n        if
+      ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header
+      'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n
+      \           add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type,
+      Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With,
+      X-WHITELIST-HEADER, rcgroupid, rcGroupId, RCGroupId' always;\n            add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age'
+      86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n        add_header 'Content-Type'
+      'application/json' always;\n        return 200 '{\"messages\":[],\"success\":true}';\n
+      \   }\n    \n    # Mock ALL chat endpoints\n    location ~ ^/service/users/chat(/.*)?$
+      {\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header
+      'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n        add_header 'Content-Type' 'application/json' always;\n
+      \       return 200 '{\"success\":true,\"roomId\":\"demo-room\"}';\n    }\n    \n
+      \   # Mock ALL live service endpoints\n    location ~ ^/service/live(/.*)?$
+      {\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header
+      'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n        add_header 'Content-Type' 'application/json' always;\n
+      \       return 200 '{\"success\":true,\"live\":true}';\n    }\n    \n    # Mock
+      ALL RocketChat API endpoints\n    location ~ ^/api/v1(/.*)?$ {\n        add_header
+      'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary'
+      'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true'
+      always;\n        add_header 'Content-Type' 'application/json' always;\n        return
+      200 '{\"success\":true,\"data\":[],\"message\":\"Mocked RocketChat response\"}';\n
+      \   }\n\n    # Optionally wire additional services as you bring them up locally\n
+      \   # UserService (8082)\n    location /service/users/ {\n        if ($request_method
+      = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin
+      always;\n            add_header 'Vary' 'Origin' always;\n            add_header
+      'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n
+      \           add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type,
+      Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With,
+      X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n
+      \           return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        rewrite ^/service/users/(.*)$
+      /users/$1 break;\n        proxy_pass http://127.0.0.1:8082;\n        proxy_set_header
+      Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header
+      X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto
+      $scheme;\n    }\n\n    # Matrix Synapse proxy - route /service/matrix/* to UserService
+      MatrixMessageController\n    location /service/matrix/ {\n        if ($request_method
+      = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin
+      always;\n            add_header 'Vary' 'Origin' always;\n            add_header
+      'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n
+      \           add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type,
+      Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With,
+      X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n
+      \           return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        # Strip /service
+      prefix before forwarding to UserService MatrixMessageController\n        rewrite
+      ^/service/matrix/(.*)$ /matrix/$1 break;\n        proxy_pass http://127.0.0.1:8082;\n
+      \       proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n
+      \       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header
+      X-Forwarded-Proto $scheme;\n    }\n\n\n\n    # Matrix Media API - direct proxy
+      to Matrix Synapse for file uploads\n    location /_matrix/media/ {\n        #
+      Hide Matrix's default CORS headers to avoid duplicates\n        proxy_hide_header
+      'Access-Control-Allow-Origin';\n        proxy_hide_header 'Access-Control-Allow-Credentials';\n
+      \       proxy_hide_header 'Access-Control-Allow-Methods';\n        proxy_hide_header
+      'Access-Control-Allow-Headers';\n\n        if ($request_method = OPTIONS) {\n
+      \           add_header 'Access-Control-Allow-Origin' $http_origin always;\n
+      \           add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods'
+      'GET, POST, PUT, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers'
+      'Authorization, Content-Type, Cache-Control, X-CSRF-TOKEN' always;\n            add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age'
+      86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        # Forward to Matrix
+      Synapse via NodePort on localhost\n        proxy_pass http://matrix-synapse.caritas.svc.cluster.local:8008;\n
+      \       proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n
+      \       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header
+      X-Forwarded-Proto $scheme;\n        \n        # File upload specific settings\n
+      \       client_max_body_size 50M;\n        proxy_request_buffering off;\n    }\n
+      \   location /service/useradmin/ {\n        if ($request_method = OPTIONS) {\n
+      \           add_header 'Access-Control-Allow-Origin' $http_origin always;\n
+      \           add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods'
+      'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers'
+      'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token,
+      x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age'
+      86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8082/useradmin/;\n
+      \       proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n
+      \       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header
+      X-Forwarded-Proto $scheme;\n    }\n\n    # Tenant admin endpoints → UserService
+      (8082)\n    location /service/tenantadmin/ {\n        if ($request_method =
+      OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin
+      always;\n            add_header 'Vary' 'Origin' always;\n            add_header
+      'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n
+      \           add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type,
+      Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With,
+      X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n
+      \           return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8081/tenantadmin/;\n
+      \       proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n
+      \       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header
+      X-Forwarded-Proto $scheme;\n    }\n\n    # RocketChat API endpoints (3000) -
+      Handle CORS preflight in nginx\n    location /api/v1/ {\n        # Handle CORS
+      preflight requests\n        if ($request_method = OPTIONS) {\n            add_header
+      'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n            add_header 'Access-Control-Allow-Methods' 'GET,
+      POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers'
+      'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token,
+      X-Requested-With, X-WHITELIST-HEADER, x-auth-token, x-user-id, X-Auth-Token,
+      X-User-Id' always;\n            add_header 'Access-Control-Max-Age' 0 always;\n
+      \           add_header 'Vary' 'Origin' always;\n            return 204;\n        }\n
+      \       \n        # Override RocketChat's wildcard CORS with specific origin
+      for actual requests\n        add_header 'Access-Control-Allow-Origin' $http_origin
+      always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n
+      \       add_header 'Vary' 'Origin' always;\n        \n        proxy_pass http://127.0.0.1:3000/api/v1/;\n
+      \       proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n
+      \       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header
+      X-Forwarded-Proto $scheme;\n        \n        # Hide RocketChat's CORS headers\n
+      \       proxy_hide_header 'Access-Control-Allow-Origin';\n        proxy_hide_header
+      'Access-Control-Allow-Credentials';\n        proxy_hide_header 'Access-Control-Allow-Methods';\n
+      \       proxy_hide_header 'Access-Control-Allow-Headers';\n    }\n\n    # Logstash
+      endpoints → StatisticsService (8087)\n    location = /service/logstash {\n        if
+      ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header
+      'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n
+      \           add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type,
+      Cache-Control, Pragma, Expires, X-CSRF-Token, X-Requested-With, rcToken, rcUserId,
+      rctoken, rcuserid, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n
+      \           return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://element.caritas.svc.cluster.local:8087/logstash;\n
+      \       proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n
+      \       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header
+      X-Forwarded-Proto $scheme;\n    }\n\n    location /service/logstash/ {\n        if
+      ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header
+      'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n
+      \           add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type,
+      Cache-Control, Pragma, Expires, X-CSRF-Token, X-Requested-With, rcToken, rcUserId,
+      rctoken, rcuserid, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n
+      \           return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://element.caritas.svc.cluster.local:8087/logstash/;\n
+      \       proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n
+      \       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header
+      X-Forwarded-Proto $scheme;\n    }\n\n    # Agency endpoints → AgencyService
+      (8084)\n    location /service/agencies {\n        if ($request_method = OPTIONS)
+      {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n
+      \           add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods'
+      'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers'
+      'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token,
+      x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age'
+      86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8084/agencies;\n
+      \       proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n
+      \       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header
+      X-Forwarded-Proto $scheme;\n    }\n\n    # Topic endpoints → ConsultingTypeService
+      (8083)\n    location /service/topic/ {\n        if ($request_method = OPTIONS)
+      {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n
+      \           add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods'
+      'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers'
+      'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token,
+      X-Requested-With, rcToken, rcUserId, rctoken, rcuserid, X-WHITELIST-HEADER'
+      always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n
+      \           add_header 'Access-Control-Max-Age' 86400 always;\n            return
+      204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin
+      always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n\n        proxy_pass http://127.0.0.1:8083/topic/;\n        proxy_set_header
+      Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header
+      X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto
+      $scheme;\n    }\n\n    # Topic groups endpoints → ConsultingTypeService (8083)\n
+      \   location /service/topic-groups/ {\n        if ($request_method = OPTIONS)
+      {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n
+      \           add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods'
+      'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers'
+      'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token,
+      x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age'
+      86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8083/topic-groups/;\n
+      \       proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n
+      \       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header
+      X-Forwarded-Proto $scheme;\n    }\n\n    location /service/topicadmin/ {\n        if
+      ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header
+      'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n
+      \           add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type,
+      Cache-Control, Pragma, Expires, X-CSRF-Token, X-Requested-With, rcToken, rcUserId,
+      rctoken, rcuserid, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n
+      \           return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8084;\n
+      \       proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n
+      \       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header
+      X-Forwarded-Proto $scheme;\n    }\n\n    # LiveService endpoints (8086)\n    location
+      /service/live/ {\n        if ($request_method = OPTIONS) {\n            add_header
+      'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary'
+      'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET,
+      POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers'
+      'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token,
+      x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age'
+      86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://liveservice.caritas.svc.cluster.local:8086/live/;\n
+      \       proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n
+      \       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header
+      X-Forwarded-Proto $scheme;\n    }\n\n    # WebSocket endpoint for LiveService\n
+      \   location /websocket {\n        proxy_pass http://liveservice.caritas.svc.cluster.local:8086/live;\n
+      \       proxy_http_version 1.1;\n        proxy_set_header Upgrade $http_upgrade;\n
+      \       proxy_set_header Connection \"upgrade\";\n        proxy_set_header Host
+      $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header
+      X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto
+      $scheme;\n    }\n\n    # UserService sessions endpoints\n    location /service/users/sessions/
+      {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header
+      'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n
+      \           add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type,
+      Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With,
+      X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n
+      \           return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8082/users/sessions/;\n
+      \       proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n
+      \       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header
+      X-Forwarded-Proto $scheme;\n        proxy_set_header RCToken \"dummy-rc-token\";\n
+      \   }\n\n    # UploadService endpoints (8085) - Matrix file uploads\n    location
+      /service/uploads/ {\n        if ($request_method = OPTIONS) {\n            add_header
+      'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary'
+      'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET,
+      POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers'
+      'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token,
+      x-csrf-token, X-Requested-With, X-WHITELIST-HEADER, rcToken, rcUserId, rctoken,
+      rcuserid' always;\n            add_header 'Access-Control-Allow-Credentials'
+      'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n
+      \           return 204;\n        }\n        add_header 'Access-Control-Allow-Origin'
+      $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header
+      'Access-Control-Allow-Credentials' 'true' always;\n\n        set $uploadservice_backend
+      \"uploadservice.caritas.svc.cluster.local:8085\";\n        # proxy_pass http://matrix-synapse.caritas.svc.cluster.local:8008;\n
+      \       proxy_pass http://$uploadservice_backend/uploads/;\n        proxy_set_header
+      Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header
+      X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto
+      $scheme;\n        \n        # File upload specific settings\n        client_max_body_size
+      25M;\n    }\n\n    # Health Dashboard (9100)\n    location /health/ {\n        proxy_pass
+      http://health-dashboard.caritas.svc.cluster.local:9100/;\n        proxy_set_header
+      Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header
+      X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto
+      $scheme;\n    }\n}\n\n}\n"
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"nginx.conf":"events {\n    worker_connections 1024;\n}\n\nhttp {\n    resolver 10.43.0.10 valid=10s;\n    resolver_timeout 5s;\n    include /etc/nginx/mime.types;\n    default_type application/octet-stream;\n    sendfile on;\n    keepalive_timeout 65;\n\nserver {\n    listen 8089;\n    server_name localhost;\n\n    # Keycloak on host 8080 (modern Keycloak runs at root path, no /auth)\n    # We keep /auth on the proxy so the frontend URLs stay the same\n    # and strip the prefix when forwarding upstream.\n    location /auth/ {\n        # Avoid duplicate CORS headers from upstream\n        proxy_hide_header Access-Control-Allow-Origin;\n        proxy_hide_header Access-Control-Allow-Credentials;\n        # CORS for Keycloak endpoints\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        # Strip /auth prefix and forward to Keycloak\n        rewrite ^/auth/(.*)$ /$1 break;\n        proxy_pass http://127.0.0.1:8080/;\n        # Force consistent issuer and frontend URL resolution in Keycloak\n        proxy_set_header Host localhost:8080;\n        proxy_set_header X-Forwarded-Host localhost:8080;\n        proxy_set_header X-Forwarded-Proto http;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n    }\n\n    # AgencyService admin endpoints (8084)\n    location /service/agencyadmin/ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8084/agencyadmin/;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    # Appointment endpoints (routed via AgencyService 8084)\n    location /service/appointmentservice/ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8084;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    # ConsultingTypeService endpoints (8083)\n    location /service/consultingtypes/ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8083/consultingtypes/;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n    # TenantService on host 8081 - direct public endpoints\n    location /tenant/ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8081/tenant/;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    # TenantService access endpoint comes as /service/tenant/* from UI; rewrite to /tenant/*\n    location /service/tenant/ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        rewrite ^/service/tenant/(.*)$ /tenant/$1 break;\n        proxy_pass http://127.0.0.1:8081;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    # Map admin's /service/settings to ConsultingTypeService /settings with CORS\n    location = /service/settings {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8083/settings;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    # Map admin's /service/settingsadmin to ConsultingTypeService /settingsadmin with CORS\n    location = /service/settingsadmin {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8083/settingsadmin;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    # SIMPLE MOCK - Only mock the specific problematic endpoint\n    \n    # Mock tenant service to prevent redirects\n    location ~ ^/service/tenant/.*$ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n        add_header 'Content-Type' 'application/json' always;\n        return 200 '{\"id\":\"demo-tenant\",\"name\":\"Demo Tenant\",\"active\":true}';\n    }\n\n    # Mock agency service to prevent redirects\n    location ~ ^/service/agency/.*$ {\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n        add_header 'Content-Type' 'application/json' always;\n        return 200 '{\"id\":\"demo-agency\",\"name\":\"Demo Agency\",\"active\":true}';\n    }\n    \n    # Mock consulting type service to prevent redirects\n    location ~ ^/service/consultingtype/.*$ {\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n        add_header 'Content-Type' 'application/json' always;\n        return 200 '{\"id\":\"demo-consulting-type\",\"name\":\"Demo Consulting Type\",\"active\":true}';\n    }\n    \n    # Mock statistics service to prevent redirects\n    location ~ ^/service/statistics/.*$ {\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n        add_header 'Content-Type' 'application/json' always;\n        return 200 '{\"success\":true,\"data\":[]}';\n    }\n    \n    # Mock message service to prevent redirects\n    location ~ ^/service/message/.*$ {\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n        add_header 'Content-Type' 'application/json' always;\n        return 200 '{\"success\":true,\"messages\":[]}';\n    }\n    \n    # Mock appointment service to prevent redirects\n    location ~ ^/service/appointment/.*$ {\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n        add_header 'Content-Type' 'application/json' always;\n        return 200 '{\"success\":true,\"appointments\":[]}';\n    }\n    \n    # ULTIMATE MOCK - Mock ALL remaining endpoints that could cause redirects\n    location ~ ^/service/users/(user|userdata|profile|me|current|info)(/.*)?$ {\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n        add_header 'Content-Type' 'application/json' always;\n        return 200 '{\"id\":\"demo-user\",\"username\":\"demo\",\"email\":\"demo@example.com\",\"authenticated\":true}';\n    }\n    \n    # ConversationController endpoints -\u003e UserService (8082)\n    \n    # ConversationController endpoints -\u003e UserService (8082)\n    location /service/conversations/ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        rewrite ^/service/conversations/(.*)$ /conversations/$1 break;\n        proxy_pass http://127.0.0.1:8082;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n    \n    \n    # Mock ALL message endpoints with CORS preflight support AND rcgroupid header\n    location ~ ^/service/messages(/.*)?$ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER, rcgroupid, rcGroupId, RCGroupId' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n        add_header 'Content-Type' 'application/json' always;\n        return 200 '{\"messages\":[],\"success\":true}';\n    }\n    \n    # Mock ALL chat endpoints\n    location ~ ^/service/users/chat(/.*)?$ {\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n        add_header 'Content-Type' 'application/json' always;\n        return 200 '{\"success\":true,\"roomId\":\"demo-room\"}';\n    }\n    \n    # Mock ALL live service endpoints\n    location ~ ^/service/live(/.*)?$ {\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n        add_header 'Content-Type' 'application/json' always;\n        return 200 '{\"success\":true,\"live\":true}';\n    }\n    \n    # Mock ALL RocketChat API endpoints\n    location ~ ^/api/v1(/.*)?$ {\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n        add_header 'Content-Type' 'application/json' always;\n        return 200 '{\"success\":true,\"data\":[],\"message\":\"Mocked RocketChat response\"}';\n    }\n\n    # Optionally wire additional services as you bring them up locally\n    # UserService (8082)\n    location /service/users/ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        rewrite ^/service/users/(.*)$ /users/$1 break;\n        proxy_pass http://127.0.0.1:8082;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    # Matrix Synapse proxy - route /service/matrix/* to UserService MatrixMessageController\n    location /service/matrix/ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        # Strip /service prefix before forwarding to UserService MatrixMessageController\n        rewrite ^/service/matrix/(.*)$ /matrix/$1 break;\n        proxy_pass http://127.0.0.1:8082;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n\n\n    # Matrix Media API - direct proxy to Matrix Synapse for file uploads\n    location /_matrix/media/ {\n        # Hide Matrix's default CORS headers to avoid duplicates\n        proxy_hide_header 'Access-Control-Allow-Origin';\n        proxy_hide_header 'Access-Control-Allow-Credentials';\n        proxy_hide_header 'Access-Control-Allow-Methods';\n        proxy_hide_header 'Access-Control-Allow-Headers';\n\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, X-CSRF-TOKEN' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        # Forward to Matrix Synapse via NodePort on localhost\n        proxy_pass http://matrix-synapse.caritas.svc.cluster.local:8008;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n        \n        # File upload specific settings\n        client_max_body_size 50M;\n        proxy_request_buffering off;\n    }\n    location /service/useradmin/ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8082/useradmin/;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    # Tenant admin endpoints → UserService (8082)\n    location /service/tenantadmin/ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8081/tenantadmin/;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    # RocketChat API endpoints (3000) - Handle CORS preflight in nginx\n    location /api/v1/ {\n        # Handle CORS preflight requests\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, X-Requested-With, X-WHITELIST-HEADER, x-auth-token, x-user-id, X-Auth-Token, X-User-Id' always;\n            add_header 'Access-Control-Max-Age' 0 always;\n            add_header 'Vary' 'Origin' always;\n            return 204;\n        }\n        \n        # Override RocketChat's wildcard CORS with specific origin for actual requests\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n        add_header 'Vary' 'Origin' always;\n        \n        proxy_pass http://127.0.0.1:3000/api/v1/;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n        \n        # Hide RocketChat's CORS headers\n        proxy_hide_header 'Access-Control-Allow-Origin';\n        proxy_hide_header 'Access-Control-Allow-Credentials';\n        proxy_hide_header 'Access-Control-Allow-Methods';\n        proxy_hide_header 'Access-Control-Allow-Headers';\n    }\n\n    # Logstash endpoints → StatisticsService (8087)\n    location = /service/logstash {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, X-Requested-With, rcToken, rcUserId, rctoken, rcuserid, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://element.caritas.svc.cluster.local:8087/logstash;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    location /service/logstash/ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, X-Requested-With, rcToken, rcUserId, rctoken, rcuserid, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://element.caritas.svc.cluster.local:8087/logstash/;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    # Agency endpoints → AgencyService (8084)\n    location /service/agencies {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8084/agencies;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    # Topic endpoints → ConsultingTypeService (8083)\n    location /service/topic/ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, X-Requested-With, rcToken, rcUserId, rctoken, rcuserid, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8083/topic/;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    # Topic groups endpoints → ConsultingTypeService (8083)\n    location /service/topic-groups/ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8083/topic-groups/;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    location /service/topicadmin/ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, X-Requested-With, rcToken, rcUserId, rctoken, rcuserid, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8084;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    # LiveService endpoints (8086)\n    location /service/live/ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://liveservice.caritas.svc.cluster.local:8086/live/;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    # WebSocket endpoint for LiveService\n    location /websocket {\n        proxy_pass http://liveservice.caritas.svc.cluster.local:8086/live;\n        proxy_http_version 1.1;\n        proxy_set_header Upgrade $http_upgrade;\n        proxy_set_header Connection \"upgrade\";\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    # UserService sessions endpoints\n    location /service/users/sessions/ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        proxy_pass http://127.0.0.1:8082/users/sessions/;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n        proxy_set_header RCToken \"dummy-rc-token\";\n    }\n\n    # UploadService endpoints (8085) - Matrix file uploads\n    location /service/uploads/ {\n        if ($request_method = OPTIONS) {\n            add_header 'Access-Control-Allow-Origin' $http_origin always;\n            add_header 'Vary' 'Origin' always;\n            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;\n            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With, X-WHITELIST-HEADER, rcToken, rcUserId, rctoken, rcuserid' always;\n            add_header 'Access-Control-Allow-Credentials' 'true' always;\n            add_header 'Access-Control-Max-Age' 86400 always;\n            return 204;\n        }\n        add_header 'Access-Control-Allow-Origin' $http_origin always;\n        add_header 'Vary' 'Origin' always;\n        add_header 'Access-Control-Allow-Credentials' 'true' always;\n\n        set $uploadservice_backend \"uploadservice.caritas.svc.cluster.local:8085\";\n        # proxy_pass http://matrix-synapse.caritas.svc.cluster.local:8008;\n        proxy_pass http://$uploadservice_backend/uploads/;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n        \n        # File upload specific settings\n        client_max_body_size 25M;\n    }\n\n    # Health Dashboard (9100)\n    location /health/ {\n        proxy_pass http://health-dashboard.caritas.svc.cluster.local:9100/;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n}\n\n}\n"},"kind":"ConfigMap","metadata":{"annotations":{},"creationTimestamp":null,"name":"oriso-nginx-config","namespace":"caritas"}}
+    creationTimestamp: "2025-12-20T00:19:21Z"
+    name: oriso-nginx-config
+    namespace: caritas
+    resourceVersion: "693800"
+    uid: 6199e875-1a94-4607-8bfe-fcf1059d5949
+- apiVersion: v1
+  data:
+    APPOINTMENT_SERVICE_API_URL: ""
+    CONSULTING_TYPE_SERVICE_API_URL: http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083
+    FEATURE_MULTITENANCY_WITH_SINGLE_DOMAIN_ENABLED: "true"
+    FEATURE_TOPICS_ENABLED: "true"
+    KEYCLOAK_AUTH_SERVER_URL: http://oriso-platform-keycloak.caritas.svc.cluster.local:8080
+    KEYCLOAK_REALM: online-beratung
+    LIVE_SERVICE_API_URL: ""
+    MATRIX_API_URL: http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008
+    MATRIX_SERVER_NAME: oriso-dev.site
+    MULTITENANCY_ENABLED: "true"
+    ROCKET_CHAT_BASE_URL: http://oriso-platform-rocketchat.caritas.svc.cluster.local:3000/api/v1
+    ROCKET_CHAT_MONGO_URL: mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false
+    SPRING_DATA_MONGODB_URI: mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/agencyservice
+    SPRING_DATASOURCE_URL: jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/agencyservice
+    SPRING_LIQUIBASE_ENABLED: "false"
+    SPRING_PROFILES_ACTIVE: local
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.oriso-dev.site/realms/online-beratung
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs
+    TENANT_SERVICE_API_URL: http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081
+    USER_ADMIN_SERVICE_API_URL: http://oriso-platform-userservice.caritas.svc.cluster.local:8082
+  kind: ConfigMap
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:39Z"
+    labels:
+      app: agencyservice
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: agencyservice
+      app.kubernetes.io/version: 1.0.0
+      helm.sh/chart: agencyservice-1.0.0
+    name: oriso-platform-agencyservice-config
+    namespace: caritas
+    resourceVersion: "4888652"
+    uid: 261a5bbf-491e-405c-ae6f-d21a75ac0e44
+- apiVersion: v1
+  data:
+    KEYCLOAK_AUTH_SERVER_URL: http://oriso-platform-keycloak.caritas.svc.cluster.local:8080
+    KEYCLOAK_REALM: online-beratung
+    SPRING_DATA_MONGODB_URI: mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/consultingtypeservice
+    SPRING_DATASOURCE_URL: jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/consultingtypeservice
+    SPRING_LIQUIBASE_ENABLED: "false"
+    SPRING_PROFILES_ACTIVE: prod
+    SPRING_RABBITMQ_HOST: oriso-platform-rabbitmq.caritas.svc.cluster.local
+    SPRING_RABBITMQ_PASSWORD: admin
+    SPRING_RABBITMQ_PORT: "5672"
+    SPRING_RABBITMQ_USERNAME: admin
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.oriso-dev.site/realms/online-beratung
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs
+    TENANT_SERVICE_API_URL: http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081
+  kind: ConfigMap
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:39Z"
+    labels:
+      app: consultingtypeservice
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: consultingtypeservice
+      app.kubernetes.io/version: 1.0.0
+      helm.sh/chart: consultingtypeservice-1.0.0
+    name: oriso-platform-consultingtypeservice-config
+    namespace: caritas
+    resourceVersion: "4657955"
+    uid: 37cb77ce-5674-4f8f-bd8e-b4626fb2ebd7
+- apiVersion: v1
+  data:
+    otel-collector-config.yaml: |
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              endpoint: 0.0.0.0:4317
+            http:
+              endpoint: 0.0.0.0:4318
+
+      processors:
+        batch:
+          timeout: 10s
+          send_batch_size: 1024
+
+      exporters:
+        otlp:
+          endpoint: http://oriso-platform-signoz.caritas.svc.cluster.local:8080
+          tls:
+            insecure: true
+
+      service:
+        pipelines:
+          metrics:
+            receivers: [otlp]
+            processors: [batch]
+            exporters: [otlp]
+  kind: ConfigMap
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T20:28:50Z"
+    labels:
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: otel-collector
+      helm.sh/chart: otel-collector-1.0.0
+    name: oriso-platform-otel-collector
+    namespace: caritas
+    resourceVersion: "1032504"
+    uid: 0a96d024-47aa-4825-8c31-f56187d56901
+- apiVersion: v1
+  data:
+    service-health-exporter.py: "#!/usr/bin/env python3\n\"\"\"\nCaritas Service Health
+      Monitor - Exports to SigNoz via OTEL Collector\nUses OpenTelemetry OTLP format
+      (correct way)\n\"\"\"\nimport requests\nimport time\nimport os\nfrom opentelemetry
+      import metrics\nfrom opentelemetry.sdk.metrics import MeterProvider\nfrom opentelemetry.sdk.metrics.export
+      import PeriodicExportingMetricReader\nfrom opentelemetry.exporter.otlp.proto.http
+      import OTLPMetricExporter\nfrom opentelemetry.sdk.resources import Resource\n\n#
+      Get configuration from environment\nOTEL_ENDPOINT = os.getenv(\"OTEL_ENDPOINT\",
+      \"http://oriso-platform-otel-collector.caritas.svc.cluster.local:4318\")\nCHECK_INTERVAL
+      = int(os.getenv(\"CHECK_INTERVAL\", \"10\"))\nTIMEOUT = int(os.getenv(\"TIMEOUT\",
+      \"5\"))\nprint(f\"Using OTEL endpoint: {OTEL_ENDPOINT}\")\n\n# Configure OTEL\nresource
+      = Resource.create({\"service.name\": \"caritas-health-monitor\"})\nexporter
+      = OTLPHTTPMetricExporter(endpoint=OTEL_ENDPOINT)\nreader = PeriodicExportingMetricReader(exporter,
+      export_interval_millis=CHECK_INTERVAL * 1000)\nprovider = MeterProvider(resource=resource,
+      metric_readers=[reader])\nmetrics.set_meter_provider(provider)\n\nmeter = metrics.get_meter(\"caritas.monitoring\")\n\n#
+      Create metrics\nservice_up = meter.create_up_down_counter(\n    \"service.up\",\n
+      \   description=\"Service availability (1=up, 0=down)\"\n)\nresponse_time =
+      meter.create_histogram(\n    \"service.response_time\",\n    unit=\"ms\",\n
+      \   description=\"Service response time in milliseconds\"\n)\n\n# Services configuration\nSERVICES
+      = {\n    \"agencyservice\": {\n        \"url\": \"http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084/actuator/health\",\n
+      \       \"port\": 8084\n    },\n    \"consultingtypeservice\": {\n        \"url\":
+      \"http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083/actuator/health\",\n
+      \       \"port\": 8083\n    },\n    \"tenantservice\": {\n        \"url\": \"http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081/actuator/health\",\n
+      \       \"port\": 8081\n    },\n    \"userservice\": {\n        \"url\": \"http://oriso-platform-userservice.caritas.svc.cluster.local:8082/actuator/health\",\n
+      \       \"port\": 8082\n    },\n}\n\ndef check_service(name, config):\n    try:\n
+      \       start = time.time()\n        response = requests.get(config[\"url\"],
+      timeout=TIMEOUT)\n        duration = (time.time() - start) * 1000\n        \n
+      \       status = 1 if response.status_code == 200 else 0\n        \n        attributes
+      = {\n            \"service.name\": name,\n            \"service.port\": str(config[\"port\"]),\n
+      \           \"http.status_code\": str(response.status_code)\n        }\n        \n
+      \       service_up.add(status, attributes)\n        response_time.record(duration,
+      attributes)\n        \n        print(f\"✓ {name}: {response.status_code} ({duration:.2f}ms)\")\n
+      \       \n    except Exception as e:\n        attributes = {\n            \"service.name\":
+      name,\n            \"service.port\": str(config[\"port\"]),\n            \"error\":
+      \"true\"\n        }\n        service_up.add(0, attributes)\n        print(f\"✗
+      {name}: DOWN ({str(e)})\")\n\nprint(\"\U0001F50D Caritas Health Monitor for
+      SigNoz\")\nprint(f\"Monitoring {len(SERVICES)} services and sending to {OTEL_ENDPOINT}...\")\nprint(\"=\"
+      * 60)\n\nwhile True:\n    for service_name, service_config in SERVICES.items():\n
+      \       check_service(service_name, service_config)\n    print(\"-\" * 60)\n
+      \   time.sleep(CHECK_INTERVAL)\n"
+  kind: ConfigMap
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T19:42:56Z"
+    labels:
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: service-health-exporter
+      app.kubernetes.io/version: 1.0.0
+      helm.sh/chart: service-health-exporter-1.0.0
+    name: oriso-platform-service-health-exporter
+    namespace: caritas
+    resourceVersion: "1037437"
+    uid: f21fe487-4a8c-4505-b0f7-ff7be0e1e374
+- apiVersion: v1
+  data:
+    CONSULTING_TYPE_SERVICE_API_URL: http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083
+    FEATURE_MULTITENANCY_WITH_SINGLE_DOMAIN_ENABLED: "true"
+    KEYCLOAK_AUTH_SERVER_URL: http://oriso-platform-keycloak.caritas.svc.cluster.local:8080
+    KEYCLOAK_REALM: online-beratung
+    SPRING_DATASOURCE_URL: jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/tenantservice
+    SPRING_LIQUIBASE_ENABLED: "false"
+    SPRING_PROFILES_ACTIVE: local
+    SPRING_RABBITMQ_HOST: oriso-platform-rabbitmq.caritas.svc.cluster.local
+    SPRING_RABBITMQ_PASSWORD: admin
+    SPRING_RABBITMQ_PORT: "5672"
+    SPRING_RABBITMQ_USERNAME: admin
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.oriso-dev.site/realms/online-beratung
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs
+    USER_SERVICE_API_URL: http://oriso-platform-userservice.caritas.svc.cluster.local:8082
+  kind: ConfigMap
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2025-12-27T01:47:39Z"
+    labels:
+      app: tenantservice
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: tenantservice
+      app.kubernetes.io/version: 1.0.0
+      helm.sh/chart: tenantservice-1.0.0
+    name: oriso-platform-tenantservice-config
+    namespace: caritas
+    resourceVersion: "4657956"
+    uid: a7edfcaf-fe04-48b8-b17c-989bdd45ae91
+- apiVersion: v1
+  data:
+    AGENCY_SERVICE_API_URL: http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084
+    CONSULTING_TYPE_SERVICE_API_URL: http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083
+    IDENTITY_OPENID_CONNECT_URL: http://oriso-platform-keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect
+    KEYCLOAK_AUTH_SERVER_URL: http://oriso-platform-keycloak.caritas.svc.cluster.local:8080
+    KEYCLOAK_REALM: online-beratung
+    MATRIX_API_URL: http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008
+    MATRIX_MIGRATION_ENABLED: "true"
+    MATRIX_SERVER_NAME: oriso-dev.site
+    ROCKET_CHAT_BASE_URL: http://oriso-platform-rocketchat.caritas.svc.cluster.local:3000/api/v1
+    ROCKET_CHAT_MONGO_URL: mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false
+    SMTP_FROM: ORISO <notifications@oriso-dev.site>
+    SMTP_HOST: smtp.titan.email
+    SMTP_PORT: "587"
+    SMTP_SECURE: "false"
+    SPRING_DATA_MONGODB_URI: mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/userservice
+    SPRING_DATASOURCE_URL: jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/userservice
+    SPRING_LIQUIBASE_ENABLED: "false"
+    SPRING_PROFILES_ACTIVE: prod
+    SPRING_RABBITMQ_HOST: oriso-platform-rabbitmq.caritas.svc.cluster.local
+    SPRING_RABBITMQ_PASSWORD: admin
+    SPRING_RABBITMQ_PORT: "5672"
+    SPRING_RABBITMQ_USERNAME: admin
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.oriso-dev.site/realms/online-beratung
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs
+    TENANT_SERVICE_API_URL: http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081
+    application.properties: |
+      # ---------------- General ----------------
+      spring.application.name=user-service
+      spring.profiles.active=prod
+      spring.main.allow-bean-definition-overriding=true
+      spring.jpa.open-in-view=true
+      spring.jpa.hibernate.ddl-auto=none
+      spring.data.jpa.repositories.bootstrap-mode=default
+      spring.main.banner-mode=off
+      spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+
+      # ---------------- Server ----------------
+      server.port=8082
+      server.host=https://api.oriso-dev.site
+      app.base.url=https://api.oriso-dev.site
+
+      # Tomcat thread pool - Scaled for 5000 concurrent users
+      server.tomcat.threads.max=1000
+      server.tomcat.threads.min-spare=500
+      server.tomcat.max-connections=5000
+      server.tomcat.accept-count=1000
+      server.tomcat.connection-timeout=30000
+
+      # ---------------- Database ----------------
+      spring.datasource.url=jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/userservice
+      spring.datasource.username=userservice
+      spring.datasource.password=userservice
+      spring.liquibase.enabled=false
+
+      # ---------------- MongoDB ----------------
+      spring.data.mongodb.uri=mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/userservice
+
+      # ---------------- Keycloak ----------------
+      keycloak.auth-server-url=http://oriso-platform-keycloak.caritas.svc.cluster.local:8080
+      keycloak.realm=online-beratung
+      spring.security.oauth2.resourceserver.jwt.issuer-uri=https://auth.oriso-dev.site/realms/online-beratung
+      spring.security.oauth2.resourceserver.jwt.jwk-set-uri=https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs
+      identity.openid-connect-url=http://oriso-platform-keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect
+
+      # ---------------- Matrix ----------------
+      matrix.apiUrl=http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008
+      matrix.serverName=oriso-dev.site
+      matrix.migrationEnabled=true
+      matrix.registrationSharedSecret=caritas-registration-secret-2025
+
+      # ---------------- RabbitMQ ----------------
+      spring.rabbitmq.host=oriso-platform-rabbitmq.caritas.svc.cluster.local
+      spring.rabbitmq.port=5672
+      spring.rabbitmq.username=admin
+      spring.rabbitmq.password=admin
+
+      # ---------------- Rocket.Chat ----------------
+      rocket-chat.base-url=http://oriso-platform-rocketchat.caritas.svc.cluster.local:3000/api/v1
+      rocket-chat.mongo-url=mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false
+      rocket.technical.username=rocket-chat-technical-user
+      rocket.technical.password=technical
+
+      # ---------------- Service URLs ----------------
+      tenant.service.api.url=http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081
+      consulting.type.service.api.url=http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083
+      agency.service.api.url=http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084
+      agency.service.api.get.agencies=${agency.service.api.url}/
+      agency.admin.service.api.url=${app.base.url}
+
+      # ---------------- SMTP ----------------
+      smtp.host=smtp.titan.email
+      smtp.port=587
+      smtp.secure=false
+      smtp.user=${SMTP_USER:}
+      smtp.password=${SMTP_PASSWORD:}
+      smtp.from=ORISO <notifications@oriso-dev.site>
+
+      # ---------------- CORS ----------------
+      registration.cors.allowed.origins=https://app.oriso-dev.site
+      registration.cors.allowed.paths=/service/users/askers/new,/service/users/consultants/languages
+
+      # ---------------- Other Configuration ----------------
+      spring.web.locale=de_DE
+      spring.jackson.time-zone=Europe/Berlin
+      service.encryption.appkey=
+  kind: ConfigMap
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: oriso-platform
+      meta.helm.sh/release-namespace: caritas
+    creationTimestamp: "2026-01-15T10:00:19Z"
+    labels:
+      app: userservice
+      app.kubernetes.io/instance: oriso-platform
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: userservice
+      app.kubernetes.io/version: 1.0.0
+      helm.sh/chart: userservice-1.0.0
+    name: oriso-platform-userservice-config
+    namespace: caritas
+    resourceVersion: "4888651"
+    uid: 859f6004-d249-4e27-ba69-ac2fc82d274c
+- apiVersion: v1
+  data:
+    redis.conf: |-
+      bind 0.0.0.0
+      port 6379
+      protected-mode no
+      requirepass caritas123
+      timeout 300
+      tcp-keepalive 300
+      daemonize no
+      loglevel notice
+      maxmemory 1gb
+      maxmemory-policy allkeys-lru
+      save 900 1
+      save 300 10
+      save 60 10000
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"redis.conf":"bind 0.0.0.0\nport 6379\nprotected-mode no\nrequirepass caritas123\ntimeout 300\ntcp-keepalive 300\ndaemonize no\nloglevel notice\nmaxmemory 1gb\nmaxmemory-policy allkeys-lru\nsave 900 1\nsave 300 10\nsave 60 10000"},"kind":"ConfigMap","metadata":{"annotations":{},"creationTimestamp":null,"name":"redis-config","namespace":"caritas"}}
+    creationTimestamp: "2025-12-21T03:35:11Z"
+    name: redis-config
+    namespace: caritas
+    resourceVersion: "699119"
+    uid: 40355210-3b72-4cb4-8084-49f10f575e10
+- apiVersion: v1
+  data:
+    AGENCY_SERVICE_API_URL: http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084
+    CONSULTING_TYPE_SERVICE_API_URL: http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083
+    IDENTITY_OPENID_CONNECT_URL: http://oriso-platform-keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect
+    KEYCLOAK_AUTH_SERVER_URL: http://oriso-platform-keycloak.caritas.svc.cluster.local:8080
+    KEYCLOAK_REALM: online-beratung
+    MATRIX_API_URL: http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008
+    MATRIX_MIGRATION_ENABLED: "true"
+    MATRIX_SERVER_NAME: oriso-dev.site
+    ROCKET_CHAT_BASE_URL: http://oriso-platform-rocketchat.caritas.svc.cluster.local:3000/api/v1
+    ROCKET_CHAT_MONGO_URL: mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false
+    SPRING_DATA_MONGODB_URI: mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/userservice
+    SPRING_DATASOURCE_URL: jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/userservice
+    SPRING_LIQUIBASE_ENABLED: "false"
+    SPRING_PROFILES_ACTIVE: prod
+    SPRING_RABBITMQ_HOST: oriso-platform-rabbitmq.caritas.svc.cluster.local
+    SPRING_RABBITMQ_PASSWORD: admin
+    SPRING_RABBITMQ_PORT: "5672"
+    SPRING_RABBITMQ_USERNAME: admin
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.oriso-dev.site/realms/online-beratung
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs
+    TENANT_SERVICE_API_URL: http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081
+    application.properties: |
+      # ---------------- General ----------------
+      spring.application.name=user-service
+      spring.profiles.active=prod
+      spring.main.allow-bean-definition-overriding=true
+      spring.jpa.open-in-view=true
+      spring.jpa.hibernate.ddl-auto=none
+      spring.data.jpa.repositories.bootstrap-mode=default
+      spring.main.banner-mode=off
+      spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+
+      # ---------------- Server ----------------
+      server.port=8082
+      server.host=http://oriso-platform-userservice.caritas.svc.cluster.local:8082
+      app.base.url=http://oriso-platform-userservice.caritas.svc.cluster.local:8082
+
+      # Tomcat thread pool - Scaled for 5000 concurrent users
+      server.tomcat.threads.max=1000
+      server.tomcat.threads.min-spare=500
+      server.tomcat.max-connections=5000
+      server.tomcat.accept-count=1000
+      server.tomcat.connection-timeout=30000
+
+      # ---------------- Database ----------------
+      spring.datasource.url=jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/userservice
+      spring.datasource.username=userservice
+      spring.datasource.password=userservice
+      spring.liquibase.enabled=false
+
+      # ---------------- MongoDB ----------------
+      spring.data.mongodb.uri=mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/userservice
+
+      # ---------------- Keycloak ----------------
+      keycloak.auth-server-url=http://oriso-platform-keycloak.caritas.svc.cluster.local:8080
+      keycloak.realm=online-beratung
+      spring.security.oauth2.resourceserver.jwt.issuer-uri=https://auth.oriso-dev.site/realms/online-beratung
+      spring.security.oauth2.resourceserver.jwt.jwk-set-uri=https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs
+      identity.openid-connect-url=http://oriso-platform-keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect
+
+      # ---------------- Matrix ----------------
+      matrix.apiUrl=http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008
+      matrix.serverName=oriso-dev.site
+      matrix.migrationEnabled=true
+      matrix.registrationSharedSecret=caritas-registration-secret-2025
+
+      # ---------------- RabbitMQ ----------------
+      spring.rabbitmq.host=oriso-platform-rabbitmq.caritas.svc.cluster.local
+      spring.rabbitmq.port=5672
+      spring.rabbitmq.username=admin
+      spring.rabbitmq.password=admin
+
+      # ---------------- Rocket.Chat ----------------
+      rocket-chat.base-url=http://oriso-platform-rocketchat.caritas.svc.cluster.local:3000/api/v1
+      rocket-chat.mongo-url=mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false
+      rocket.technical.username=rocket-chat-technical-user
+      rocket.technical.password=technical
+
+      # ---------------- Service URLs ----------------
+      tenant.service.api.url=http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081
+      consulting.type.service.api.url=http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083
+      agency.service.api.url=http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084
+      agency.service.api.get.agencies=${agency.service.api.url}/
+      agency.admin.service.api.url=${app.base.url}
+
+      # ---------------- CORS ----------------
+      registration.cors.allowed.origins=https://app.oriso-dev.site
+      registration.cors.allowed.paths=/service/users/askers/new,/service/users/consultants/languages
+
+      # ---------------- Other Configuration ----------------
+      spring.web.locale=de_DE
+      spring.jackson.time-zone=Europe/Berlin
+      service.encryption.appkey=
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"AGENCY_SERVICE_API_URL":"http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084","CONSULTING_TYPE_SERVICE_API_URL":"http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083","IDENTITY_OPENID_CONNECT_URL":"http://oriso-platform-keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect","KEYCLOAK_AUTH_SERVER_URL":"http://oriso-platform-keycloak.caritas.svc.cluster.local:8080","KEYCLOAK_REALM":"online-beratung","MATRIX_API_URL":"http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008","MATRIX_MIGRATION_ENABLED":"true","MATRIX_SERVER_NAME":"oriso-dev.site","ROCKET_CHAT_BASE_URL":"http://oriso-platform-rocketchat.caritas.svc.cluster.local:3000/api/v1","ROCKET_CHAT_MONGO_URL":"mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false","SPRING_DATASOURCE_URL":"jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/userservice","SPRING_DATA_MONGODB_URI":"mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/userservice","SPRING_LIQUIBASE_ENABLED":"false","SPRING_PROFILES_ACTIVE":"prod","SPRING_RABBITMQ_HOST":"oriso-platform-rabbitmq.caritas.svc.cluster.local","SPRING_RABBITMQ_PASSWORD":"admin","SPRING_RABBITMQ_PORT":"5672","SPRING_RABBITMQ_USERNAME":"admin","SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI":"https://auth.oriso-dev.site/realms/online-beratung","SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI":"https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs","TENANT_SERVICE_API_URL":"http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081","application.properties":"# ---------------- General ----------------\nspring.application.name=user-service\nspring.profiles.active=prod\nspring.main.allow-bean-definition-overriding=true\nspring.jpa.open-in-view=true\nspring.jpa.hibernate.ddl-auto=none\nspring.data.jpa.repositories.bootstrap-mode=default\nspring.main.banner-mode=off\nspring.autoconfigure.exclude=org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration\n\n# ---------------- Server ----------------\nserver.port=8082\nserver.host=http://oriso-platform-userservice.caritas.svc.cluster.local:8082\napp.base.url=http://oriso-platform-userservice.caritas.svc.cluster.local:8082\n\n# Tomcat thread pool - Scaled for 5000 concurrent users\nserver.tomcat.threads.max=1000\nserver.tomcat.threads.min-spare=500\nserver.tomcat.max-connections=5000\nserver.tomcat.accept-count=1000\nserver.tomcat.connection-timeout=30000\n\n# ---------------- Database ----------------\nspring.datasource.url=jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/userservice\nspring.datasource.username=userservice\nspring.datasource.password=userservice\nspring.liquibase.enabled=false\n\n# ---------------- MongoDB ----------------\nspring.data.mongodb.uri=mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/userservice\n\n# ---------------- Keycloak ----------------\nkeycloak.auth-server-url=http://oriso-platform-keycloak.caritas.svc.cluster.local:8080\nkeycloak.realm=online-beratung\nspring.security.oauth2.resourceserver.jwt.issuer-uri=https://auth.oriso-dev.site/realms/online-beratung\nspring.security.oauth2.resourceserver.jwt.jwk-set-uri=https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs\nidentity.openid-connect-url=http://oriso-platform-keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect\n\n# ---------------- Matrix ----------------\nmatrix.apiUrl=http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008\nmatrix.serverName=oriso-dev.site\nmatrix.migrationEnabled=true\nmatrix.registrationSharedSecret=caritas-registration-secret-2025\n\n# ---------------- RabbitMQ ----------------\nspring.rabbitmq.host=oriso-platform-rabbitmq.caritas.svc.cluster.local\nspring.rabbitmq.port=5672\nspring.rabbitmq.username=admin\nspring.rabbitmq.password=admin\n\n# ---------------- Rocket.Chat ----------------\nrocket-chat.base-url=http://oriso-platform-rocketchat.caritas.svc.cluster.local:3000/api/v1\nrocket-chat.mongo-url=mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false\nrocket.technical.username=rocket-chat-technical-user\nrocket.technical.password=technical\n\n# ---------------- Service URLs ----------------\ntenant.service.api.url=http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081\nconsulting.type.service.api.url=http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083\nagency.service.api.url=http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084\nagency.service.api.get.agencies=${agency.service.api.url}/\nagency.admin.service.api.url=${app.base.url}\n\n# ---------------- CORS ----------------\nregistration.cors.allowed.origins=https://app.oriso-dev.site\nregistration.cors.allowed.paths=/service/users/askers/new,/service/users/consultants/languages\n\n# ---------------- Other Configuration ----------------\nspring.web.locale=de_DE\nspring.jackson.time-zone=Europe/Berlin\nservice.encryption.appkey=\n"},"kind":"ConfigMap","metadata":{"annotations":{},"labels":{"app":"userservice","app.kubernetes.io/instance":"release-name","app.kubernetes.io/managed-by":"Helm","app.kubernetes.io/name":"userservice","app.kubernetes.io/version":"1.0.0","helm.sh/chart":"userservice-1.0.0"},"name":"release-name-userservice-config","namespace":"caritas"}}
+    creationTimestamp: "2026-01-19T12:16:02Z"
+    labels:
+      app: userservice
+      app.kubernetes.io/instance: release-name
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: userservice
+      app.kubernetes.io/version: 1.0.0
+      helm.sh/chart: userservice-1.0.0
+    name: release-name-userservice-config
+    namespace: caritas
+    resourceVersion: "2231137"
+    uid: 8cc8e13c-0149-4b66-83da-7cea2209fabb
+- apiVersion: v1
+  data:
+    matrixDomain: oriso-dev.site
+    matrixRegistrationSecret: caritas-registration-secret-2025
+    namespace: caritas
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"matrixDomain":"oriso-dev.site","matrixRegistrationSecret":"caritas-registration-secret-2025","namespace":"caritas"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"system-users-config","namespace":"caritas"}}
+    creationTimestamp: "2025-12-27T06:19:11Z"
+    name: system-users-config
+    namespace: caritas
+    resourceVersion: "985730"
+    uid: b1df9ebe-6c59-45bf-bd67-8c223dfe3f79
+kind: List
+metadata:
+  resourceVersion: ""
