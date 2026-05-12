@@ -9,7 +9,7 @@ image:
 
 # Deployment Configuration
 replicas: 1
-namespace: caritas
+namespace: ""
 
 resources: {}  # No limits set in original
 
@@ -21,13 +21,17 @@ service:
 
 # Keycloak Configuration
 keycloak:
+  # Startup arguments for the Keycloak container. Default keeps current
+  # "start-dev" behaviour; override to e.g. ["start"] for production.
+  args:
+    - start-dev
   # Admin credentials (should be in Secret, defaults here)
   admin:
     username: "admin"
     password: "admin"  # Should be in Secret
   
   # Hostname configuration (uses global.domains.auth if available)
-  hostname: "auth.oriso-dev.site"
+  hostname: ""
   hostnameStrictHttps: true
   httpEnabled: true
   
@@ -44,7 +48,6 @@ hostNetwork: true
 # Global values (will be passed from parent chart or values.yaml)
 global:
   domains:
-    auth: "auth.oriso-dev.site"
-
+    auth: ""
 
 

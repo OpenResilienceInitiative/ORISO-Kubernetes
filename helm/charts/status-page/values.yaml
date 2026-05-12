@@ -3,13 +3,13 @@
 
 # Application Configuration
 image:
-  repository: oriso-status
-  tag: v2
+  repository: ghcr.io/openresilienceinitiative/oriso-status
+  tag: rebuild
   pullPolicy: Never  # Use local image from k3s
 
 # Deployment Configuration
 replicas: 1
-namespace: caritas
+namespace: ""
 
 resources: {}
 

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "livekit.fullname" . }}
-  namespace: {{ .Values.namespace }}
+  namespace: {{ default .Release.Namespace .Values.namespace }}
   labels:
     {{- include "livekit.main.labels" . | nindent 4 }}
 spec:

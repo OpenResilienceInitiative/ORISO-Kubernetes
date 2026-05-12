@@ -1,0 +1,59 @@
+{{- range $name, $svc := .Values.services }}
+{{- if and $svc.enabled $svc.ingress.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ printf "%s-ingress" (include "oriso-platform.serviceName" (dict "Release" $.Release "service" $name)) }}
+  namespace: {{ include "oriso-platform.namespace" $ }}
+  labels:
+    {{- include "oriso-platform.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: {{ $name }}
+  {{- $globalAnnos := default dict $.Values.global.ingress.annotations }}
+  {{- $svcAnnos    := default dict $svc.ingress.annotations }}
+  {{- $merged := merge $svcAnnos $globalAnnos }}
+  {{- if $merged }}
+  annotations:
+    {{- toYaml $merged | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: {{ $.Values.global.ingress.className }}
+  rules:
+  - host: {{ default $.Values.global.domain $svc.ingress.host }}
+    http:
+      paths:
+      {{- range $path := $svc.ingress.paths }}
+      {{- $base := trimSuffix "/" $path.path }}
+      {{- if eq $base "" }}
+      - path: {{ $path.path }}
+        pathType: {{ default "Prefix" $path.pathType }}
+        backend:
+          service:
+            name: {{ include "oriso-platform.serviceName" (dict "Release" $.Release "service" $name) }}
+            port:
+              number: {{ $svc.service.port }}
+      {{- else }}
+      - path: {{ $base }}
+        pathType: Exact
+        backend:
+          service:
+            name: {{ include "oriso-platform.serviceName" (dict "Release" $.Release "service" $name) }}
+            port:
+              number: {{ $svc.service.port }}
+      - path: {{ printf "%s/" $base }}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ include "oriso-platform.serviceName" (dict "Release" $.Release "service" $name) }}
+            port:
+              number: {{ $svc.service.port }}
+      {{- end }}
+      {{- end }}
+  {{- if $.Values.global.ingress.tls.enabled }}
+  tls:
+  - hosts:
+    - {{ default $.Values.global.domain $svc.ingress.host }}
+    secretName: {{ $.Values.global.ingress.tls.secretName }}
+  {{- end }}
+{{- end }}
+{{- end }}

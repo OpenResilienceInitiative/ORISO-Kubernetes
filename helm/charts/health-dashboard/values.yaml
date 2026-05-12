@@ -3,13 +3,13 @@
 
 # Application Configuration
 image:
-  repository: health-dashboard
-  tag: latest
+  repository: ghcr.io/openresilienceinitiative/health-dashboard
+  tag: rebuild
   pullPolicy: Never  # Use local image from k3s
 
 # Deployment Configuration
 replicas: 1
-namespace: caritas
+namespace: ""
 
 resources: {}
 

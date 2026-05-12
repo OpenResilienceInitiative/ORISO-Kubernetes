@@ -7,7 +7,7 @@ image:
   pullPolicy: Always
 
 replicas: 1
-namespace: caritas
+namespace: ""
 
 service:
   type: ClusterIP
@@ -17,10 +17,19 @@ service:
 
 # Matrix Configuration
 matrix:
-  # Server name (uses global.matrix.serverName if available)
-  serverName: "oriso-dev.site"
+  # Server name. Falls back to global.matrix.serverName, then global.domain.
+  serverName: ""
+  # Public homeserver URL. Falls back to global.matrix.publicUrl,
+  # then https://matrix.<global.domain>.
+  publicBaseUrl: ""
   reportStats: "no"
   enableAuthenticatedMedia: "false"
+  # Redis password Synapse uses. Set this in values-prod-secrets.yaml to
+  # match the running Redis instance.
+  redisPassword: ""
+  # Registration shared secret. Must match the agencyservice / userservice
+  # MATRIX_REGISTRATION_SHARED_SECRET so they can register Matrix users.
+  registrationSharedSecret: ""
 
 # Storage Configuration
 persistence:
@@ -30,10 +39,13 @@ persistence:
   accessMode: ReadWriteOnce
   existingClaim: "matrix-synapse-data"  # Use existing PVC
 
-# ConfigMap for homeserver.yaml
+# ConfigMap for homeserver.yaml.
+# The chart now ships its own templates/configmap.yaml that creates this,
+# so `existing: false` (chart-managed) is the right default.
+# Set `existing: true` only if you manage the ConfigMap out-of-band.
 configMap:
   name: matrix-homeserver-oidc
-  existing: true  # Use existing ConfigMap
+  existing: true
 
 resources:
   requests:
@@ -77,6 +89,5 @@ securityContext:
   fsGroup: 991
   runAsUser: 991
   runAsGroup: 991
-
 
 

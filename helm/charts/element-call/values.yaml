@@ -2,12 +2,12 @@
 # Based on actual running deployment
 
 image:
-  repository: element-call
-  tag: "latest"
+  repository: ghcr.io/openresilienceinitiative/element-call
+  tag: rebuild
   pullPolicy: Never  # Use local image
 
 replicas: 1
-namespace: caritas
+namespace: ""
 
 service:
   type: ClusterIP
@@ -47,3 +47,9 @@ readinessProbe:
 
 
 
+
+# Element Call runtime config (rendered into element-call-config ConfigMap).
+config:
+  matrixBaseUrl: ""
+  matrixServerName: ""
+  livekitServiceUrl: ""

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "redis.fullname" . }}
-  namespace: {{ .Values.namespace }}
+  namespace: {{ default .Release.Namespace .Values.namespace }}
   labels:
     {{- include "redis.labels" . | nindent 4 }}
 spec:
@@ -25,9 +25,14 @@ spec:
       - name: redis
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        # Use sh -c so $REDIS_PASSWORD is expanded by the shell into a
+        # --requirepass flag. Keeps the password in a Secret (env) rather
+        # than baking it into the redis.conf ConfigMap (world-readable).
         command:
-        - redis-server
-        - /etc/redis/redis.conf
+        - sh
+        - -c
+        - |
+          exec redis-server /etc/redis/redis.conf --requirepass "$REDIS_PASSWORD"
         env:
         - name: REDIS_PASSWORD
           {{- if .Values.redis.secret.name }}

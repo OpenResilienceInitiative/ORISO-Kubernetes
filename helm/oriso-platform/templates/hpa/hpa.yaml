@@ -1,0 +1,29 @@
+{{- range $name, $svc := .Values.services }}
+{{- $autoscaling := default (dict) $svc.autoscaling }}
+{{- if and $svc.enabled (default false $autoscaling.enabled) }}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "oriso-platform.serviceName" (dict "Release" $.Release "service" $name) }}
+  namespace: {{ include "oriso-platform.namespace" $ }}
+  labels:
+    {{- include "oriso-platform.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: {{ $name }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "oriso-platform.serviceName" (dict "Release" $.Release "service" $name) }}
+  minReplicas: {{ default 2 $autoscaling.minReplicas }}
+  maxReplicas: {{ default 5 $autoscaling.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ default 80 $autoscaling.targetCPUUtilizationPercentage }}
+{{- end }}
+{{- end }}
+

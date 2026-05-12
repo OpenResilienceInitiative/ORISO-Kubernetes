@@ -1,0 +1,42 @@
+{{- if .Values.bootstrapPvc.enabled }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-storage
+  namespace: {{ include "oriso-platform.namespace" . }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.bootstrapPvc.mongodb.size | quote }}
+  storageClassName: {{ .Values.bootstrapPvc.storageClass | quote }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-pvc
+  namespace: {{ include "oriso-platform.namespace" . }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.bootstrapPvc.redis.size | quote }}
+  storageClassName: {{ .Values.bootstrapPvc.storageClass | quote }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: matrix-synapse-data
+  namespace: {{ include "oriso-platform.namespace" . }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.bootstrapPvc.matrix.size | quote }}
+  storageClassName: {{ .Values.bootstrapPvc.storageClass | quote }}
+{{- end }}
+

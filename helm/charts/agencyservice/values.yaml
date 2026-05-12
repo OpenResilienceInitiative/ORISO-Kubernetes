@@ -1,15 +1,19 @@
 # AgencyService Helm Chart - Values
-# All values match current production deployment to ensure no breaking changes
+#
+# IMPORTANT: This file contains CHART DEFAULTS only.
+# All URLs and environment-specific values should be supplied by the
+# umbrella values-prod.yaml via `global.*` keys.
 
-# Application Configuration
 image:
-  repository: oriso-agencyservice
-  tag: latest
-  pullPolicy: Never  # Use local image from k3s
+  repository: ghcr.io/openresilienceinitiative/oriso-agencyservice
+  tag: rebuild
+  pullPolicy: IfNotPresent
 
-# Deployment Configuration
 replicas: 1
-namespace: caritas
+namespace: ""
+
+podLabels:
+  tier: backend
 
 resources:
   requests:
@@ -33,17 +37,16 @@ readinessProbe:
   initialDelaySeconds: 60
   periodSeconds: 10
 
-# Service Configuration
 service:
   type: ClusterIP
   port: 8084
   targetPort: 8084
 
-# Database Configuration (MariaDB)
+# Database Configuration (MariaDB) – URL built from global.services.mariadb.*
 database:
-  url: "jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/agencyservice"
-  username: "agencyservice"
-  password: "agencyservice"
+  url: ""
+  username: ""
+  password: ""
   driver: "org.mariadb.jdbc.Driver"
   hikari:
     maximumPoolSize: 10
@@ -56,15 +59,17 @@ database:
     formatSql: true
     ddlAuto: "validate"
   liquibase:
-    enabled: false  # Database schemas managed separately
+    # Enabled so Spring Boot runs its bundled changesets on first boot
+    # and creates the schema automatically in an empty database.
+    enabled: false
 
-# MongoDB Configuration
+# MongoDB – URI built from global.services.mongodb.uri
 mongodb:
-  uri: "mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/agencyservice"
+  uri: ""
 
-# Keycloak Configuration
+# Keycloak – templates prefer global.keycloak.*
 keycloak:
-  authServerUrl: "http://oriso-platform-keycloak.caritas.svc.cluster.local:8080"
+  authServerUrl: ""
   realm: "online-beratung"
   bearerOnly: true
   resource: "agency-service"
@@ -72,48 +77,44 @@ keycloak:
   cors: false
   sslRequired: "none"
   config:
-    adminUsername: "technical"
-    adminPassword: "technical"
+    adminUsername: ""
+    adminPassword: ""
     adminClientId: "admin-cli"
     appClientId: "app"
   jwt:
-    # External URL for JWT validation (managed cluster requirement)
-    # Uses global.keycloak.jwt values if available, otherwise defaults below
-    issuerUri: "https://auth.oriso-dev.site/realms/online-beratung"
-    jwkSetUri: "https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs"
+    issuerUri: ""
+    jwkSetUri: ""
 
-# Matrix Synapse Configuration
-# Uses global.matrix values if available, otherwise defaults below
+# Matrix Synapse – templates prefer global.matrix.*
 matrix:
-  apiUrl: "http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008"
-  registrationSharedSecret: "caritas-registration-secret-2025"
-  serverName: "oriso-dev.site"  # Standardized to match global.matrix.serverName
-  adminUsername: "caritas_admin"
-  adminPassword: "@CaritasAdmin2025!"
+  apiUrl: ""
+  registrationSharedSecret: ""
+  serverName: ""
+  adminUsername: ""
+  adminPassword: ""
 
-# Service URLs (Kubernetes DNS - Full FQDN for managed clusters)
+# Service URLs – derived from global.services.*
 services:
   consultingTypeService:
-    apiUrl: "http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083"
+    apiUrl: ""
   tenantService:
-    apiUrl: "http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081"
+    apiUrl: ""
   userAdminService:
-    apiUrl: "http://oriso-platform-userservice.caritas.svc.cluster.local:8082"
+    apiUrl: ""
   liveService:
     apiUrl: ""
   appointmentService:
     apiUrl: ""
 
-# Rocket.Chat Configuration
+# Rocket.Chat (disabled until rocketchat is deployed)
 rocketchat:
-  baseUrl: "http://oriso-platform-rocketchat.caritas.svc.cluster.local:3000/api/v1"
-  mongoUrl: "mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false"
+  baseUrl: ""
+  mongoUrl: ""
   technical:
-    username: "rocket-chat-technical-user"
-    password: "technical"
+    username: ""
+    password: ""
   credentialCron: "0 0 * * * ?"
 
-# Feature Flags
 features:
   topics:
     enabled: true
@@ -122,7 +123,6 @@ features:
     withSingleDomain:
       enabled: true
 
-# Spring Profile
 spring:
   profiles:
     active: "local"

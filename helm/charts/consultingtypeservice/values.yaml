@@ -1,15 +1,17 @@
 # ConsultingTypeService Helm Chart - Values
-# All values from ACTUAL running cluster resources
+#
+# IMPORTANT: chart defaults only. URLs come from umbrella global.*.
 
-# Application Configuration
 image:
-  repository: oriso-consultingtypeservice
-  tag: latest
-  pullPolicy: Never  # Use local image from k3s
+  repository: ghcr.io/openresilienceinitiative/oriso-consultingtypeservice
+  tag: rebuild
+  pullPolicy: IfNotPresent
 
-# Deployment Configuration
 replicas: 1
-namespace: caritas
+namespace: ""
+
+podLabels:
+  tier: backend
 
 resources:
   requests: {}
@@ -18,57 +20,52 @@ resources:
 livenessProbe: {}
 readinessProbe: {}
 
-# Service Configuration
 service:
   type: ClusterIP
   port: 8083
   targetPort: 8083
 
-# Database Configuration (MariaDB) - Full DNS FQDN for managed clusters
 database:
-  url: "jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/consultingtypeservice"
-  username: "consultingtypeservice"
-  password: "consultingtypeservice"
+  url: ""
+  username: ""
+  password: ""
   driver: "org.mariadb.jdbc.Driver"
   liquibase:
-    enabled: false  # Database schemas managed separately
+    # Enabled so Spring Boot runs its bundled changesets on first boot
+    # and creates the schema automatically in an empty database.
+    enabled: false
 
-# MongoDB Configuration - Full DNS FQDN for managed clusters
 mongodb:
-  uri: "mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/consultingtypeservice"
+  uri: ""
 
-# Keycloak Configuration - External URL for managed clusters
 keycloak:
-  authServerUrl: "http://oriso-platform-keycloak.caritas.svc.cluster.local:8080"
+  authServerUrl: ""
   realm: "online-beratung"
+  config:
+    adminUsername: ""
+    adminPassword: ""
   jwt:
-    # External URL for JWT validation (managed cluster requirement)
-    issuerUri: "https://auth.oriso-dev.site/realms/online-beratung"
-    jwkSetUri: "https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs"
+    issuerUri: ""
+    jwkSetUri: ""
 
-# RabbitMQ Configuration - Full DNS FQDN for managed clusters
 rabbitmq:
-  host: "oriso-platform-rabbitmq.caritas.svc.cluster.local"
+  host: ""
   port: 5672
-  username: "admin"
-  password: "admin"
+  username: ""
+  password: ""
 
-# Service URLs - Full DNS FQDN for managed clusters
 services:
   tenantService:
-    apiUrl: "http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081"
+    apiUrl: ""
 
-# Spring Profile
 spring:
   profiles:
-    active: "prod"
+    active: "local"
 
-# Feature Flags
 features:
   multitenancy:
     enabled: false
     withSingleDomain:
       enabled: true
+    # Tenant-specific business value: subdomain of the main/default tenant.
     mainTenantSubdomain: "caritas-berlin"
-
-

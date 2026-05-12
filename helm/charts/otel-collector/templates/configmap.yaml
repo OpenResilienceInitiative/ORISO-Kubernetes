@@ -1,8 +1,20 @@
+{{- /*
+OTEL Collector ConfigMap.
+SigNoz endpoint is derived from .Values.global.services.signoz.* when set.
+*/ -}}
+{{- $gSvc := default dict (.Values.global | default dict).services -}}
+{{- $gSn  := default dict $gSvc.signoz -}}
+{{- $snHost := default "" $gSn.host -}}
+{{- $snPort := default 0 $gSn.port -}}
+{{- $endpoint := .Values.signoz.endpoint -}}
+{{- if and (eq $endpoint "") (ne $snHost "") -}}
+{{- $endpoint = printf "%s:%v" $snHost $snPort -}}
+{{- end -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ include "otel-collector.fullname" . }}
-  namespace: {{ .Values.namespace }}
+  namespace: {{ default .Release.Namespace .Values.namespace }}
   labels:
     {{- include "otel-collector.labels" . | nindent 4 }}
 data:
@@ -11,25 +23,24 @@ data:
       otlp:
         protocols:
           grpc:
-            endpoint: 0.0.0.0:4317
+            endpoint: 0.0.0.0:{{ .Values.service.ports.otlpGrpc }}
           http:
-            endpoint: 0.0.0.0:4318
-    
+            endpoint: 0.0.0.0:{{ .Values.service.ports.otlpHttp }}
+
     processors:
       batch:
         timeout: 10s
         send_batch_size: 1024
-    
+
     exporters:
       otlp:
-        endpoint: http://{{ .Values.signoz.endpoint }}
+        endpoint: http://{{ $endpoint }}
         tls:
           insecure: true
-    
+
     service:
       pipelines:
         metrics:
           receivers: [otlp]
           processors: [batch]
           exporters: [otlp]
-

@@ -7,7 +7,7 @@ image:
   pullPolicy: Always
 
 replicas: 1
-namespace: caritas
+namespace: ""
 
 service:
   type: ClusterIP
@@ -23,12 +23,13 @@ redis:
       password: password
       httpUser: HTTP_USER
       httpPassword: HTTP_PASSWORD
-  # Redis host (Kubernetes service name)
-  # NOTE: In this platform release, Redis service is named `oriso-platform-redis`.
-  host: "oriso-platform-redis.caritas.svc.cluster.local"
+  # Redis host – preferred source is .Values.global.services.redis.host
+  # from the umbrella values-prod.yaml. Empty here so the chart works
+  # in any environment.
+  host: ""
   port: 6379
   # Display name used in Redis Commander UI for this connection.
-  connectionName: "oriso-dev-redis"
+  connectionName: "oriso-redis"
 
 resources:
   requests:

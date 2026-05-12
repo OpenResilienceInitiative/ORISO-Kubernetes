@@ -49,13 +49,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Get Keycloak hostname from global or local values
+Get Keycloak hostname from global or local values.
+Nil-guarded so chart renders even when .Values.global.domains is unset.
 */}}
 {{- define "keycloak.hostname" -}}
-{{- if .Values.global.domains.auth }}
+{{- if and .Values.global .Values.global.domains .Values.global.domains.auth }}
 {{- .Values.global.domains.auth }}
 {{- else }}
-{{- .Values.keycloak.hostname }}
+{{- default "" .Values.keycloak.hostname }}
 {{- end }}
 {{- end }}
 

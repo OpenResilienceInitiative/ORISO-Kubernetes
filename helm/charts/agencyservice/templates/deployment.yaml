@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "agencyservice.fullname" . }}
-  namespace: {{ .Values.namespace }}
+  namespace: {{ default .Release.Namespace .Values.namespace }}
   labels:
     {{- include "agencyservice.labels" . | nindent 4 }}
 spec:
@@ -14,7 +14,9 @@ spec:
     metadata:
       labels:
         {{- include "agencyservice.selectorLabels" . | nindent 8 }}
-        tier: backend
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       containers:
       - name: agencyservice
@@ -22,17 +24,22 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - name: http
-          containerPort: 8084
+          containerPort: {{ .Values.service.targetPort }}
           protocol: TCP
-        # Load all configuration from ConfigMaps and Secrets
         envFrom:
         - configMapRef:
             name: {{ include "agencyservice.fullname" . }}-config
         - secretRef:
             name: {{ include "agencyservice.fullname" . }}-secrets
+        {{- if .Values.resources }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
+        {{- end }}
+        {{- if .Values.livenessProbe }}
         livenessProbe:
           {{- toYaml .Values.livenessProbe | nindent 10 }}
+        {{- end }}
+        {{- if .Values.readinessProbe }}
         readinessProbe:
           {{- toYaml .Values.readinessProbe | nindent 10 }}
+        {{- end }}

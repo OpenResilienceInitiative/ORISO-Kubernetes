@@ -3,13 +3,17 @@
 
 # Application Configuration
 image:
-  repository: caritas-admin
-  tag: latest
+  repository: ghcr.io/openresilienceinitiative/caritas-admin
+  tag: rebuild
   pullPolicy: IfNotPresent  # Use local image from k3s
 
 # Deployment Configuration
 replicas: 1
-namespace: caritas
+namespace: ""
+
+# Extra pod labels merged into pod template metadata.
+podLabels:
+  tier: frontend
 
 resources:
   requests:
@@ -41,13 +45,7 @@ service:
   port: 9000
   targetPort: 80
 
-# Environment Variables - Will be populated from global values in deployment template
-# These are defaults, but deployment template uses global.domains if available
-env:
-  # URLs will be set from global.domains in deployment template
-  # Defaults below (will be overridden by global values)
-  REACT_APP_API_URL: "https://api.oriso-dev.site"
-  REACT_APP_MATRIX_URL: "https://matrix.oriso-dev.site"
-  REACT_APP_KEYCLOAK_URL: "https://auth.oriso-dev.site"
-  VITE_API_URL: "https://api.oriso-dev.site"
-
+# Environment Variables.
+# All REACT_APP_* / VITE_* URLs are rendered by the deployment template
+# from .Values.global.domains.*. Only non-URL env vars belong here.
+env: {}

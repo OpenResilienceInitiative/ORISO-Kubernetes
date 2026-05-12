@@ -72,4 +72,4 @@ dependencies:
   repository: file://../charts/service-health-exporter
   version: 1.0.0
 digest: sha256:943fa75213658b224f742cf4f55a88cf54b9a84e158601e6caf39a6221af499b
-generated: "2025-12-27T20:21:29.780305389Z"
+generated: "2026-05-12T13:13:31.591284304+02:00"

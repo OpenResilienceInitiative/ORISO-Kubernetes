@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "redis-exporter.fullname" . }}
-  namespace: {{ .Values.namespace }}
+  namespace: {{ default .Release.Namespace .Values.namespace }}
   labels:
     {{- include "redis-exporter.labels" . | nindent 4 }}
     app: redis-exporter
@@ -28,7 +28,14 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
         - name: REDIS_ADDR
-          value: {{ .Values.redis.addr | quote }}
+          {{- $gRedis := default dict (default dict (.Values.global | default dict).services).redis -}}
+          {{- $rHost := default .Values.redis.host (default "" $gRedis.host) -}}
+          {{- $rPort := default .Values.redis.port (default 0 $gRedis.port) -}}
+          {{- $finalAddr := .Values.redis.addr -}}
+          {{- if and (eq $finalAddr "") (ne $rHost "") -}}
+          {{- $finalAddr = printf "%s:%v" $rHost $rPort -}}
+          {{- end }}
+          value: {{ $finalAddr | quote }}
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:

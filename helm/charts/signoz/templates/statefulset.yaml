@@ -1,8 +1,20 @@
+{{- $gSvc := default dict (.Values.global | default dict).services -}}
+{{- $gCh  := default dict $gSvc.clickhouse -}}
+{{- $chHost := default .Values.clickhouse.host (default "" $gCh.host) -}}
+{{- $chPort := default .Values.clickhouse.port (default 0 $gCh.port) -}}
+{{- $gDom := default dict (.Values.global | default dict).domains -}}
+{{- $extUrl := .Values.signoz.alertmanager.signozExternalUrl -}}
+{{- if and (eq $extUrl "") $gDom.status -}}
+{{- $extUrl = printf "https://%s" $gDom.status -}}
+{{- end -}}
+{{- if eq $extUrl "" -}}
+{{- $extUrl = printf "http://%s.%s.svc.cluster.local:%v" (include "signoz.fullname" .) (default .Release.Namespace .Values.namespace) .Values.service.port -}}
+{{- end -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ include "signoz.fullname" . }}
-  namespace: {{ .Values.namespace }}
+  namespace: {{ default .Release.Namespace .Values.namespace }}
   labels:
     {{- include "signoz.labels" . | nindent 4 }}
     app.kubernetes.io/component: signoz
@@ -28,8 +40,8 @@ spec:
         command: ['sh', '-c']
         args:
         - |
-          until nc -z {{ .Values.clickhouse.host }} {{ .Values.clickhouse.port }}; do
-            echo "Waiting for ClickHouse at {{ .Values.clickhouse.host }}:{{ .Values.clickhouse.port }}..."
+          until nc -z {{ $chHost }} {{ $chPort }}; do
+            echo "Waiting for ClickHouse at {{ $chHost }}:{{ $chPort }}..."
             sleep 2
           done
           echo "ClickHouse is ready!"
@@ -39,9 +51,9 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
         - name: CLICKHOUSE_HOST
-          value: {{ .Values.clickhouse.host | quote }}
+          value: {{ $chHost | quote }}
         - name: CLICKHOUSE_PORT
-          value: {{ .Values.clickhouse.port | quote }}
+          value: {{ $chPort | quote }}
         - name: CLICKHOUSE_HTTP_PORT
           value: {{ .Values.clickhouse.httpPort | quote }}
         - name: CLICKHOUSE_CLUSTER
@@ -62,7 +74,7 @@ spec:
         - name: SIGNOZ_TELEMETRYSTORE_PROVIDER
           value: {{ .Values.signoz.telemetryStore.provider | quote }}
         - name: SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_DSN
-          value: tcp://{{ .Values.clickhouse.host }}:{{ .Values.clickhouse.port }}/?username=$(CLICKHOUSE_USER)&password=$(CLICKHOUSE_PASSWORD)
+          value: tcp://{{ $chHost }}:{{ $chPort }}/?username=$(CLICKHOUSE_USER)&password=$(CLICKHOUSE_PASSWORD)
         - name: SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_CLUSTER
           value: {{ .Values.clickhouse.cluster | quote }}
         - name: SIGNOZ_PROMETHEUS_ACTIVE_QUERY_TRACKER_ENABLED
@@ -70,7 +82,7 @@ spec:
         - name: SIGNOZ_EMAILING_ENABLED
           value: {{ .Values.signoz.emailing.enabled | quote }}
         - name: SIGNOZ_ALERTMANAGER_SIGNOZ_EXTERNAL__URL
-          value: {{ .Values.signoz.alertmanager.signozExternalUrl | quote }}
+          value: {{ $extUrl | quote }}
         - name: SIGNOZ_ALERTMANAGER_PROVIDER
           value: {{ .Values.signoz.alertmanager.provider | quote }}
         - name: DOT_METRICS_ENABLED
@@ -86,10 +98,10 @@ spec:
           containerPort: {{ .Values.service.opampPort }}
           protocol: TCP
         - name: otel-grpc
-          containerPort: 4317
+          containerPort: {{ .Values.service.otlpGrpcPort }}
           protocol: TCP
         - name: otel-http
-          containerPort: 4318
+          containerPort: {{ .Values.service.otlpHttpPort }}
           protocol: TCP
         {{- if .Values.livenessProbe }}
         livenessProbe:

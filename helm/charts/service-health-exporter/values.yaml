@@ -1,5 +1,6 @@
 # Service Health Exporter Helm Chart - Values
-# Monitors backend services and exports metrics to SigNoz
+#
+# IMPORTANT: chart defaults only. Endpoints come from umbrella global.*.
 
 image:
   repository: python
@@ -7,33 +8,37 @@ image:
   pullPolicy: IfNotPresent
 
 replicas: 1
-namespace: caritas
+namespace: ""
 
-# OTEL Collector Configuration
-# Send to OTEL Collector which forwards to SigNoz
+# OTEL exporter target. Templates derive from
+# .Values.global.services.otelCollector.url; falls back to value here only.
 otel:
-  endpoint: "http://oriso-platform-otel-collector.caritas.svc.cluster.local:4318"  # OTEL Collector HTTP endpoint
+  endpoint: ""
   insecure: true
 
-# Services to Monitor
+# Services to monitor. The template computes the URL as
+# <global.services.<name>.url><path> and uses .url here as fallback.
 services:
   tenantservice:
-    url: "http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081/actuator/health"
+    url: ""
+    path: "/actuator/health"
     port: 8081
   userservice:
-    url: "http://oriso-platform-userservice.caritas.svc.cluster.local:8082/actuator/health"
+    url: ""
+    path: "/actuator/health"
     port: 8082
   consultingtypeservice:
-    url: "http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083/actuator/health"
+    url: ""
+    path: "/actuator/health"
     port: 8083
   agencyservice:
-    url: "http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084/actuator/health"
+    url: ""
+    path: "/actuator/health"
     port: 8084
 
-# Monitoring Configuration
 monitoring:
-  checkInterval: 10  # seconds
-  timeout: 5  # seconds
+  checkInterval: 10
+  timeout: 5
 
 resources:
   requests:
@@ -43,3 +48,7 @@ resources:
     cpu: 200m
     memory: 256Mi
 
+# Identifier strings used by the Python exporter / OTel resource attrs.
+exporter:
+  serviceName: "oriso-health-monitor"
+  meterName:   "oriso.monitoring"

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "tenantservice.fullname" . }}
-  namespace: {{ .Values.namespace }}
+  namespace: {{ default .Release.Namespace .Values.namespace }}
   labels:
     {{- include "tenantservice.labels" . | nindent 4 }}
 spec:
@@ -14,7 +14,9 @@ spec:
     metadata:
       labels:
         {{- include "tenantservice.selectorLabels" . | nindent 8 }}
-        tier: backend
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       containers:
       - name: tenantservice
@@ -22,7 +24,7 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - name: http
-          containerPort: 8081
+          containerPort: {{ .Values.service.targetPort }}
           protocol: TCP
         # Load all configuration from ConfigMaps and Secrets
         envFrom:

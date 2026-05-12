@@ -1,0 +1,4 @@
+global:
+  environment: dev
+  namespace: oriso-dev
+  domain: oriso.org

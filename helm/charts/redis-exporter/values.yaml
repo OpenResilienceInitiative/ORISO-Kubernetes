@@ -1,24 +1,29 @@
 # Redis Exporter Helm Chart - Values
-# Based on actual running deployment
+#
+# IMPORTANT: chart defaults only. Production Redis address is supplied
+# from the umbrella via .Values.global.services.redis.* and consumed
+# by the templates with that as preferred source.
 
 image:
   repository: oliver006/redis_exporter
   tag: "latest"
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 replicas: 1
-namespace: caritas
+namespace: ""
 
 service:
   type: ClusterIP
   port: 9121
   targetPort: 9121
 
-# Redis Configuration
+# Redis Configuration. Templates derive `addr` from global.services.redis.*;
+# falls back to .Values.redis.host:port if global isn't set.
 redis:
-  # Redis address (Kubernetes service name)
-  addr: "redis:6379"
-  # Secret reference for Redis password
+  host: ""
+  port: 6379
+  # Optional explicit override; if empty, addr is built as host:port.
+  addr: ""
   secret:
     name: redis-secret
     key: password
@@ -30,6 +35,3 @@ resources:
   limits:
     cpu: 100m
     memory: 128Mi
-
-
-

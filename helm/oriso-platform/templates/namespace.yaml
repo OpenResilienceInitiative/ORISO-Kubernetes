@@ -1,0 +1,12 @@
+{{- if .Values.namespace.create }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ include "oriso-platform.namespace" . }}
+  annotations:
+    "helm.sh/resource-policy": keep
+  labels:
+    {{- include "oriso-platform.labels" . | nindent 4 }}
+    oriso.environment: {{ .Values.global.environment | quote }}
+{{- end }}
+

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "keycloak.fullname" . }}
-  namespace: {{ .Values.namespace }}
+  namespace: {{ default .Release.Namespace .Values.namespace }}
   labels:
     {{- include "keycloak.labels" . | nindent 4 }}
 spec:
@@ -29,7 +29,7 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         args:
-        - start-dev
+          {{- toYaml .Values.keycloak.args | nindent 8 }}
         env:
         - name: KEYCLOAK_ADMIN
           value: {{ .Values.keycloak.admin.username | quote }}

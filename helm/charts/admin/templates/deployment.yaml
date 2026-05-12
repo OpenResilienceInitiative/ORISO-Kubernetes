@@ -2,10 +2,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "admin.fullname" . }}
-  namespace: {{ .Values.namespace }}
+  namespace: {{ default .Release.Namespace .Values.namespace }}
   labels:
     {{- include "admin.labels" . | nindent 4 }}
-    tier: frontend
+    {{- with .Values.podLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   replicas: {{ .Values.replicas }}
   revisionHistoryLimit: 10
@@ -21,7 +23,9 @@ spec:
     metadata:
       labels:
         app: admin
-        tier: frontend
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       containers:
       - name: admin
@@ -29,7 +33,7 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - name: http
-          containerPort: 80
+          containerPort: {{ .Values.service.targetPort }}
           protocol: TCP
         env:
         {{- range $key, $value := .Values.env }}

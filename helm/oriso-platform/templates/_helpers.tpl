@@ -1,42 +1,40 @@
-{{/*
-Expand the name of the chart.
-*/}}
+{{/* Common naming */}}
 {{- define "oriso-platform.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
-{{- end }}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
 
-{{/*
-Create a default fully qualified app name.
-*/}}
 {{- define "oriso-platform.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-{{- end }}
-{{- end }}
+{{- if .Values.fullnameOverride -}}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name (include "oriso-platform.name" .) | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
 
-{{/*
-Common labels
-*/}}
 {{- define "oriso-platform.labels" -}}
-helm.sh/chart: {{ include "oriso-platform.name" . }}-{{ .Chart.Version }}
-{{ include "oriso-platform.selectorLabels" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels
-*/}}
-{{- define "oriso-platform.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "oriso-platform.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
+helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+{{- end -}}
 
+{{- define "oriso-platform.serviceName" -}}
+{{- printf "%s-%s" .Release.Name .service | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
 
+{{- define "oriso-platform.serviceHost" -}}
+{{- printf "%s.%s" .service $.Values.global.domain -}}
+{{- end -}}
 
+{{- define "oriso-platform.namespace" -}}
+{{- default .Release.Namespace .Values.global.namespace -}}
+{{- end -}}
+
+{{- define "oriso-platform.image" -}}
+{{- $registry := trimSuffix "/" (default "" .root.Values.global.imageRegistry) -}}
+{{- $repo := .svc.image.repository -}}
+{{- if $registry -}}
+{{- printf "%s/%s" $registry $repo -}}
+{{- else -}}
+{{- $repo -}}
+{{- end -}}
+{{- end -}}

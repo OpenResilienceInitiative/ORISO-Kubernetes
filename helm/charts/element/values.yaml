@@ -2,12 +2,12 @@
 # Based on actual running deployment
 
 image:
-  repository: oriso-element
-  tag: "latest"
+  repository: ghcr.io/openresilienceinitiative/oriso-element
+  tag: rebuild
   pullPolicy: Never  # Use local image (must exist)
 
 replicas: 1
-namespace: caritas
+namespace: ""
 
 service:
   type: ClusterIP

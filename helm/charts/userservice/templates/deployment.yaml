@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "userservice.fullname" . }}
-  namespace: {{ .Values.namespace }}
+  namespace: {{ default .Release.Namespace .Values.namespace }}
   labels:
     {{- include "userservice.labels" . | nindent 4 }}
 spec:
@@ -14,7 +14,9 @@ spec:
     metadata:
       labels:
         {{- include "userservice.selectorLabels" . | nindent 8 }}
-        tier: backend
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       containers:
       - name: userservice
@@ -22,7 +24,7 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - name: http
-          containerPort: 8082
+          containerPort: {{ .Values.service.targetPort }}
           protocol: TCP
         # Load all configuration from ConfigMaps and Secrets
         envFrom:
@@ -34,8 +36,8 @@ spec:
         - name: SPRING_REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: redis-secret
-              key: password
+              name: {{ .Values.redis.secret.name }}
+              key: {{ .Values.redis.secret.key }}
         {{- if .Values.resources.requests }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}

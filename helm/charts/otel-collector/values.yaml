@@ -7,12 +7,13 @@ image:
   pullPolicy: IfNotPresent
 
 replicas: 1
-namespace: caritas
+namespace: ""
 
-# SigNoz Configuration
-# Note: SigNoz query service receives OTLP on port 8080, not 4317
+# SigNoz Configuration. Templates derive endpoint from
+# .Values.global.services.signoz.host:port; falls back to value below
+# only if no global is set. SigNoz receives OTLP on port 8080.
 signoz:
-  endpoint: "oriso-platform-signoz.caritas.svc.cluster.local:8080"  # SigNoz query service HTTP endpoint
+  endpoint: ""
 
 service:
   type: ClusterIP

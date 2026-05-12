@@ -1,15 +1,24 @@
 # UserService Helm Chart - Values
-# All values from ACTUAL running cluster resources
+#
+# IMPORTANT: This file contains CHART DEFAULTS only.
+# All URLs, hostnames and environment-specific values should be supplied
+# by the umbrella values-prod.yaml via `global.*` keys. The templates in
+# this chart prefer `.Values.global.*` and fall back to the values here.
 
 # Application Configuration
 image:
-  repository: oriso-userservice
-  tag: latest
-  pullPolicy: Never  # Use local image from k3s
+  repository: ghcr.io/openresilienceinitiative/oriso-userservice
+  tag: rebuild
+  pullPolicy: IfNotPresent
 
 # Deployment Configuration
 replicas: 1
-namespace: caritas
+# Empty -> templates fall back to .Release.Namespace
+namespace: ""
+
+# Extra pod labels merged into pod template metadata.
+podLabels:
+  tier: backend
 
 resources:
   requests: {}
@@ -24,52 +33,60 @@ service:
   port: 8082
   targetPort: 8082
 
-# Database Configuration (MariaDB) - Full DNS FQDN for managed clusters
+# Database Configuration (MariaDB)
+# In-cluster URL is built from global.services.mariadb.* by the configmap template.
 database:
-  url: "jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/userservice"
-  username: "userservice"
-  password: "userservice"
+  url: ""
+  username: ""
+  password: ""
   liquibase:
-    enabled: false  # Database schemas managed separately
-    user: "userservice"
-    password: "userservice"
+    # Enabled so Spring Boot runs its bundled changesets on first boot
+    # and creates the schema automatically in an empty database.
+    enabled: false
+    user: ""
+    password: ""
 
-# MongoDB Configuration - Full DNS FQDN for managed clusters
+# MongoDB Configuration
 mongodb:
-  uri: "mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/userservice"
+  uri: ""
 
-# Keycloak Configuration - External URL for managed clusters
+# Keycloak Configuration
+# Templates use global.keycloak.* when set; values here are fallback only.
 keycloak:
-  authServerUrl: "http://oriso-platform-keycloak.caritas.svc.cluster.local:8080"
+  authServerUrl: ""
   realm: "online-beratung"
   config:
-    adminUsername: "technical"
-    adminPassword: "technical"
+    adminUsername: ""
+    adminPassword: ""
   jwt:
-    # External URL for JWT validation (managed cluster requirement)
-    issuerUri: "https://auth.oriso-dev.site/realms/online-beratung"
-    jwkSetUri: "https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs"
+    issuerUri: ""
+    jwkSetUri: ""
   identity:
-    openIdConnectUrl: "http://oriso-platform-keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect"
+    openIdConnectUrl: ""
 
-# Matrix Configuration - Full DNS FQDN for managed clusters
+# Matrix Configuration
+# Templates use global.matrix.* when set; values here are fallback only.
 matrix:
-  apiUrl: "http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008"
-  serverName: "oriso-dev.site"
+  apiUrl: ""
+  serverName: ""
   migrationEnabled: true
-  registrationSharedSecret: "caritas-registration-secret-2025"
-  adminUsername: "caritas_admin"
-  adminPassword: "@CaritasAdmin2025!"
+  registrationSharedSecret: ""
+  adminUsername: ""
+  adminPassword: ""
 
 # Privacy / Notification Preview Policy
 privacy:
   notificationPreviewMode: "NONE"
   ipMode: "STANDARD"
 
-# Redis (debug mirror only; does not affect DB services)
+# Redis (debug mirror only; does not affect DB services).
+# Host is derived from global.services.redis.* in the configmap template.
 redis:
-  host: "oriso-platform-redis.caritas.svc.cluster.local"
+  host: ""
   port: 6379
+  secret:
+    name: redis-secret
+    key: password
 
 # Debug feature flags
 debug:
@@ -79,38 +96,44 @@ debug:
     maxBodyLength: 500
     keyPrefix: "debug:msgmirror"
 
-# RabbitMQ Configuration - Full DNS FQDN for managed clusters
+# RabbitMQ Configuration
+# Host is derived from global.services.rabbitmq.* in the configmap template.
 rabbitmq:
-  host: "oriso-platform-rabbitmq.caritas.svc.cluster.local"
+  host: ""
   port: 5672
-  username: "admin"
-  password: "admin"
+  username: ""
+  password: ""
 
-# Rocket.Chat Configuration - Full DNS FQDN for managed clusters
+# Rocket.Chat Configuration (disabled until rocketchat is deployed)
 rocketchat:
-  baseUrl: "http://oriso-platform-rocketchat.caritas.svc.cluster.local:3000/api/v1"
-  mongoUrl: "mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false"
+  baseUrl: ""
+  mongoUrl: ""
   technical:
-    username: "rocket-chat-technical-user"
-    password: "technical"
+    username: ""
+    password: ""
   systemuser:
     id: ""
     username: ""
     password: ""
 
-# Service URLs - Full DNS FQDN for managed clusters
+# Service URLs (in-cluster). Templates prefer global.services.*.url.
 services:
   tenantService:
-    apiUrl: "http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081"
+    apiUrl: ""
   consultingTypeService:
-    apiUrl: "http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083"
+    apiUrl: ""
   agencyService:
-    apiUrl: "http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084"
+    apiUrl: ""
 
 # Spring Profile
 spring:
   profiles:
-    active: "prod"
+    active: "local"
+
+# Application locale / timezone
+app:
+  locale: "de_DE"
+  timezone: "Europe/Berlin"
 
 # Feature Flags
 features:
@@ -123,12 +146,11 @@ features:
 encryption:
   appKey: ""
 
-# SMTP Configuration (for mail infrastructure integration)
+# SMTP Configuration (mail infra integration)
 smtp:
-  host: "smtp.titan.email"
+  host: ""
   port: "587"
   secure: "false"
   user: ""
   password: ""
-  from: "ORISO <notifications@oriso-dev.site>"
-
+  from: ""

@@ -9,7 +9,7 @@ image:
   pullPolicy: IfNotPresent
 
 replicas: 1
-namespace: caritas
+namespace: ""
 
 service:
   type: ClusterIP
@@ -17,16 +17,19 @@ service:
   targetPort: 8080
   internalPort: 8085
   opampPort: 4320
+  otlpGrpcPort: 4317
+  otlpHttpPort: 4318
 
-# ClickHouse Configuration
+# ClickHouse Configuration. Templates prefer .Values.global.services.clickhouse.*
+# from the umbrella values-prod.yaml. Empty defaults here so the chart is
+# environment-agnostic; do NOT commit real passwords – use a Secret.
 clickhouse:
-  host: "oriso-platform-clickhouse"  # Use Helm-managed service name
+  host: ""
   port: 9000
   httpPort: 8123
   cluster: "cluster"
-  user: "default"  # ClickHouse default user
-  # Password should be in Secret
-  password: "clickhouse-password"  # From clickhouse-config ConfigMap
+  user: "default"
+  password: ""
   secret:
     name: clickhouse-config
     key: default-password
@@ -42,7 +45,10 @@ signoz:
     enabled: false
   alertmanager:
     provider: "signoz"
-    signozExternalUrl: "http://localhost:8080"
+    # External URL the alertmanager renders into outgoing links.
+    # Empty -> templates fall back to https://{{ .Values.global.domains.status }}
+    # or in-cluster service URL when no public domain is configured.
+    signozExternalUrl: ""
   dotMetrics:
     enabled: true
 

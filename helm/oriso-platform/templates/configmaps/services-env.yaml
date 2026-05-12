@@ -1,0 +1,17 @@
+{{- range $name, $svc := .Values.services }}
+{{- if and $svc.enabled $svc.env }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "oriso-platform.serviceName" (dict "Release" $.Release "service" $name) }}-env
+  namespace: {{ include "oriso-platform.namespace" $ }}
+  labels:
+    {{- include "oriso-platform.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: {{ $name }}
+data:
+{{- range $k, $v := $svc.env }}
+  {{ $k }}: {{ $v | quote }}
+{{- end }}
+{{- end }}
+{{- end }}

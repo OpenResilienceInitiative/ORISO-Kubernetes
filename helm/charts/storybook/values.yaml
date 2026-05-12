@@ -2,12 +2,12 @@
 # Based on actual running deployment
 
 image:
-  repository: caritas-storybook
-  tag: "latest"
-  pullPolicy: Never  # Use local image
+  repository: ghcr.io/openresilienceinitiative/caritas-storybook
+  tag: rebuild
+  pullPolicy: IfNotPresent
 
 replicas: 1
-namespace: caritas
+namespace: ""
 
 service:
   type: ClusterIP

@@ -1,0 +1,24 @@
+{{- if .Values.redis.enabled }}
+{{- $cfg := .Values.redis.config | default dict -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config
+  namespace: {{ include "oriso-platform.namespace" . }}
+data:
+  redis.conf: |
+    bind {{ default "0.0.0.0" $cfg.bind }}
+    port {{ default 6379 $cfg.port }}
+    protected-mode {{ default "no" $cfg.protectedMode }}
+    timeout {{ default 300 $cfg.timeout }}
+    tcp-keepalive {{ default 300 $cfg.tcpKeepalive }}
+    daemonize no
+    loglevel {{ default "notice" $cfg.logLevel }}
+    appendonly {{ default "yes" $cfg.appendonly }}
+    maxmemory {{ default "1gb" $cfg.maxmemory }}
+    maxmemory-policy {{ default "allkeys-lru" $cfg.maxmemoryPolicy }}
+    {{- range $cfg.save | default (list "900 1" "300 10" "60 10000") }}
+    save {{ . }}
+    {{- end }}
+{{- end }}
+
