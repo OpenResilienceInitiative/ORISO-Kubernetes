@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: livekit-token-service-script
+  namespace: caritas
+
+data:
+  server.js: |
+    const express = require('express');
+    const cors = require('cors');
+    const { AccessToken } = require('livekit-server-sdk');
+
+    const app = express();
+    const PORT = 3010;
+
+    const LIVEKIT_API_KEY = process.env.LIVEKIT_API_KEY || 'orisoKey';
+    const LIVEKIT_API_SECRET = process.env.LIVEKIT_API_SECRET || 'orisoSecret';
+    const LIVEKIT_URL = process.env.LIVEKIT_URL || 'wss://oriso.neusta-integrate.de/livekit/sfu';
+
+    app.use(cors({ origin: true, credentials: true }));
+    app.use(express.json());
+
+    app.get('/health', (_req, res) => res.json({ status: 'ok' }));
+
+    async function handleSfuRequest(req, res) {
+      try {
+        const { room, device_id } = req.body || {};
+
+        if (!room) {
+          return res.status(400).json({ error: 'room is required' });
+        }
+
+        const identity = device_id || `device_${Date.now()}`;
+
+        const at = new AccessToken(
+          LIVEKIT_API_KEY,
+          LIVEKIT_API_SECRET,
+          {
+            identity,
+            name: identity,
+          }
+        );
+
+        at.addGrant({
+          room,
+          roomJoin: true,
+          canPublish: true,
+          canSubscribe: true,
+        });
+
+        const jwt = await at.toJwt();
+
+        return res.json({
+          url: LIVEKIT_URL,
+          jwt,
+        });
+      } catch (e) {
+        return res.status(500).json({
+          error: String(e),
+        });
+      }
+    }
+
+    app.post('/livekit/jwt/sfu/get', handleSfuRequest);
+    app.post('/api/livekit/token/sfu/get', handleSfuRequest);
+
+    app.listen(PORT, () => {
+      console.log(`livekit-token-service on ${PORT}`);
+    });

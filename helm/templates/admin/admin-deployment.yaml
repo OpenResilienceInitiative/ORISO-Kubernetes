@@ -20,7 +20,7 @@ spec:
       containers:
       - name: admin
         image: {{ .Values.admin.imageName }}:{{ .Values.admin.imageVersion }}     
-        imagePullPolicy: Always  # Use local image from k3s
+        imagePullPolicy: Always
         envFrom:
           - configMapRef:
               name: admin-configmap

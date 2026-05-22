@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "livekit.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "livekit.main.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.livekit.service.type }}
+  ports:
+  - port: {{ .Values.livekit.service.port }}
+    targetPort: {{ .Values.livekit.service.targetPort }}
+    protocol: TCP
+    name: http
+  selector:
+    app: livekit
+
+
+
