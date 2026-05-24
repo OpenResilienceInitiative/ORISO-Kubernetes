@@ -57,7 +57,7 @@ keycloak:
   bearerOnly: true
   resource: "tenant-service"
   principalAttribute: ""
-  cors: false
+  cors: true
   sslRequired: "none"
   jwt:
     issuerUri: ""

@@ -74,7 +74,7 @@ keycloak:
   bearerOnly: true
   resource: "agency-service"
   principalAttribute: "preferred_username"
-  cors: false
+  cors: true
   sslRequired: "none"
   config:
     adminUsername: ""
@@ -126,3 +126,8 @@ features:
 spring:
   profiles:
     active: "local"
+
+csrf:
+  headerProperty: "X-CSRF-Token"
+  whitelistHeaderProperty: "X-CSRF-Bypass"
+

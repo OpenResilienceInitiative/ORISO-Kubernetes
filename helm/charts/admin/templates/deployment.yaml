@@ -51,6 +51,7 @@ spec:
           value: "https://{{ .Values.global.domains.auth }}"
         - name: VITE_API_URL
           value: "https://{{ .Values.global.domains.api }}"
+
         {{- end }}
         {{- end }}
         {{- if .Values.resources }}

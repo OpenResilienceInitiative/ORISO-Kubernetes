@@ -1,0 +1,5 @@
+# helm packaged charts
+*.tgz
+
+# macOS
+.DS_Store

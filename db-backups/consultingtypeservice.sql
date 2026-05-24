@@ -1,9 +1,9 @@
 /*M!999999\- enable the sandbox mode */ 
--- MariaDB dump 10.19  Distrib 10.11.15-MariaDB, for debian-linux-gnu (x86_64)
+-- MariaDB dump 10.19  Distrib 10.11.14-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: consultingtypeservice
+-- Host: 127.0.0.1    Database: consultingtypeservice
 -- ------------------------------------------------------
--- Server version       10.11.15-MariaDB-ubu2204
+-- Server version	10.11.15-MariaDB-ubu2204
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -15,6 +15,14 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Current Database: `consultingtypeservice`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `consultingtypeservice` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
+
+USE `consultingtypeservice`;
 
 --
 -- Sequence structure for `sequence_topic`
@@ -66,6 +74,26 @@ CREATE TABLE `DATABASECHANGELOG` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `DATABASECHANGELOG`
+--
+
+LOCK TABLES `DATABASECHANGELOG` WRITE;
+/*!40000 ALTER TABLE `DATABASECHANGELOG` DISABLE KEYS */;
+INSERT INTO `DATABASECHANGELOG` VALUES
+('initSql-tables','initialSetup','db/changelog/changeset/0001_initsql/initSql.xml','2025-09-06 14:44:31',1,'EXECUTED','8:e0b3fa0b7c8b1f834422df6d5a059fbc','sqlFile','',NULL,'4.9.1',NULL,NULL,'7169871428'),
+('initSql-tables','initialSetup','db/changelog/changeset/0002_topic_internal_identifier/topic_internal_identifier_column.xml','2025-09-06 14:44:31',2,'EXECUTED','8:e7b1ca2422d21803f6a1fd73e807f06d','sqlFile','',NULL,'4.9.1',NULL,NULL,'7169871428'),
+('migrateToMultilingualContent','idrissnaji','db/changelog/changeset/0003_migrate_topic_to_multilingual_structure/0003-changeSet.xml','2025-09-06 14:44:31',3,'EXECUTED','8:08fdbb118d9f72ed774f0ad04dd2fd43','sqlFile','',NULL,'4.9.1',NULL,NULL,'7169871428'),
+('topicGroups','dodalovicgran','db/changelog/changeset/0004_topic_groups/0004-changeSet.xml','2025-09-06 14:44:31',4,'EXECUTED','8:183f9b74679c0aca8ce595671a026704','sqlFile','',NULL,'4.9.1',NULL,NULL,'7169871428'),
+('initSql-tables','initialSetup','db/changelog/changeset/0005_topic_fallback_agency_id/topic_fallback_agency_id.xml','2025-09-06 14:44:31',5,'EXECUTED','8:97b045eea237996e49a39fbacaa0dc66','sqlFile','',NULL,'4.9.1',NULL,NULL,'7169871428'),
+('initSql-tables','initialSetup','db/changelog/changeset/0006_topic_fallback_url/topic_fallback_url.xml','2025-09-06 14:44:31',6,'EXECUTED','8:2d4916d52daf9e8d02c21b1c8b6add98','sqlFile','',NULL,'4.9.1',NULL,NULL,'7169871428'),
+('topic_welcome_message','dodalovicgran','db/changelog/changeset/0007_topic_welcome_message/topic_welcome_message.xml','2025-09-06 14:44:31',7,'EXECUTED','8:8dcfe4006cee45cd94fbd850b8980a21','sqlFile','',NULL,'4.9.1',NULL,NULL,'7169871428'),
+('topic_send_next_step_message','dodalovicgran','db/changelog/changeset/0008_topic_send_next_step_message/topic_send_next_step_message.xml','2025-09-06 14:44:31',8,'EXECUTED','8:bdac8320fd05fca30da686df05f41cb8','sqlFile','',NULL,'4.9.1',NULL,NULL,'7169871428'),
+('topic_add_titles','dodalovicgran','db/changelog/changeset/0009_topic_add_titles_and_extend_internal_identifier/0009_topic_add_titles_and_extend_internal_identifier.xml','2025-09-06 14:44:31',9,'EXECUTED','8:075434200b126abd32d734e6c7644db5','sqlFile','',NULL,'4.9.1',NULL,NULL,'7169871428'),
+('topic_add_titles','dodalovicgran','db/changelog/changeset/0010_change_topic_and_topic_groups_to_be_i18n_aware/0010_change_topic_and_topic_groups_to_be_i18n_aware.xml','2025-09-06 14:44:31',10,'EXECUTED','8:7c462c4ccd916b17b1569d2f4576818f','sqlFile','',NULL,'4.9.1',NULL,NULL,'7169871428');
+/*!40000 ALTER TABLE `DATABASECHANGELOG` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `DATABASECHANGELOGLOCK`
 --
 
@@ -80,6 +108,17 @@ CREATE TABLE `DATABASECHANGELOGLOCK` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `DATABASECHANGELOGLOCK`
+--
+
+LOCK TABLES `DATABASECHANGELOGLOCK` WRITE;
+/*!40000 ALTER TABLE `DATABASECHANGELOGLOCK` DISABLE KEYS */;
+INSERT INTO `DATABASECHANGELOGLOCK` VALUES
+(1,'\0',NULL,NULL);
+/*!40000 ALTER TABLE `DATABASECHANGELOGLOCK` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `topic`
@@ -112,6 +151,19 @@ CREATE TABLE `topic` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `topic`
+--
+
+LOCK TABLES `topic` WRITE;
+/*!40000 ALTER TABLE `topic` DISABLE KEYS */;
+INSERT INTO `topic` VALUES
+(1,1,'{\"de\": \"Beratung\", \"en\": \"Counseling\"}','{\"de\": \"Allgemeine Beratung\", \"en\": \"General Counseling\"}','ACTIVE','2025-09-07 09:28:07','2025-09-07 09:28:07','counseling',NULL,NULL,NULL,0,'{\"de\": \"Beratung\", \"en\": \"Counseling\"}','{\"de\": \"Allgemeine Beratung\", \"en\": \"General Counseling\"}','Willkommen zur Beratung','Beratung','counseling'),
+(2,1,'{\"de\": \"Suchtberatung\", \"en\": \"Addiction Counseling\"}','{\"de\": \"Beratung bei Suchtproblemen\", \"en\": \"Counseling for addiction problems\"}','ACTIVE','2025-09-07 09:28:07','2025-09-07 09:28:07','addiction',NULL,NULL,NULL,0,'{\"de\": \"Sucht\", \"en\": \"Addiction\"}','{\"de\": \"Suchtberatung\", \"en\": \"Addiction Counseling\"}','Willkommen zur Suchtberatung','Suchtberatung','addiction-counseling'),
+(3,1,'{\"de\": \"Familienberatung\", \"en\": \"Family Counseling\"}','{\"de\": \"Beratung für Familien\", \"en\": \"Counseling for families\"}','ACTIVE','2025-09-07 09:28:07','2025-09-07 09:28:07','family',NULL,NULL,NULL,0,'{\"de\": \"Familie\", \"en\": \"Family\"}','{\"de\": \"Familienberatung\", \"en\": \"Family Counseling\"}','Willkommen zur Familienberatung','Familienberatung','family-counseling');
+/*!40000 ALTER TABLE `topic` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `topic_group`
 --
 
@@ -126,6 +178,15 @@ CREATE TABLE `topic_group` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `topic_group`
+--
+
+LOCK TABLES `topic_group` WRITE;
+/*!40000 ALTER TABLE `topic_group` DISABLE KEYS */;
+/*!40000 ALTER TABLE `topic_group` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `topic_group_x_topic`
@@ -147,6 +208,15 @@ CREATE TABLE `topic_group_x_topic` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `topic_group_x_topic`
+--
+
+LOCK TABLES `topic_group_x_topic` WRITE;
+/*!40000 ALTER TABLE `topic_group_x_topic` DISABLE KEYS */;
+/*!40000 ALTER TABLE `topic_group_x_topic` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Dumping events for database 'consultingtypeservice'
 --
 
@@ -163,4 +233,4 @@ CREATE TABLE `topic_group_x_topic` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-12  7:29:44
+-- Dump completed on 2026-05-24 10:00:29

@@ -171,7 +171,7 @@ data:
     smtp.password=${SMTP_PASSWORD:}
     smtp.from={{ .Values.smtp.from }}
 
-    registration.cors.allowed.origins=https://{{ $appHost }}
+    registration.cors.allowed.origins=https://{{ $appHost }},https://{{ .Values.global.domains.admin }}
     registration.cors.allowed.paths=/service/users/askers/new,/service/users/consultants/languages
 
     spring.web.locale={{ .Values.app.locale }}

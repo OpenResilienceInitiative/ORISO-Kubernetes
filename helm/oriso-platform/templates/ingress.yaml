@@ -1,17 +1,20 @@
 {{- range $name, $svc := .Values.services }}
-{{- if and $svc.enabled $svc.ingress.enabled }}
+{{- if and (default true $svc.enabled) (default true $svc.ingress.enabled) }}
+{{- $host := default $.Values.global.domain $svc.ingress.host }}
+{{- range $i, $p := $svc.ingress.paths }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ printf "%s-ingress" (include "oriso-platform.serviceName" (dict "Release" $.Release "service" $name)) }}
+  name: {{ printf "%s-%s-ingress" $name (default (printf "path-%d" $i) $p.name) | trunc 63 | trimSuffix "-" }}
   namespace: {{ include "oriso-platform.namespace" $ }}
   labels:
     {{- include "oriso-platform.labels" $ | nindent 4 }}
     app.kubernetes.io/name: {{ $name }}
   {{- $globalAnnos := default dict $.Values.global.ingress.annotations }}
-  {{- $svcAnnos    := default dict $svc.ingress.annotations }}
-  {{- $merged := merge $svcAnnos $globalAnnos }}
+  {{- $svcAnnos := default dict $svc.ingress.annotations }}
+  {{- $pathAnnos := default dict $p.annotations }}
+  {{- $merged := merge (merge $pathAnnos $svcAnnos) $globalAnnos }}
   {{- if $merged }}
   annotations:
     {{- toYaml $merged | nindent 4 }}
@@ -19,41 +22,23 @@ metadata:
 spec:
   ingressClassName: {{ $.Values.global.ingress.className }}
   rules:
-  - host: {{ default $.Values.global.domain $svc.ingress.host }}
-    http:
-      paths:
-      {{- range $path := $svc.ingress.paths }}
-      {{- $base := trimSuffix "/" $path.path }}
-      {{- if eq $base "" }}
-      - path: {{ $path.path }}
-        pathType: {{ default "Prefix" $path.pathType }}
-        backend:
-          service:
-            name: {{ include "oriso-platform.serviceName" (dict "Release" $.Release "service" $name) }}
-            port:
-              number: {{ $svc.service.port }}
-      {{- else }}
-      - path: {{ $base }}
-        pathType: Exact
-        backend:
-          service:
-            name: {{ include "oriso-platform.serviceName" (dict "Release" $.Release "service" $name) }}
-            port:
-              number: {{ $svc.service.port }}
-      - path: {{ printf "%s/" $base }}
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ include "oriso-platform.serviceName" (dict "Release" $.Release "service" $name) }}
-            port:
-              number: {{ $svc.service.port }}
-      {{- end }}
-      {{- end }}
+    - host: {{ $host }}
+      http:
+        paths:
+          - path: {{ $p.path }}
+            pathType: {{ default "Prefix" $p.pathType }}
+            backend:
+              service:
+                name: {{ default (include "oriso-platform.serviceName" (dict "Release" $.Release "service" $name)) $svc.ingress.backendServiceName }}
+                port:
+                  number: {{ $svc.service.port }}
   {{- if $.Values.global.ingress.tls.enabled }}
   tls:
-  - hosts:
-    - {{ default $.Values.global.domain $svc.ingress.host }}
-    secretName: {{ $.Values.global.ingress.tls.secretName }}
+    - hosts:
+        - {{ $host }}
+      secretName: {{ $.Values.global.ingress.tls.secretName }}
   {{- end }}
 {{- end }}
 {{- end }}
+{{- end }}
+

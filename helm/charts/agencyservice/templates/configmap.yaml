@@ -41,6 +41,8 @@ data:
   USER_ADMIN_SERVICE_API_URL:      {{ default .Values.services.userAdminService.apiUrl      $userUrl   | quote }}
   LIVE_SERVICE_API_URL:            {{ .Values.services.liveService.apiUrl        | quote }}
   APPOINTMENT_SERVICE_API_URL:     {{ .Values.services.appointmentService.apiUrl | quote }}
+  CSRF_HEADER_PROPERTY: {{ .Values.csrf.headerProperty | quote }}
+  CSRF_WHITELIST_HEADER_PROPERTY: {{ .Values.csrf.whitelistHeaderProperty | quote }}
 
   ROCKET_CHAT_BASE_URL:  {{ .Values.rocketchat.baseUrl  | quote }}
   ROCKET_CHAT_MONGO_URL: {{ .Values.rocketchat.mongoUrl | quote }}

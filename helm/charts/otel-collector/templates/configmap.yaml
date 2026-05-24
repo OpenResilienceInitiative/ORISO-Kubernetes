@@ -34,7 +34,7 @@ data:
 
     exporters:
       otlp:
-        endpoint: http://{{ $endpoint }}
+        endpoint: {{ $endpoint }}
         tls:
           insecure: true
 

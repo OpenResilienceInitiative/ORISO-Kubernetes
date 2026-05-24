@@ -1,4 +1,0 @@
-global:
-  environment: stage
-  namespace: oriso-stage
-  domain: oriso.org

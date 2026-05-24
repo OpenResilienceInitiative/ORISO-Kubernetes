@@ -1,284 +1,710 @@
+# =====================================================================
+# ORISO Platform – Production values
+# =====================================================================
+# All environment-specific configuration lives here.
+# Templates read from `global.*` so no URLs/hostnames live in subchart
+# values.yaml files. Change a hostname here and the whole stack follows.
+# =====================================================================
 global:
-  namespace: oriso
-  environment: dev
+  environment: prod
+  namespace: caritas
   domain: oriso.org
+  # Container registry prefix. Leave empty if image.repository values
+  # already contain the full registry path (they do for ghcr.io images).
   imageRegistry: ""
   imagePullSecrets: []
-  storageClass: managed-csi
+  # Storage class used by PVCs created by this chart.
+  storageClass: local-path
+  # ----- Public hostnames -----------------------------------------
+  domains:
+    api: api.oriso.org
+    app: app.oriso.org
+    admin: admin.oriso.org
+    auth: auth.oriso.org
+    matrix: matrix.oriso.org
+    call: call.oriso.org
+    livekit: livekit.oriso.org
+    storybook: storybook.oriso.org
+    status: status.oriso.org
+    health: health.oriso.org
+  # ----- Internal cluster URLs ------------------------------------
+  services:
+    userservice:
+      url: http://oriso-userservice.caritas.svc.cluster.local:8082
+      host: oriso-userservice.caritas.svc.cluster.local
+      port: 8082
+    tenantservice:
+      url: http://oriso-tenantservice.caritas.svc.cluster.local:8081
+      host: oriso-tenantservice.caritas.svc.cluster.local
+      port: 8081
+    agencyservice:
+      url: http://oriso-agencyservice.caritas.svc.cluster.local:8084
+      host: oriso-agencyservice.caritas.svc.cluster.local
+      port: 8084
+    consultingtypeservice:
+      url: http://oriso-consultingtypeservice.caritas.svc.cluster.local:8083
+      host: oriso-consultingtypeservice.caritas.svc.cluster.local
+      port: 8083
+    mariadb:
+      host: oriso-mariadb.caritas.svc.cluster.local
+      port: 3306
+    mongodb:
+      host: oriso-mongodb.caritas.svc.cluster.local
+      port: 27017
+      uri: mongodb://oriso-mongodb.caritas.svc.cluster.local:27017
+    redis:
+      host: oriso-redis.caritas.svc.cluster.local
+      port: 6379
+    rabbitmq:
+      host: oriso-rabbitmq.caritas.svc.cluster.local
+      port: 5672
+    signoz:
+      url: http://oriso-signoz.caritas.svc.cluster.local:4317
+      host: oriso-signoz.caritas.svc.cluster.local
+      port: 4317
+    otelCollector:
+      url: http://oriso-otel-collector.caritas.svc.cluster.local:4318
+      grpcUrl: http://oriso-otel-collector.caritas.svc.cluster.local:4317
+      host: oriso-otel-collector.caritas.svc.cluster.local
+    clickhouse:
+      host: oriso-clickhouse.caritas.svc.cluster.local
+      port: 9000
+      httpPort: 8123
+    rocketchat:
+      baseUrl: "http://oriso-rocketchat.caritas.svc.cluster.local:3000/api/v1"
+      mongoUrl: "mongodb://oriso-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false"        
+  # ----- Matrix Synapse -------------------------------------------
+  matrix:
+    serverName: oriso.org
+    internalUrl: http://oriso-matrix-synapse.caritas.svc.cluster.local:8008
+    publicUrl: https://matrix.oriso.org
+  # ----- Keycloak -------------------------------------------------
+  keycloak:
+    realm: online-beratung
+    internalUrl: http://oriso-keycloak.caritas.svc.cluster.local:8080
+    publicUrl: https://auth.oriso.org
+    jwt:
+      issuerUri: "https://auth.oriso.org/realms/online-beratung"
+      jwkSetUri: "http://oriso-keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect/certs"
+  # ----- Ingress (shared by all services) -------------------------
   ingress:
     className: nginx
     tls:
       enabled: true
       secretName: wildcard-tls
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+      nginx.ingress.kubernetes.io/enable-cors: "true"
+      nginx.ingress.kubernetes.io/cors-allow-origin: "https://app.oriso.org,https://admin.oriso.org"
+      nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+      nginx.ingress.kubernetes.io/cors-allow-headers: "Authorization,Content-Type,Cache-Control,Pragma,Expires,X-CSRF-Token,x-csrf-token,X-Requested-With,X-WHITELIST-HEADER,rctoken"
+      nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "120"
+      nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+      nginx.ingress.kubernetes.io/proxy-buffers-number: "8"
+      nginx.ingress.kubernetes.io/proxy-busy-buffers-size: "256k"
+
 
 namespace:
-  create: true
+  create: false
 
+# ----- Secrets ----------------------------------------------------
 externalSecrets:
   enabled: false
   secretStoreRef:
     name: cluster-secret-store
     kind: ClusterSecretStore
 
-# Bootstrap Secrets (rendered by templates/secrets/bootstrap-secrets.yaml).
-# Disabled by default so a vanilla `helm install` doesn't create empty Secrets;
-# enable via values-<env>.yaml and provide real credentials there.
 bootstrapSecrets:
-  enabled: false
+  enabled: true
   mariadb:
-    rootPassword: ""
-    database: ""
-    user: ""
-    password: ""
+    rootPassword: "CHANGE_ME_ROOT_PASSWORD"
+    database: "oriso"
+    user: "oriso"
+    password: "CHANGE_ME_DB_PASSWORD"
   rabbitmq:
-    user: ""
-    password: ""
+    user: "admin"
+    password: "CHANGE_ME_RABBITMQ_PASSWORD"
   redis:
-    password: ""
+    password: "CHANGE_ME_REDIS_PASSWORD"
 
-# Bootstrap PVCs (rendered by templates/pvc/bootstrap-pvc.yaml).
-# Disabled by default so the chart works on clusters without the local-path provisioner.
 bootstrapPvc:
-  enabled: false
-  storageClass: ""
+  enabled: true
+  storageClass: local-path
   mongodb:
-    size: 10Gi
+    size: 20Gi
   redis:
-    size: 1Gi
-  matrix:
     size: 10Gi
+  matrix:
+    size: 20Gi
 
-# Single place to manage dependency enablement and images used by subcharts.
+# =====================================================================
+# Subchart dependency configuration (images, enablement)
+# =====================================================================
 mariadb:
   enabled: true
-  image: { repository: mariadb, tag: "10.11", pullPolicy: IfNotPresent }
+  image:
+    repository: mariadb
+    tag: "10.11"
+    pullPolicy: IfNotPresent
+  livenessProbe:
+    exec:
+      command:
+        - sh
+        - -c
+        - mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD"
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 6
+  readinessProbe:
+    exec:
+      command:
+        - sh
+        - -c
+        - mysql -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" -e 'SELECT 1;'
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 3
+    successThreshold: 1
+    failureThreshold: 3
+
 mongodb:
   enabled: true
-  image: { repository: mongo, tag: "5.0", pullPolicy: IfNotPresent }
+  image:
+    repository: mongo
+    tag: "6.0"
+    pullPolicy: IfNotPresent
+
 redis:
   enabled: true
-  image: { repository: redis, tag: "7-alpine", pullPolicy: IfNotPresent }
-  # redis.conf settings rendered into the redis-config ConfigMap.
-  config:
-    bind: "0.0.0.0"
-    protectedMode: "no"
-    appendonly: "yes"
+  image:
+    repository: ghcr.io/openresilienceinitiative/oriso-redis
+    tag: latest
+    pullPolicy: IfNotPresent
+
 rabbitmq:
   enabled: true
-  image: { repository: rabbitmq, tag: "3-management", pullPolicy: IfNotPresent }
+  image:
+    repository: rabbitmq
+    tag: "3.12-management"
+    pullPolicy: IfNotPresent
+
 keycloak:
   enabled: true
-  image: { repository: quay.io/keycloak/keycloak, tag: "20.0.5", pullPolicy: IfNotPresent }
+  hostNetwork: false
+  image:
+    repository: quay.io/keycloak/keycloak
+    tag: "20.0.5"
+    pullPolicy: IfNotPresent
+
+  keycloak:
+    args:
+      - start
+    hostname: auth.oriso.org
+    hostnameStrictHttps: true
+    httpEnabled: true
+    proxy: edge
+    admin:
+      username: admin
+      password: admin
+    env:
+      KC_SPI_STICKY_SESSION_ENCODER_INFINISPAN_SHOULD_ATTACH_ROUTE: "false"
+      KC_DB: mariadb
+      KC_DB_URL_HOST: oriso-mariadb.caritas.svc.cluster.local
+      KC_DB_URL_PORT: "3306"
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+      KC_PROXY_HEADERS: xforwarded
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+
+
 matrix-synapse:
   enabled: true
-  image: { repository: matrixdotorg/synapse, tag: latest, pullPolicy: Always }
+  image:
+    repository: matrixdotorg/synapse
+    tag: latest
+    pullPolicy: IfNotPresent
+
 element:
   enabled: false
-  image: { repository: ghcr.io/openresilienceinitiative/oriso-element, tag: rebuild, pullPolicy: Never }
+
 element-call:
   enabled: true
-  image: { repository: ghcr.io/openresilienceinitiative/element-call, tag: rebuild, pullPolicy: Never }
+  image:
+    repository: ghcr.io/openresilienceinitiative/element-call
+    tag: rebuild
+    pullPolicy: IfNotPresent
+
 livekit:
   enabled: true
   livekit:
-    image: { repository: livekit/livekit-server, tag: latest, pullPolicy: IfNotPresent }
+    enableServiceLinks: false
+    image:
+      repository: livekit/livekit-server
+      tag: latest
+      pullPolicy: IfNotPresent
+    config: |
+      port: 7880
+      keys:
+        APIm7qGJ8kR3fN2pL5tX: "cd543a34fa8f80cfbf7285dcad76974a28fd5ee4d2290fba635853c2f5e7a195"
   tokenService:
-    image: { repository: ghcr.io/openresilienceinitiative/livekit-token-service, tag: rebuild, pullPolicy: Never }
+    image:
+      repository: ghcr.io/openresilienceinitiative/livekit-token-service
+      tag: rebuild
+      pullPolicy: IfNotPresent
+
+
 tenantservice:
   enabled: true
-  image: { repository: ghcr.io/openresilienceinitiative/oriso-tenantservice, tag: rebuild, pullPolicy: IfNotPresent }
+  image:
+    repository: ghcr.io/openresilienceinitiative/oriso-tenantservice
+    tag: rebuild
+    pullPolicy: IfNotPresent
+
 userservice:
   enabled: true
-  image: { repository: ghcr.io/openresilienceinitiative/oriso-userservice, tag: rebuild, pullPolicy: IfNotPresent }
+  image:
+    repository: ghcr.io/openresilienceinitiative/oriso-userservice
+    tag: rebuild
+    pullPolicy: IfNotPresent
+
 agencyservice:
   enabled: true
-  image: { repository: ghcr.io/openresilienceinitiative/oriso-agencyservice, tag: rebuild, pullPolicy: IfNotPresent }
-  features:
-    topics:
-      enabled: true
+  image:
+    repository: ghcr.io/openresilienceinitiative/oriso-agencyservice
+    tag: rebuild
+    pullPolicy: IfNotPresent
+
 consultingtypeservice:
   enabled: true
-  image: { repository: ghcr.io/openresilienceinitiative/oriso-consultingtypeservice, tag: rebuild, pullPolicy: IfNotPresent }
+  image:
+    repository: ghcr.io/openresilienceinitiative/oriso-consultingtypeservice
+    tag: rebuild
+    pullPolicy: IfNotPresent
+
 frontend:
   enabled: true
-  image: { repository: ghcr.io/openresilienceinitiative/caritas-frontend, tag: rebuild, pullPolicy: Never }
+  image:
+    #repository: ghcr.io/openresilienceinitiative/oriso-frontend
+    repository: ghcr.io/hassan9215/caritas-frontend
+    tag: runtime-config-proof1
+    pullPolicy: IfNotPresent
+
 admin:
   enabled: true
-  image: { repository: ghcr.io/openresilienceinitiative/caritas-admin, tag: rebuild, pullPolicy: IfNotPresent }
+  image:
+    repository: ghcr.io/openresilienceinitiative/oriso-admin
+    tag: rebuild-v3
+    pullPolicy: IfNotPresent
+
 clickhouse:
   enabled: true
-  image: { repository: clickhouse/clickhouse-server, tag: "23.8", pullPolicy: IfNotPresent }
+  image:
+    repository: clickhouse/clickhouse-server
+    tag: "23.8"
+    pullPolicy: IfNotPresent
+
 redis-commander:
   enabled: true
-  image: { repository: rediscommander/redis-commander, tag: latest, pullPolicy: Always }
+  image:
+    repository: rediscommander/redis-commander
+    tag: latest
+    pullPolicy: IfNotPresent
+
 redis-exporter:
   enabled: true
-  image: { repository: oliver006/redis_exporter, tag: latest, pullPolicy: Always }
+  image:
+    repository: oliver006/redis_exporter
+    tag: latest
+    pullPolicy: IfNotPresent
+
 status-page:
   enabled: true
-  image: { repository: ghcr.io/openresilienceinitiative/oriso-status, tag: rebuild, pullPolicy: Never }
+  image:
+    repository: ghcr.io/openresilienceinitiative/oriso-status
+    tag: rebuild
+    pullPolicy: IfNotPresent
+
 health-dashboard:
   enabled: true
-  image: { repository: ghcr.io/openresilienceinitiative/health-dashboard, tag: rebuild, pullPolicy: Never }
+  image:
+    repository: ghcr.io/openresilienceinitiative/health-dashboard
+    tag: rebuild
+    pullPolicy: IfNotPresent
+
 storybook:
   enabled: true
-  image: { repository: ghcr.io/openresilienceinitiative/caritas-storybook, tag: rebuild, pullPolicy: Never }
+  image:
+    repository: ghcr.io/openresilienceinitiative/caritas-storybook
+    tag: rebuild
+    pullPolicy: IfNotPresent
+
 signoz:
   enabled: true
-  image: { repository: signoz/signoz, tag: "v0.105.1", pullPolicy: IfNotPresent }
+  image:
+    repository: signoz/signoz
+    tag: "v0.105.1"
+    pullPolicy: IfNotPresent
+  clickhouse:
+    password: "clickhouse-password"
+    secret:
+      name: ""
+      key: ""
+
 otel-collector:
   enabled: true
-  image: { repository: otel/opentelemetry-collector, tag: "0.100.0", pullPolicy: IfNotPresent }
+  image:
+    repository: otel/opentelemetry-collector
+    tag: "0.100.0"
+    pullPolicy: IfNotPresent
+
 service-health-exporter:
   enabled: true
-  image: { repository: python, tag: "3.11-slim", pullPolicy: IfNotPresent }
+  image:
+    repository: python
+    tag: "3.11-slim"
+    pullPolicy: IfNotPresent
 
+# =====================================================================
+# Per-service umbrella config (ingress, autoscaling, env extras)
+# =====================================================================
 services:
   userservice:
-    enabled: true
-    replicaCount: 2
-    image: { repository: ghcr.io/openresilienceinitiative/oriso-userservice, tag: rebuild, pullPolicy: IfNotPresent }
-    service: { port: 8082 }
+    service:
+      port: 8082
     ingress:
-      enabled: true
-      annotations: {}
+      host: api.oriso.org
       paths:
-      - path: /api/users
-        pathType: Prefix
-      - path: /api/conversations
-        pathType: Prefix
-    resources:
-      requests: { cpu: 100m, memory: 128Mi }
-      limits: { cpu: 500m, memory: 512Mi }
-    autoscaling: { enabled: false, minReplicas: 2, maxReplicas: 5, targetCPUUtilizationPercentage: 80 }
-    probes:
-      liveness: { path: /actuator/health/liveness, port: 8082 }
-      readiness: { path: /actuator/health/readiness, port: 8082 }
-    env:
-      DB_HOST: oriso-platform-mariadb
-      DB_PORT: "3306"
-    secret:
-      existingSecret: userservice-secret
-      externalSecret:
-        enabled: false
-        data: []
+        - name: users-sessions
+          path: /service/users/sessions(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /users/sessions/$2
+        - name: users
+          path: /service/users(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /users/$2
+        - name: users-live
+          path: /service/live(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /live/$2
+        - name: users-matrix
+          path: /service/matrix(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /matrix/$2
+        - name: users-conversations
+          path: /service/conversations(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /conversations/$2
+        - name: users-useradmin
+          path: /service/useradmin(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /useradmin/$2
+        - name: users-messages
+          path: /service/messages(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /messages/$2
+    autoscaling:
+      enabled: false
+      targetCPUUtilizationPercentage: 70
 
   tenantservice:
-    enabled: true
-    replicaCount: 2
-    image: { repository: ghcr.io/openresilienceinitiative/oriso-tenantservice, tag: rebuild, pullPolicy: IfNotPresent }
-    service: { port: 8081 }
+    service:
+      port: 8081
     ingress:
-      enabled: true
-      annotations: {}
+      host: api.oriso.org
       paths:
-      - path: /api/tenant
-        pathType: Prefix
-    resources:
-      requests: { cpu: 100m, memory: 128Mi }
-      limits: { cpu: 500m, memory: 512Mi }
-    autoscaling: { enabled: false }
-    probes:
-      liveness: { path: /actuator/health/liveness, port: 8081 }
-      readiness: { path: /actuator/health/readiness, port: 8081 }
-    env: {}
-    secret:
-      existingSecret: tenantservice-secret
-      externalSecret: { enabled: false, data: [] }
+        - name: tenant-access
+          path: /service/tenant/access
+          pathType: Exact
+          annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /tenant/access
+            nginx.ingress.kubernetes.io/use-regex: "true"
+        - name: tenant-numeric
+          path: /service/tenant/([0-9]+)(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /tenant/$1$2$3
+        - name: tenant-public
+          path: /service/tenant/public/(.+)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /tenant/public/$1
+        - name: tenant-public-root
+          path: /service/tenant/public/
+          pathType: Exact
+          annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /tenant/public/caritas-berlin
+        - name: tenant
+          path: /tenant(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /tenant/$2
+        - name: tenantadmin
+          path: /service/tenantadmin(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /tenantadmin$1$2
+    autoscaling:
+      enabled: false
 
   agencyservice:
-    enabled: true
-    replicaCount: 2
-    image: { repository: ghcr.io/openresilienceinitiative/oriso-agencyservice, tag: rebuild, pullPolicy: IfNotPresent }
-    service: { port: 8084 }
+    service:
+      port: 8084
     ingress:
-      enabled: true
-      annotations: {}
+      host: api.oriso.org
       paths:
-      - path: /api/agencies
-        pathType: Prefix
-      - path: /api/agencyadmin
-        pathType: Prefix
-    resources:
-      requests: { cpu: 100m, memory: 128Mi }
-      limits: { cpu: 500m, memory: 512Mi }
-    autoscaling: { enabled: false }
-    probes:
-      liveness: { path: /actuator/health/liveness, port: 8084 }
-      readiness: { path: /actuator/health/readiness, port: 8084 }
+        - name: agencies
+          path: /service/agencies(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /agencyadmin/$2
+        - name: agencyadmin
+          path: /service/agencyadmin(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /agencyadmin/$2
+        - name: topicadmin
+          path: /service/topicadmin(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+        - name: appointmentservice
+          path: /service/appointmentservice(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+    autoscaling:
+      enabled: false
     env:
       FEATURE_TOPICS_ENABLED: "true"
-    secret:
-      existingSecret: agencyservice-secret
-      externalSecret: { enabled: false, data: [] }
 
   consultingtypeservice:
+    service:
+      port: 8083
+    ingress:
+      host: api.oriso.org
+      paths:
+        - name: consultingtypes
+          path: /service/consultingtypes(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /consultingtypes/$2
+        - name: settings
+          path: /service/settings(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /settings
+        - name: settingsadmin
+          path: /service/settingsadmin(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /settingsadmin
+        - name: topic-groups
+          path: /service/topic-groups(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /topic-groups/$2
+        - name: topic
+          path: /service/topic(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /topic/$2
+    autoscaling:
+      enabled: false
+
+  element-call:
     enabled: true
-    replicaCount: 2
-    image: { repository: ghcr.io/openresilienceinitiative/oriso-consultingtypeservice, tag: rebuild, pullPolicy: IfNotPresent }
-    service: { port: 8083 }
+    service:
+      port: 80
     ingress:
       enabled: true
-      annotations: {}
+      host: call.oriso.org
       paths:
-      - path: /api/consultingtypes
-        pathType: Prefix
-      - path: /api/settings
-        pathType: Prefix
-    resources:
-      requests: { cpu: 100m, memory: 128Mi }
-      limits: { cpu: 500m, memory: 512Mi }
-    autoscaling: { enabled: false }
-    probes:
-      liveness: { path: /actuator/health/liveness, port: 8083 }
-      readiness: { path: /actuator/health/readiness, port: 8083 }
-    env: {}
-    secret:
-      existingSecret: consultingtypeservice-secret
-      externalSecret: { enabled: false, data: [] }
+        - name: element-call-config
+          path: /config.json
+          pathType: Exact
+        - name: element-call-root
+          path: /
+          pathType: Prefix
+    autoscaling:
+      enabled: false
 
   frontend:
+    service:
+      port: 9001
+    ingress:
+      host: app.oriso.org
+      paths:
+        - name: frontend-root
+          path: /
+          pathType: Prefix
+    autoscaling:
+      enabled: false
+
+  keycloak:
     enabled: true
-    replicaCount: 2
-    image: { repository: ghcr.io/openresilienceinitiative/caritas-frontend, tag: rebuild, pullPolicy: IfNotPresent }
-    service: { port: 8080 }
+    service:
+      port: 8080
     ingress:
       enabled: true
-      annotations: {}
+      host: auth.oriso.org
+      backendServiceName: oriso-keycloak
       paths:
-      - path: /
-        pathType: Prefix
-    resources:
-      requests: { cpu: 100m, memory: 128Mi }
-      limits: { cpu: 500m, memory: 512Mi }
-    autoscaling: { enabled: false }
-    probes:
-      liveness: { path: /, port: 8080 }
-      readiness: { path: /, port: 8080 }
-    env: {}
-    secret:
-      existingSecret: frontend-secret
-      externalSecret: { enabled: false, data: [] }
+        - name: root
+          path: /
+          pathType: Prefix
+    autoscaling:
+      enabled: false
+
+  health-dashboard:
+    enabled: true
+    service:
+      port: 9100
+    ingress:
+      enabled: true
+      host: health.oriso.org
+      backendServiceName: oriso-health-dashboard
+      paths:
+        - name: root
+          path: /
+          pathType: Prefix
+    autoscaling:
+      enabled: false
+
+  matrix-synapse:
+    enabled: true
+    service:
+      port: 8008
+    ingress:
+      enabled: true
+      host: matrix.oriso.org
+      backendServiceName: oriso-matrix-synapse
+      paths:
+        - name: root
+          path: /
+          pathType: Prefix
+    autoscaling:
+      enabled: false
+
+  keycloak-api:
+    enabled: true
+    service:
+      port: 8080
+    ingress:
+      enabled: true
+      host: api.oriso.org
+      backendServiceName: oriso-keycloak
+      paths:
+        - name: auth
+          path: /auth(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /$2
+
+  health-api:
+    enabled: true
+    service:
+      port: 9100
+    ingress:
+      enabled: true
+      host: api.oriso.org
+      backendServiceName: oriso-health-dashboard
+      paths:
+        - name: health
+          path: /health(/|$)(.*)
+          pathType: ImplementationSpecific
+          annotations:
+            nginx.ingress.kubernetes.io/use-regex: "true"
+            nginx.ingress.kubernetes.io/rewrite-target: /$2
+
+  matrix-api:
+    enabled: true
+    service:
+      port: 8008
+    ingress:
+      enabled: true
+      host: api.oriso.org
+      backendServiceName: oriso-matrix-synapse
+      paths:
+        - name: media
+          path: /_matrix/media(/|$)(.*)
+          pathType: ImplementationSpecific
+        - name: wk-client
+          path: /.well-known/matrix/client
+          pathType: ImplementationSpecific
+        - name: wk-server
+          path: /.well-known/matrix/server
+          pathType: ImplementationSpecific
 
   admin:
+    service:
+      port: 9000
+    ingress:
+      host: admin.oriso.org
+      paths:
+        - name: admin-root
+          path: /
+          pathType: Prefix
+    autoscaling:
+      enabled: false
+
+  status-page:
     enabled: true
-    replicaCount: 2
-    image: { repository: ghcr.io/openresilienceinitiative/caritas-admin, tag: rebuild, pullPolicy: IfNotPresent }
-    service: { port: 8080 }
+    service:
+      port: 9200
     ingress:
       enabled: true
-      annotations: {}
+      host: status.oriso.org
       paths:
-      - path: /admin
-        pathType: Prefix
-    resources:
-      requests: { cpu: 100m, memory: 128Mi }
-      limits: { cpu: 500m, memory: 512Mi }
-    autoscaling: { enabled: false }
-    probes:
-      liveness: { path: /, port: 8080 }
-      readiness: { path: /, port: 8080 }
-    env: {}
-    secret:
-      existingSecret: admin-secret
-      externalSecret: { enabled: false, data: [] }
+        - name: status-root
+          path: /
+          pathType: Prefix
+    autoscaling:
+      enabled: false
+
+  storybook:
+    enabled: true
+    service:
+      port: 80
+    ingress:
+      enabled: true
+      host: storybook.oriso.org
+      paths:
+        - name: storybook-root
+          path: /
+          pathType: Prefix
+    autoscaling:
+      enabled: false
