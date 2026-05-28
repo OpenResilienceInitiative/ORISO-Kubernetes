@@ -1,0 +1,12 @@
+sequenceDiagram
+  participant Client
+  participant DNS
+  participant Nginx as Nginx Ingress
+  participant Service as ClusterIP Service
+  participant Pod
+  Client->>DNS: resolve oriso-dev.site host
+  DNS-->>Client: ingress controller address
+  Client->>Nginx: HTTPS request
+  Nginx->>Nginx: TLS and regex rewrite
+  Nginx->>Service: route to oriso-platform-* service
+  Service->>Pod: forward to selected pod

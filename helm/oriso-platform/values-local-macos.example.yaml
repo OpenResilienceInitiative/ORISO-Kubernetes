@@ -1,0 +1,84 @@
+global:
+  namespace: oriso-local
+  domains:
+    api: api.oriso.localhost
+    app: oriso.localhost
+    admin: admin.oriso.localhost
+    auth: auth.oriso.localhost
+    matrix: matrix.oriso.localhost
+    element: element.oriso.localhost
+    call: call.oriso.localhost
+    livekit: livekit.oriso.localhost
+    health: health.oriso.localhost
+    status: status.oriso.localhost
+    redis: redis.oriso.localhost
+    signoz: signoz.oriso.localhost
+    storybook: storybook.oriso.localhost
+  keycloak:
+    externalUrl: http://auth.oriso.localhost:8080
+    jwt:
+      issuerUri: http://auth.oriso.localhost:8080/realms/online-beratung
+      jwkSetUri: http://auth.oriso.localhost:8080/realms/online-beratung/protocol/openid-connect/certs
+  matrix:
+    serverName: matrix.oriso.localhost
+    externalUrl: http://matrix.oriso.localhost:8008
+    registrationSharedSecret: "REPLACE_WITH_LOCAL_SECRET"
+
+# Infra
+mariadb:
+  enabled: true
+mongodb:
+  enabled: true
+redis:
+  enabled: true
+rabbitmq:
+  enabled: true
+
+# Auth + comm
+keycloak:
+  enabled: true
+  hostNetwork: false
+matrix-synapse:
+  enabled: false
+element:
+  enabled: false
+element-call:
+  enabled: false
+livekit:
+  enabled: false
+
+# Backend
+tenantservice:
+  enabled: false
+userservice:
+  enabled: true
+agencyservice:
+  enabled: true
+consultingtypeservice:
+  enabled: true
+
+# Frontend
+frontend:
+  enabled: true
+admin:
+  enabled: true
+
+# Monitoring (optional)
+clickhouse:
+  enabled: false
+redis-commander:
+  enabled: false
+redis-exporter:
+  enabled: false
+status-page:
+  enabled: true
+health-dashboard:
+  enabled: true
+storybook:
+  enabled: false
+signoz:
+  enabled: false
+otel-collector:
+  enabled: false
+service-health-exporter:
+  enabled: false

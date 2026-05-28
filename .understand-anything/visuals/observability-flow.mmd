@@ -1,0 +1,9 @@
+flowchart LR
+  Services[Backend actuator health endpoints] --> Exporter[service-health-exporter]
+  Exporter --> OTEL[otel-collector 4318]
+  OTEL --> SigNoz[SigNoz]
+  SigNoz --> ClickHouse[(ClickHouse)]
+  Redis[(Redis)] --> RedisExporter[redis-exporter]
+  RedisExporter --> Monitoring[Metrics scrape/export path]
+  HealthDashboard[health-dashboard] --> Services
+  StatusPage[status-page] --> Users

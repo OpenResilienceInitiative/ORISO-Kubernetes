@@ -1,0 +1,17 @@
+flowchart TD
+  UserService --> TenantService
+  UserService --> AgencyService
+  UserService --> ConsultingTypeService
+  AgencyService --> TenantService
+  AgencyService --> UserService
+  AgencyService --> ConsultingTypeService
+  TenantService --> UserService
+  TenantService --> ConsultingTypeService
+  ConsultingTypeService --> TenantService
+  UserService --> MariaDB
+  UserService --> MongoDB
+  UserService --> Keycloak
+  UserService --> MatrixSynapse
+  UserService --> RabbitMQ
+  AgencyService --> MatrixSynapse
+  AgencyService --> RocketChatMissing[Rocket.Chat reference no chart]

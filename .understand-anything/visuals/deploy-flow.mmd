@@ -1,0 +1,9 @@
+flowchart TD
+  Dev[Developer/DevOps] --> Deps[helm dependency update oriso-platform]
+  Deps --> Secrets[Create required Secrets]
+  Secrets --> Helm[helm upgrade --install oriso-platform]
+  Helm --> VerifyPods[kubectl get pods/services]
+  VerifyPods --> IngressApply[kubectl apply -f ingress]
+  IngressApply --> VerifyIngress[kubectl get ingress/certificate/endpoints]
+  Local[Local macOS override] --> Helm
+  Staging[values-staging.yaml expected but not committed] --> Helm
