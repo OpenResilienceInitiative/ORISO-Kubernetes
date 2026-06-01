@@ -1,0 +1,1657 @@
+{
+  "version": "1.0.0",
+  "gitCommitHash": "b9fdf2cc5efc5e7978f569dfd564355ad29ff03a",
+  "generatedAt": "2026-05-28T13:39:03.541Z",
+  "files": {
+    ".github/workflows/build-and-push.yml": {
+      "filePath": ".github/workflows/build-and-push.yml",
+      "contentHash": "fc4169ae585ae5374f611b817a41fd234a2d78e2f10670e182f6e82b64eafc84",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 387,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/admin/Chart.yaml": {
+      "filePath": "helm/charts/admin/Chart.yaml",
+      "contentHash": "6dbc8d81513b743888ecfca39c0ea41d73fec287eabf24b1d6b37aa30a86609d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 8,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/admin/templates/_helpers.tpl": {
+      "filePath": "helm/charts/admin/templates/_helpers.tpl",
+      "contentHash": "564ff705e0b890b14f7f3215ec0c02277ae12d14d2c1dc30944f0f37a1bad727",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 52,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/admin/templates/deployment.yaml": {
+      "filePath": "helm/charts/admin/templates/deployment.yaml",
+      "contentHash": "6dddc39003bc524e7e2fcaf5cc986229ecdf61c5178692b1bc744fae2c500ac4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 68,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/admin/templates/service.yaml": {
+      "filePath": "helm/charts/admin/templates/service.yaml",
+      "contentHash": "5c63657ce232b22d2d404f5731a8d2d652f522238a4c5e61a4d0a3e3b5b21096",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 18,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/admin/values.yaml": {
+      "filePath": "helm/charts/admin/values.yaml",
+      "contentHash": "6f3650c548fb062160274f012df6c55049eb523d70ad55e670b9423f6fd1529a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 54,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/agencyservice/Chart.yaml": {
+      "filePath": "helm/charts/agencyservice/Chart.yaml",
+      "contentHash": "390ef9d84f75f9dbf7c985ae19acfd55623e66077941de1bdb0055138585542e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 7,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/agencyservice/README.md": {
+      "filePath": "helm/charts/agencyservice/README.md",
+      "contentHash": "72ea3ae8ac6be699a263f7898caffa64a749b43841922007334c1b1656c3a726",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 118,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/agencyservice/templates/_helpers.tpl": {
+      "filePath": "helm/charts/agencyservice/templates/_helpers.tpl",
+      "contentHash": "f0363458f54a7837ab7ff8a26c1640b8aa36e7514bfb33b4cabdd20e522692d6",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 44,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/agencyservice/templates/configmap.yaml": {
+      "filePath": "helm/charts/agencyservice/templates/configmap.yaml",
+      "contentHash": "611b88cee0c2d3e281c61564bd3b7e2ce4b7228fcbb90a8a767861dad4af8b69",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 44,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/agencyservice/templates/deployment.yaml": {
+      "filePath": "helm/charts/agencyservice/templates/deployment.yaml",
+      "contentHash": "6b1209bf6cf700c94549201accaae866a98a329514015f7198a1621928f391fd",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 39,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/agencyservice/templates/secret.yaml": {
+      "filePath": "helm/charts/agencyservice/templates/secret.yaml",
+      "contentHash": "ab028b4a25f619faae6441bfa8118f02bfb7e9eb773c2086aadd292a5eb23172",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 26,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/agencyservice/templates/service.yaml": {
+      "filePath": "helm/charts/agencyservice/templates/service.yaml",
+      "contentHash": "5302fc2b2d32f09ae7b225fd72efc8ef2294d03574bd5116b98ef8eb633bf34c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 17,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/agencyservice/values.yaml": {
+      "filePath": "helm/charts/agencyservice/values.yaml",
+      "contentHash": "d950035012a1b4307a3c8bc653bb9afe4bab18e370900b42665ad323cb9719ef",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 125,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/clickhouse/Chart.yaml": {
+      "filePath": "helm/charts/clickhouse/Chart.yaml",
+      "contentHash": "b4a6e519049d6a53e253ac3daec7021c0101657da632bce1698a5fc2383832dd",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/clickhouse/templates/_helpers.tpl": {
+      "filePath": "helm/charts/clickhouse/templates/_helpers.tpl",
+      "contentHash": "2f55454d0569a836ccf5c1c9ca9a2a8835526493635ac19135d329cf8da5d4bb",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 53,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/clickhouse/templates/service.yaml": {
+      "filePath": "helm/charts/clickhouse/templates/service.yaml",
+      "contentHash": "5a899e08332fc1c2d37bce6a5186bdcd601cf63a86ddb051397444781859f4e0",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 28,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/clickhouse/templates/statefulset.yaml": {
+      "filePath": "helm/charts/clickhouse/templates/statefulset.yaml",
+      "contentHash": "7d7f3f5a95ad1f734f3c1f84e930900cda2d945ee184b3620b5890cf6c1331bc",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 74,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/clickhouse/values.yaml": {
+      "filePath": "helm/charts/clickhouse/values.yaml",
+      "contentHash": "fa821fc2f3f3f0dca19a03ad18f4753fbff10838feec1da8f17fc6055aea3956",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 47,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/consultingtypeservice/Chart.yaml": {
+      "filePath": "helm/charts/consultingtypeservice/Chart.yaml",
+      "contentHash": "779cd03a06c4dceb99e4e2c98bd682138427d6da01b65824de96d85ca8d7721c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 9,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/consultingtypeservice/templates/_helpers.tpl": {
+      "filePath": "helm/charts/consultingtypeservice/templates/_helpers.tpl",
+      "contentHash": "6d004ad206313f4a7a9ae44cacf50d6b8a17d02ce43b0bd6fca29d5bd8cd98d6",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 52,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/consultingtypeservice/templates/configmap.yaml": {
+      "filePath": "helm/charts/consultingtypeservice/templates/configmap.yaml",
+      "contentHash": "e051d5e82669bb83949416febb1adf1d0af0e883e7d320f4e13e58427270d0bb",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 37,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/consultingtypeservice/templates/deployment.yaml": {
+      "filePath": "helm/charts/consultingtypeservice/templates/deployment.yaml",
+      "contentHash": "7edc91a608fb3641466a974e01eaf0bde49f05bdedc354d7dd6c64b47df2b9e2",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 47,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/consultingtypeservice/templates/secret.yaml": {
+      "filePath": "helm/charts/consultingtypeservice/templates/secret.yaml",
+      "contentHash": "ae6a7a458216754aebea04e2e4ee368e970b9ad41bdee0e04a7de5503c75efba",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 19,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/consultingtypeservice/templates/service.yaml": {
+      "filePath": "helm/charts/consultingtypeservice/templates/service.yaml",
+      "contentHash": "08df97aaf72de7a77755d41858dfb126965000deeb1bcb5cadc9465a8ca4920e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 19,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/consultingtypeservice/values.yaml": {
+      "filePath": "helm/charts/consultingtypeservice/values.yaml",
+      "contentHash": "e1caf76c58a3a0b0f0ccb6f95bed1e8a36e541d194c724e0698e977ffdf4e4f5",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 67,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/element-call/Chart.yaml": {
+      "filePath": "helm/charts/element-call/Chart.yaml",
+      "contentHash": "ab0ca425619c06ea5dca924873a31d430f9c30c7a885c879634a0f09d730b7fe",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/element-call/templates/_helpers.tpl": {
+      "filePath": "helm/charts/element-call/templates/_helpers.tpl",
+      "contentHash": "33dda27eaf8ab14d74cc92862d948814e96ee5a1f3a636a94daebcf03e7dca9c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 43,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/element-call/templates/deployment.yaml": {
+      "filePath": "helm/charts/element-call/templates/deployment.yaml",
+      "contentHash": "e1cab213c1fd12921b3031e9f3b2c6bf170044d209467af3891ebcad0fa1b6bc",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 57,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/element-call/templates/service.yaml": {
+      "filePath": "helm/charts/element-call/templates/service.yaml",
+      "contentHash": "ab8f73867136db7a96d7fa3035de02ebb2723335fc09521f6017de86155bdd2c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/element-call/values.yaml": {
+      "filePath": "helm/charts/element-call/values.yaml",
+      "contentHash": "80fe61fa6ee3dc41df36889fa544fd63fddb0c5abb4036e03ade431e7af70b71",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 50,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/element/Chart.yaml": {
+      "filePath": "helm/charts/element/Chart.yaml",
+      "contentHash": "0c7a477406a44f6f9ac4d9d0bc4b7495019a3e00196bf79b81d0be4851da0e16",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/element/templates/_helpers.tpl": {
+      "filePath": "helm/charts/element/templates/_helpers.tpl",
+      "contentHash": "48022e1c4fa4df9d8b16c93a37c9a9c06ca5c5bddb233b7077f9f43cce323fc3",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 43,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/element/templates/deployment.yaml": {
+      "filePath": "helm/charts/element/templates/deployment.yaml",
+      "contentHash": "f7ef27acbc03a75112a65bb9e8f61265b3e36a4c47e2d8cf898cd5ea6d244b74",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 45,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/element/templates/service.yaml": {
+      "filePath": "helm/charts/element/templates/service.yaml",
+      "contentHash": "a9d38fadb6b38016d26e7d258f9bf882bd324558ee81fde0090804fded16e862",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/element/values.yaml": {
+      "filePath": "helm/charts/element/values.yaml",
+      "contentHash": "7e407dbf3365737236eea17fc5000b5685a233c33a15d2989e2b348d266b9cf8",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 22,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/frontend/Chart.yaml": {
+      "filePath": "helm/charts/frontend/Chart.yaml",
+      "contentHash": "6f48257cb55fe50a51e86fbf84e489087fc48a7f0b73aba1c544362b9d2422c6",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 8,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/frontend/templates/_helpers.tpl": {
+      "filePath": "helm/charts/frontend/templates/_helpers.tpl",
+      "contentHash": "fb05c94e7a337fe4db0cf2bbdf2cb7a136c7c921ed190dabc31d2a30f94c3f7c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 52,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/frontend/templates/deployment.yaml": {
+      "filePath": "helm/charts/frontend/templates/deployment.yaml",
+      "contentHash": "aee43c4682bb9d9d039a3aa5ef9f73a05a369d4222f6a62f4e559405cfe623e8",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 74,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/frontend/templates/service.yaml": {
+      "filePath": "helm/charts/frontend/templates/service.yaml",
+      "contentHash": "9142280a5bebc085022435e38ce04e67bfd7e8f2b3f2794648cfc879bf76c442",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 18,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/frontend/values.yaml": {
+      "filePath": "helm/charts/frontend/values.yaml",
+      "contentHash": "b6b20f3c932b8ce2dda76b8e0e31de2974a56abae67ba4ac80d4412fdcc2b17a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 60,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/health-dashboard/Chart.yaml": {
+      "filePath": "helm/charts/health-dashboard/Chart.yaml",
+      "contentHash": "b644655826ec2f83a351a7e96057f25d4f47edb9abc21f9497166268f9486b0d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 8,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/health-dashboard/templates/_helpers.tpl": {
+      "filePath": "helm/charts/health-dashboard/templates/_helpers.tpl",
+      "contentHash": "9e63124e7d1cdfb61c8b524baaccbea5276b11adf78d0d5af5a3bbd7b4288dbd",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 52,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/health-dashboard/templates/deployment.yaml": {
+      "filePath": "helm/charts/health-dashboard/templates/deployment.yaml",
+      "contentHash": "b8cc54da928213f3cedbde3ba13d33ad493039932366df0f91368b046ed0d2c4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 45,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/health-dashboard/templates/service.yaml": {
+      "filePath": "helm/charts/health-dashboard/templates/service.yaml",
+      "contentHash": "7e675b7a51211cea9e954816e84bee8fa80b5700c555e223e6d2e591b9709962",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 18,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/health-dashboard/values.yaml": {
+      "filePath": "helm/charts/health-dashboard/values.yaml",
+      "contentHash": "253e65de2c547d1751ed4a1f50b5165dcccd9e8ead59c1b9dcd18de49f3d20b5",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 26,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/keycloak/Chart.yaml": {
+      "filePath": "helm/charts/keycloak/Chart.yaml",
+      "contentHash": "1561418e830175b2109cd118b02f0157e235cba31a1c2088e7d44dfd0e92dfa9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/keycloak/templates/_helpers.tpl": {
+      "filePath": "helm/charts/keycloak/templates/_helpers.tpl",
+      "contentHash": "d85dcd03f6d98bd217ad0b8fe9c0bc5145221c83ee039fa8b4a16a0c29499495",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 64,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/keycloak/templates/deployment.yaml": {
+      "filePath": "helm/charts/keycloak/templates/deployment.yaml",
+      "contentHash": "ef7b8d3a7c190a650b0b926cc21ab83151d376dbae50b930e46f5768aa67a865",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 64,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/keycloak/templates/service.yaml": {
+      "filePath": "helm/charts/keycloak/templates/service.yaml",
+      "contentHash": "c26f56fdf207e19436ce802f596b33e2e76f716bc5ff3c4e191361b39ddb272e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/keycloak/values.yaml": {
+      "filePath": "helm/charts/keycloak/values.yaml",
+      "contentHash": "562e003dd08c01b177cf839f9924ef01b8701255c1e790c37ad470144faaffca",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 51,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/livekit/Chart.yaml": {
+      "filePath": "helm/charts/livekit/Chart.yaml",
+      "contentHash": "61378fd22cfd301fbebe79e72b770213cbd340baf4f52e9cf10484e2eabecf48",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/livekit/templates/_helpers.tpl": {
+      "filePath": "helm/charts/livekit/templates/_helpers.tpl",
+      "contentHash": "032fb964101d2eaa5c8a7ccff7bb978c7e8bf3100f75a79a92d5c8b17403b4da",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 50,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/livekit/templates/livekit-deployment.yaml": {
+      "filePath": "helm/charts/livekit/templates/livekit-deployment.yaml",
+      "contentHash": "bf90c20b6e889e82ed32b5f6a63e1ea0ade18fa9b3dc79286368c1bf1d390031",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 36,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/livekit/templates/livekit-service.yaml": {
+      "filePath": "helm/charts/livekit/templates/livekit-service.yaml",
+      "contentHash": "ff85d7e0875808a5dd672e3671b3cfc087bbea495020a28b00844d35d2950392",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/livekit/templates/token-service-deployment.yaml": {
+      "filePath": "helm/charts/livekit/templates/token-service-deployment.yaml",
+      "contentHash": "03e1d28e988dda68ce805bac4334f45c0c8d73a9dbc191b21cfd3e5a5130f10f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 36,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/livekit/templates/token-service-service.yaml": {
+      "filePath": "helm/charts/livekit/templates/token-service-service.yaml",
+      "contentHash": "804184ddc5b7308cfb7de56fc17c18b6e460d173407db20f6b9d2e2fdcc60ec1",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/livekit/values.yaml": {
+      "filePath": "helm/charts/livekit/values.yaml",
+      "contentHash": "d88b0e3e08d5d74fb4a0e07299d8099759519658b3339f8761069b18854f1f65",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 38,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/mariadb/Chart.yaml": {
+      "filePath": "helm/charts/mariadb/Chart.yaml",
+      "contentHash": "699acfdebc61508975dbe11c0c951c32807495bf34936a628818a2b4c3421c13",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/mariadb/templates/_helpers.tpl": {
+      "filePath": "helm/charts/mariadb/templates/_helpers.tpl",
+      "contentHash": "72c4f4e737f3ca77a6d89d3c20b7adc012cf2f785673a4eacd6fe4fb84c47b40",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 53,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/mariadb/templates/service.yaml": {
+      "filePath": "helm/charts/mariadb/templates/service.yaml",
+      "contentHash": "9933138b83cb72cc6f65a7c8311f6b13411b2256e2b4fbce26b1923bcc86b532",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 21,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/mariadb/templates/statefulset.yaml": {
+      "filePath": "helm/charts/mariadb/templates/statefulset.yaml",
+      "contentHash": "fa5ae7607edf0d1b991d1c8ea518ad16f478e9d65fcc4ce1444ed9e05bab6b60",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 87,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/mariadb/values.yaml": {
+      "filePath": "helm/charts/mariadb/values.yaml",
+      "contentHash": "3d15e710b7d02ddd0d16e857a873ee232040f3ea232657b92116453cbc4a7e6d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 80,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/matrix-synapse/Chart.yaml": {
+      "filePath": "helm/charts/matrix-synapse/Chart.yaml",
+      "contentHash": "ad84fde99937cb442b7c98e1e527272fdf0b4bb845ef47c9aa6d3f6b85d6217a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/matrix-synapse/templates/_helpers.tpl": {
+      "filePath": "helm/charts/matrix-synapse/templates/_helpers.tpl",
+      "contentHash": "8775d64fdcffd9f7e2771c1aaefe7436fb79d6378ee5ec38ec2d1fb3b52af76a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 52,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/matrix-synapse/templates/deployment.yaml": {
+      "filePath": "helm/charts/matrix-synapse/templates/deployment.yaml",
+      "contentHash": "efda45318bd409cd888a02b8e686be8a783bd8b9e05a93ff884247c3f5de7925",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 104,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/matrix-synapse/templates/service.yaml": {
+      "filePath": "helm/charts/matrix-synapse/templates/service.yaml",
+      "contentHash": "ed886f3ed933be9fc950363c15ab3f005f451122e61782902659ef81df613042",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 24,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/matrix-synapse/values.yaml": {
+      "filePath": "helm/charts/matrix-synapse/values.yaml",
+      "contentHash": "23ad911124495e9aa2064c0f733a1b1991dcb9f730242550a2ff8b3caf97400f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 83,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/mongodb/Chart.yaml": {
+      "filePath": "helm/charts/mongodb/Chart.yaml",
+      "contentHash": "edc174aa886bc57bf8d5275eb2f6022bfc81f2d2df5483b39031ffd742aa1be2",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/mongodb/templates/_helpers.tpl": {
+      "filePath": "helm/charts/mongodb/templates/_helpers.tpl",
+      "contentHash": "24cf177da96344f3e8fc9d6386312b72190ce9ba4debff9e0026bf2aaf981596",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 43,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/mongodb/templates/deployment.yaml": {
+      "filePath": "helm/charts/mongodb/templates/deployment.yaml",
+      "contentHash": "85498f2ebea08d4e02499171d6de06e227d1ed1610e43dd10fa2dc0afa0a7ca9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 55,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/mongodb/templates/service.yaml": {
+      "filePath": "helm/charts/mongodb/templates/service.yaml",
+      "contentHash": "75e25137d870dfa85ba1f47da6bd6d4d556c8299f40e86d4db2ae26c81c32cf8",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/mongodb/values.yaml": {
+      "filePath": "helm/charts/mongodb/values.yaml",
+      "contentHash": "81646759e980bbc65d7f98bce4ecf25b031cce9a2fd68a7a9762a28fe207d3ba",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 39,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/otel-collector/Chart.yaml": {
+      "filePath": "helm/charts/otel-collector/Chart.yaml",
+      "contentHash": "898a04e6bb1ffd74aa53268e1b4722a4ab15d8bcaacc5ae935943bf132f38191",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/otel-collector/templates/_helpers.tpl": {
+      "filePath": "helm/charts/otel-collector/templates/_helpers.tpl",
+      "contentHash": "4141116d3c852df5a94fc8fdd84f76c13d740da0d35722be329629b210f2a457",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 50,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/otel-collector/templates/configmap.yaml": {
+      "filePath": "helm/charts/otel-collector/templates/configmap.yaml",
+      "contentHash": "53e947a6b1af253ffc03f0b68803cf9b63c56a5b521094448f0ab6fdff457914",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 36,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/otel-collector/templates/deployment.yaml": {
+      "filePath": "helm/charts/otel-collector/templates/deployment.yaml",
+      "contentHash": "7fbeca4ea6134feec149e037d6c4e3032e799344661ba0453dd40c78de4233bc",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 72,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/otel-collector/templates/service.yaml": {
+      "filePath": "helm/charts/otel-collector/templates/service.yaml",
+      "contentHash": "3bdb5b0cc341bcabd80741a6d78651443137d02b1091700fd71583ea5620cf3d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 26,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/otel-collector/values.yaml": {
+      "filePath": "helm/charts/otel-collector/values.yaml",
+      "contentHash": "5ce0605fd7b6b244c2fbfac31abda48f4beb1f94b99246c394d05580a4f55a1a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 32,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/rabbitmq/Chart.yaml": {
+      "filePath": "helm/charts/rabbitmq/Chart.yaml",
+      "contentHash": "c501d6ed467feddb180efd0c668c26a589b1954e32e2c42817942fa40d4009cb",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/rabbitmq/templates/_helpers.tpl": {
+      "filePath": "helm/charts/rabbitmq/templates/_helpers.tpl",
+      "contentHash": "773f240a8a9ec42b725364bc710bef292e1e363358997e97a2765d635b42915e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 43,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/rabbitmq/templates/deployment.yaml": {
+      "filePath": "helm/charts/rabbitmq/templates/deployment.yaml",
+      "contentHash": "67eab0b6009245ad2b4cdc535d7bb78ddbd77b33a4f801ca07afc0043c4b24ee",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 64,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/rabbitmq/templates/service.yaml": {
+      "filePath": "helm/charts/rabbitmq/templates/service.yaml",
+      "contentHash": "1c6c7208f6122eacb2d67372d246f8c2c0e68f928f6eb534385354b4c506b048",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 24,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/rabbitmq/values.yaml": {
+      "filePath": "helm/charts/rabbitmq/values.yaml",
+      "contentHash": "e730ff4ff07a608b3088e4e62c873ceb6b4cea48793eb6e3280d49ad6045fe73",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 39,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/redis-commander/Chart.yaml": {
+      "filePath": "helm/charts/redis-commander/Chart.yaml",
+      "contentHash": "1c8db08bd9911c80d63a3d69872efd38775718b12cc6311d24826c98d0f1c6ad",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/redis-commander/templates/_helpers.tpl": {
+      "filePath": "helm/charts/redis-commander/templates/_helpers.tpl",
+      "contentHash": "aa1fe5d06daa9a451fb0991f928b497f9047ce12609be2605cc6212aef39e4d7",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 43,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/redis-commander/templates/deployment.yaml": {
+      "filePath": "helm/charts/redis-commander/templates/deployment.yaml",
+      "contentHash": "deb4efa7820adeeb3f1d01bc5b1674bdcccd6efe41bc724339c325889543d9a9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 69,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/redis-commander/templates/service.yaml": {
+      "filePath": "helm/charts/redis-commander/templates/service.yaml",
+      "contentHash": "72e59b27986aac662c4089466f4e27ddcbe13004642216b31833eb4aaa73a694",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/redis-commander/values.yaml": {
+      "filePath": "helm/charts/redis-commander/values.yaml",
+      "contentHash": "547263c7918832212c5f6461502b403e84440f556bb5b63eaf57c39890b4de72",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 63,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/redis-exporter/Chart.yaml": {
+      "filePath": "helm/charts/redis-exporter/Chart.yaml",
+      "contentHash": "1ce0f4840c56f86ad07c231f03573be9984f0ceb39a753d28c04c67de4ef7db9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/redis-exporter/templates/_helpers.tpl": {
+      "filePath": "helm/charts/redis-exporter/templates/_helpers.tpl",
+      "contentHash": "3b261562da9f3994a6680871bfe40d59444eea08b388422ac223fb67195f18f7",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 43,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/redis-exporter/templates/deployment.yaml": {
+      "filePath": "helm/charts/redis-exporter/templates/deployment.yaml",
+      "contentHash": "cb7250d93c5ef3c72e33fabec87ce0c8d2a5458c33c6ab48865761e27fd0bc23",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 51,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/redis-exporter/templates/service.yaml": {
+      "filePath": "helm/charts/redis-exporter/templates/service.yaml",
+      "contentHash": "a7f08d55ae8c065ac02c9e33e0b6d057c66e9cf0654f4392059f1b7303b77b27",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/redis-exporter/values.yaml": {
+      "filePath": "helm/charts/redis-exporter/values.yaml",
+      "contentHash": "0785dc22229d350527579794960d9946504054635a3f5837f257a69415f11427",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 36,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/redis/Chart.yaml": {
+      "filePath": "helm/charts/redis/Chart.yaml",
+      "contentHash": "d5555a2f973ec5ea1e6b499e94a7d5c8926262a7259ca67cec61d41d67742205",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/redis/templates/_helpers.tpl": {
+      "filePath": "helm/charts/redis/templates/_helpers.tpl",
+      "contentHash": "4c43ec509947df5e66367c7c91e1dd66888788066eb8ef0c3f8c0aed4660f0bd",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 43,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/redis/templates/deployment.yaml": {
+      "filePath": "helm/charts/redis/templates/deployment.yaml",
+      "contentHash": "8e04c7fdb713d88513d8d543cf19bfbe1ebc62078ba4d3389466e211d7014bb4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 87,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/redis/templates/service.yaml": {
+      "filePath": "helm/charts/redis/templates/service.yaml",
+      "contentHash": "1c8505b8d7cf4d360c6f50bf03206ed2bb32220db542ac738d67986371d0776a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/redis/values.yaml": {
+      "filePath": "helm/charts/redis/values.yaml",
+      "contentHash": "df3e138e7b1347127949d5d6bc6d1d48642378a9652901b6977c247e5006951b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 73,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/service-health-exporter/Chart.yaml": {
+      "filePath": "helm/charts/service-health-exporter/Chart.yaml",
+      "contentHash": "e8e3edf521bec31e1d6164b48fd8f2283cabd89766d765568d6f2f3c87bf5f0d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/service-health-exporter/templates/_helpers.tpl": {
+      "filePath": "helm/charts/service-health-exporter/templates/_helpers.tpl",
+      "contentHash": "f776a07ad72b8452e35e4f6514e2538f1de570f5625c1258e7cb0b6c4d200b1f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 53,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/service-health-exporter/templates/configmap.yaml": {
+      "filePath": "helm/charts/service-health-exporter/templates/configmap.yaml",
+      "contentHash": "1cae25c77a2f77d302488a72a2c9d00ede35bd095a8258a11ff00335e8c73cda",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 97,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/service-health-exporter/templates/deployment.yaml": {
+      "filePath": "helm/charts/service-health-exporter/templates/deployment.yaml",
+      "contentHash": "ce451e15ea43b07b562fa74bdf565ec1d345dc6f20f504cb4306769a55e70254",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 55,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/service-health-exporter/values.yaml": {
+      "filePath": "helm/charts/service-health-exporter/values.yaml",
+      "contentHash": "737f18c59fa59a0f192cf5c07a2d8276437e3f0cf290e7122d386dcd488e18dc",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 46,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/signoz/Chart.yaml": {
+      "filePath": "helm/charts/signoz/Chart.yaml",
+      "contentHash": "91a1931d697ed9239cd44633b2ee59b7f804efc02920932c481069ed2fbd7e10",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/signoz/templates/_helpers.tpl": {
+      "filePath": "helm/charts/signoz/templates/_helpers.tpl",
+      "contentHash": "99ce672efdc99578c122049d8378c732db99426fb09db6fc352f47780bd33661",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 43,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/signoz/templates/service.yaml": {
+      "filePath": "helm/charts/signoz/templates/service.yaml",
+      "contentHash": "2a3914cccb7454652cf807ae5bd1fce8ed7aefb9290291b64421efe72cbc8f80",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 37,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/signoz/templates/statefulset.yaml": {
+      "filePath": "helm/charts/signoz/templates/statefulset.yaml",
+      "contentHash": "9a6a9d8cd8177bf9a9eccbc833e44f14e2688140648368978ecc9226067e7b36",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 128,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/signoz/values.yaml": {
+      "filePath": "helm/charts/signoz/values.yaml",
+      "contentHash": "9f9975e9d7fcaa0d7c9d46dabef4e17ffdb2eb2f91208a6126932b18be8f119f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 87,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/status-page/Chart.yaml": {
+      "filePath": "helm/charts/status-page/Chart.yaml",
+      "contentHash": "bad678ca97f83c4d43aec32732f6157fd2328b51904dfdc49228e92902c1e3ba",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 8,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/status-page/templates/_helpers.tpl": {
+      "filePath": "helm/charts/status-page/templates/_helpers.tpl",
+      "contentHash": "7d7e684ec06a51931e33dafb3a53424f95bb159bd52cb9169994fa7948dc9212",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 52,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/status-page/templates/deployment.yaml": {
+      "filePath": "helm/charts/status-page/templates/deployment.yaml",
+      "contentHash": "265179f230651a1ae98ae1720966f2c17da4a3515e5b1390992a4cb8e5236f44",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 72,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/status-page/templates/service.yaml": {
+      "filePath": "helm/charts/status-page/templates/service.yaml",
+      "contentHash": "18b163ea471abf12dc4200ee003587d9747a39c3bd7e20651e88567312e8f987",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 18,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/status-page/values.yaml": {
+      "filePath": "helm/charts/status-page/values.yaml",
+      "contentHash": "29a0358434cd6be35b26d08e5a5af9dc86441a66b0778e009def4cba847344f1",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 26,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/storybook/Chart.yaml": {
+      "filePath": "helm/charts/storybook/Chart.yaml",
+      "contentHash": "710c21fd55efe3243a93fcaa25129be6f4d869745948533ba509561c17fd42cf",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 10,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/storybook/templates/_helpers.tpl": {
+      "filePath": "helm/charts/storybook/templates/_helpers.tpl",
+      "contentHash": "6677922545a566aa09daa4a2bf82c9096250975c230c3ef0381e831a1264582b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 43,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/storybook/templates/deployment.yaml": {
+      "filePath": "helm/charts/storybook/templates/deployment.yaml",
+      "contentHash": "c36023ca25f8e2ee0e4a456fe778f1c7d40f263773e666b6d933e227ea8456ec",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 55,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/storybook/templates/service.yaml": {
+      "filePath": "helm/charts/storybook/templates/service.yaml",
+      "contentHash": "9a9b6a1ac9a182249d9a019d548646f25fdc0ea113a957cb62e4d891915a94b1",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/storybook/values.yaml": {
+      "filePath": "helm/charts/storybook/values.yaml",
+      "contentHash": "281704d2e989e8120cd0f65a1fc3771bea9bf52dcb37a0a56178311503aa135c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 55,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/tenantservice/Chart.yaml": {
+      "filePath": "helm/charts/tenantservice/Chart.yaml",
+      "contentHash": "4b173cf2dd7bda22707a144db03fb171a58758517e7d2e013a3e693b0d1fc2ec",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 9,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/tenantservice/templates/_helpers.tpl": {
+      "filePath": "helm/charts/tenantservice/templates/_helpers.tpl",
+      "contentHash": "08af06849427e8cd893c8a41abcca27f8d410b2ffa8f03d62a89ca61fb61d832",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 53,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/tenantservice/templates/configmap.yaml": {
+      "filePath": "helm/charts/tenantservice/templates/configmap.yaml",
+      "contentHash": "a57c5b70d8ed788d6aa326b65639682922b9e7a8cba31a1adef0c78a8d9292b2",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 39,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/tenantservice/templates/deployment.yaml": {
+      "filePath": "helm/charts/tenantservice/templates/deployment.yaml",
+      "contentHash": "ac0bb80050f6c82c532ba057e45e9cb406cb6256dbbb828b4dc9e20192530708",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 47,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/tenantservice/templates/secret.yaml": {
+      "filePath": "helm/charts/tenantservice/templates/secret.yaml",
+      "contentHash": "17029a503928b868c49138e37655aacfc0bcbbb65f720d9ec638a04266ef4ec9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 15,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/tenantservice/templates/service.yaml": {
+      "filePath": "helm/charts/tenantservice/templates/service.yaml",
+      "contentHash": "057fd603efe7825071d85e7bb48580c69edfd32590efebc045d29c0a553c30ca",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 19,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/tenantservice/values.yaml": {
+      "filePath": "helm/charts/tenantservice/values.yaml",
+      "contentHash": "44eae5b0250eaeee73286f6156082929530d7239c3f81c7ca9ac99cd7c868d98",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 86,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/userservice/Chart.yaml": {
+      "filePath": "helm/charts/userservice/Chart.yaml",
+      "contentHash": "0da2f1576c05ce8808ad357e9ca9d3684ded969890d465e6d86a91bdf78c57d7",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 9,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/userservice/templates/_helpers.tpl": {
+      "filePath": "helm/charts/userservice/templates/_helpers.tpl",
+      "contentHash": "54f861d689b17531dccd4b064f2db34a0710561cc5f031fc6428fe1c7e5fdd79",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 52,
+      "hasStructuralAnalysis": false
+    },
+    "helm/charts/userservice/templates/configmap.yaml": {
+      "filePath": "helm/charts/userservice/templates/configmap.yaml",
+      "contentHash": "7c6453a8fa69524719ec2a4381c3f29a85d62c0b4398670dadcbe3b2449c1866",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 146,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/userservice/templates/deployment.yaml": {
+      "filePath": "helm/charts/userservice/templates/deployment.yaml",
+      "contentHash": "7d43ad40f0beeae75022076d7c4c64c3d932474bfae6ed838bce09c3097d5afe",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 47,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/userservice/templates/secret.yaml": {
+      "filePath": "helm/charts/userservice/templates/secret.yaml",
+      "contentHash": "2c6fbb89cccb2641ced3ec01fcde1c25f822417d923934a604555b2ed8839247",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 48,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/userservice/templates/service.yaml": {
+      "filePath": "helm/charts/userservice/templates/service.yaml",
+      "contentHash": "df7dd7c68d13a7c1a1ad482d7f9444da0e019dd8e70f87fbab206277cb841b58",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 19,
+      "hasStructuralAnalysis": true
+    },
+    "helm/charts/userservice/values.yaml": {
+      "filePath": "helm/charts/userservice/values.yaml",
+      "contentHash": "ea2537c8a30427fe1959945b10b041817827c59620605ad748fa31a9188ff8ab",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 108,
+      "hasStructuralAnalysis": true
+    },
+    "helm/oriso-platform/Chart.yaml": {
+      "filePath": "helm/oriso-platform/Chart.yaml",
+      "contentHash": "27f284b84136f3da6291bf8737cd1965a1f5ff4ce2d2c717d982100d5a9d13d5",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 117,
+      "hasStructuralAnalysis": true
+    },
+    "helm/oriso-platform/README.md": {
+      "filePath": "helm/oriso-platform/README.md",
+      "contentHash": "f2b35c826fe199e1077b528966c5eeab939532532b51de7c301b010b03bf73a1",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 192,
+      "hasStructuralAnalysis": true
+    },
+    "helm/oriso-platform/templates/_helpers.tpl": {
+      "filePath": "helm/oriso-platform/templates/_helpers.tpl",
+      "contentHash": "2ffc2a61731ba46b93ed9545d0778c5b23af0c803eab7e21cfe562da41f3c744",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 43,
+      "hasStructuralAnalysis": false
+    },
+    "helm/oriso-platform/values-local-macos.example.yaml": {
+      "filePath": "helm/oriso-platform/values-local-macos.example.yaml",
+      "contentHash": "8fdf479950a1f2f304b2f6aab1f1ad84d71ec2ef957705fec704e6bba7b2e57e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 85,
+      "hasStructuralAnalysis": true
+    },
+    "helm/oriso-platform/values.yaml": {
+      "filePath": "helm/oriso-platform/values.yaml",
+      "contentHash": "a0344bf174afe232aed23580e9137e8dfc03ffb10a3e764449c3c8fd9079c26e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 134,
+      "hasStructuralAnalysis": true
+    },
+    "helm/README.md": {
+      "filePath": "helm/README.md",
+      "contentHash": "dc0a84e25275399f8c48aa16d64dab170bc447298f502fab82c259c9876b2c38",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 251,
+      "hasStructuralAnalysis": true
+    },
+    "helm/values.yaml": {
+      "filePath": "helm/values.yaml",
+      "contentHash": "62fc18672ff2cfc01e1630a4b1140add823bfc649cf7bf8d4357ccc569bc4e19",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 118,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/00-keycloak-auth-domain-ingress.yaml": {
+      "filePath": "ingress/00-keycloak-auth-domain-ingress.yaml",
+      "contentHash": "97be72762bc6ec0bba1fcb3ddff340c7033d3d0715fe30921018265cc18a701b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 65,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/01-keycloak-ingress.yaml": {
+      "filePath": "ingress/01-keycloak-ingress.yaml",
+      "contentHash": "abd15c95d5f4e2815f0efd5a31ad6489f8d729084f4128a7cceef5f77aa315ea",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 62,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/02-userservice-ingress.yaml": {
+      "filePath": "ingress/02-userservice-ingress.yaml",
+      "contentHash": "03e49cc175bed0de2f365b7394a6ad1b116147f29b195dde76e6f571b461a946",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 323,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/03-agencyservice-ingress.yaml": {
+      "filePath": "ingress/03-agencyservice-ingress.yaml",
+      "contentHash": "f59a2842612b54cb1d825e5790d84022c01209942df4b7a4cc4b2a965572b0ad",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 258,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/04-consultingtypeservice-ingress.yaml": {
+      "filePath": "ingress/04-consultingtypeservice-ingress.yaml",
+      "contentHash": "ea66ad5c369920b94eaa65640d0a56207a9e42ae78434562d33f87190a834c24",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 302,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/05-tenantservice-ingress.yaml": {
+      "filePath": "ingress/05-tenantservice-ingress.yaml",
+      "contentHash": "dfcde412a82ad60339ebb7d318f8ab9e961b1cfa8f1d11ee37298cbd1dd0c0bb",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 292,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/06-matrix-ingress.yaml": {
+      "filePath": "ingress/06-matrix-ingress.yaml",
+      "contentHash": "1f7f941cfe18ffa46e37403106ab5c439d341b029351970afaa88aaf8e392b79",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 71,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/08-uploadservice-ingress.yaml": {
+      "filePath": "ingress/08-uploadservice-ingress.yaml",
+      "contentHash": "0512c25fae996aaa733d6c1f4cc9ab5c824b67607c00599af877a7a87571fa4f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 56,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/10-health-ingress.yaml": {
+      "filePath": "ingress/10-health-ingress.yaml",
+      "contentHash": "205b4bcfef449aa19047bf8490535638fd6cf33cf400c55d93164eaae4cb0f1e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 36,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/11-rocketchat-ingress.yaml": {
+      "filePath": "ingress/11-rocketchat-ingress.yaml",
+      "contentHash": "ee8a9bc14e64329955617a9bc2178a0dee85900c918f7012a1866d43cb0feba9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 55,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/12-matrix-domain-ingress.yaml": {
+      "filePath": "ingress/12-matrix-domain-ingress.yaml",
+      "contentHash": "c21585762d654ab05948f80d347bbf2ad2f989536ca3b20168d521ad9f9dbd2b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 54,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/13-frontend-ingress.yaml": {
+      "filePath": "ingress/13-frontend-ingress.yaml",
+      "contentHash": "d28d286ee5e9b4a9dde7ac9f15c1d2a2098cf61e505e1934bf6714bdb9f1bb79",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 29,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/14-admin-ingress.yaml": {
+      "filePath": "ingress/14-admin-ingress.yaml",
+      "contentHash": "a1c006117a8998eb5cdefbedad35dfb254ab495e3a23d38091de4b73135db13b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 29,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/15-health-dashboard-ingress.yaml": {
+      "filePath": "ingress/15-health-dashboard-ingress.yaml",
+      "contentHash": "b92d3251e6d280d61caa2523dbc92003c28b8d4850cfc2abf53f8a0408e26f22",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 29,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/16-element-ingress.yaml": {
+      "filePath": "ingress/16-element-ingress.yaml",
+      "contentHash": "c97103df141eaf56031b1ac0ec794ca00538ccb9c337bd5e42431f9c8de319ec",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 29,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/17-element-call-ingress.yaml": {
+      "filePath": "ingress/17-element-call-ingress.yaml",
+      "contentHash": "3676aeb6928ab8afda91f1db8b79d70a0593e95dddfad831303204bdc34977bb",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 36,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/18-livekit-ingress.yaml": {
+      "filePath": "ingress/18-livekit-ingress.yaml",
+      "contentHash": "704c7de12ad27fa8fc16cc842f42b21b342b6e23edd0d32623130751ca0df412",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 40,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/19-redis-commander-ingress.yaml": {
+      "filePath": "ingress/19-redis-commander-ingress.yaml",
+      "contentHash": "367880a572fa86e1470fde6689278d42724cef30d6cb6d0e352e2092b3c8c9b4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 29,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/20-signoz-ingress.yaml": {
+      "filePath": "ingress/20-signoz-ingress.yaml",
+      "contentHash": "c50b7d2db7bdb00f875d6f3688be8f12effd888982aeac28323893b57100c8af",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 29,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/21-status-page-ingress.yaml": {
+      "filePath": "ingress/21-status-page-ingress.yaml",
+      "contentHash": "125a9754405e3263edf9e754ee6b078c8bd595e69b4d9cd192672ee1cf9c7482",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 29,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/22-storybook-ingress.yaml": {
+      "filePath": "ingress/22-storybook-ingress.yaml",
+      "contentHash": "0d3866b26ccc7d35b2768828dfea384a1929e451679264c2ad04332fba8f7596",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 29,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/apply-ingress.sh": {
+      "filePath": "ingress/apply-ingress.sh",
+      "contentHash": "01d39b50ced502e1d38665e6c799b7f17c586d153f4864a7f5d29632b89d17a7",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 35,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/ingress-values.yaml": {
+      "filePath": "ingress/ingress-values.yaml",
+      "contentHash": "d663283c90d0011b8086f182ced11fe7b9763f13b76ce9a1766366c8465102d6",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 73,
+      "hasStructuralAnalysis": true
+    },
+    "ingress/README.md": {
+      "filePath": "ingress/README.md",
+      "contentHash": "123123bb875a17b7a5e0fe355a10ae0328eba798a637640639800a3d1c501193",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 271,
+      "hasStructuralAnalysis": true
+    },
+    "README.md": {
+      "filePath": "README.md",
+      "contentHash": "7074775b3f7cb5f9bb635a926ce88ffe4d83696e540e329db1033018e77a0614",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 169,
+      "hasStructuralAnalysis": true
+    }
+  }
+}

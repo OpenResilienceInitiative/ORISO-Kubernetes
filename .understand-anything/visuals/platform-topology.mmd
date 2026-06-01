@@ -1,0 +1,12 @@
+flowchart TD
+  DNS[External DNS] --> Ingress[Nginx Ingress + cert-manager TLS]
+  Ingress --> API[api.oriso-dev.site routes]
+  Ingress --> Web[app/admin/auth/matrix/call/livekit utility domains]
+  API --> Backends[Backend ClusterIP services]
+  Web --> Frontends[Frontend Admin Matrix LiveKit Utility UIs]
+  Backends --> MariaDB[(MariaDB)]
+  Backends --> MongoDB[(MongoDB)]
+  Backends --> RabbitMQ[(RabbitMQ)]
+  Backends --> Keycloak[Keycloak]
+  Backends --> Matrix[Matrix Synapse]
+  Observability[OTEL + SigNoz] --> ClickHouse[(ClickHouse)]

@@ -1,0 +1,15 @@
+# Understand-Anything ignore rules for ORISO-Kubernetes
+# Syntax: same as .gitignore.
+
+.understand-anything/
+.git/
+.DS_Store
+*.log
+*.tgz
+*.zip
+*.tar
+*.gz
+node_modules/
+dist/
+build/
+target/

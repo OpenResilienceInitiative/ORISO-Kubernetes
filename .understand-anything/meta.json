@@ -1,0 +1,27 @@
+{
+  "projectRoot": "/Users/nikunjchampakbhairohit/Developer/freelance/Germany/Oriso-frank-client/ORISO/ORISO-Kubernetes",
+  "gitCommitHash": "b9fdf2cc5efc5e7978f569dfd564355ad29ff03a",
+  "generatedAt": "2026-05-28T13:38:54.005Z",
+  "skill": "understand-anything",
+  "scope": "current repository only",
+  "stats": {
+    "filesScanned": 165,
+    "nodes": 339,
+    "edges": 588,
+    "layers": 8,
+    "charts": 24,
+    "ingressResources": 36,
+    "ingressFiles": 21,
+    "externalHosts": 13,
+    "renderedChartExpectedServices": 24
+  },
+  "verification": {
+    "helmTemplate": "helm template oriso-platform ./helm/oriso-platform --namespace caritas -f helm/values.yaml",
+    "helmLint": "helm lint ./helm/oriso-platform -f helm/values.yaml"
+  },
+  "notes": [
+    "Packaged chart archives were excluded from content scanning because source charts are present.",
+    "No parent folders or sibling repositories were analyzed.",
+    "A pre-existing untracked local macOS values example was read but not modified."
+  ]
+}

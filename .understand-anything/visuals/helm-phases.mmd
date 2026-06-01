@@ -1,0 +1,15 @@
+flowchart LR
+  Umbrella[oriso-platform Chart] --> Infra[Phase 1 Infrastructure]
+  Infra --> Auth[Phase 2 Auth and Communication]
+  Auth --> WebRTC[Phase 3 LiveKit]
+  WebRTC --> Backend[Phase 4 Backend Services]
+  Backend --> Frontend[Phase 5 Frontend/Admin]
+  Frontend --> Monitor[Phase 6 Monitoring/Utilities]
+  Infra --> MariaDB
+  Infra --> MongoDB
+  Infra --> Redis
+  Infra --> RabbitMQ
+  Backend --> UserService
+  Backend --> TenantService
+  Backend --> AgencyService
+  Backend --> ConsultingTypeService
