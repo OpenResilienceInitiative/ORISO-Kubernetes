@@ -1,18 +1,8 @@
---
--- ------------------------------------------------------
-
-
---
--- Sequence structure for `sequence_uploadbyuser`
---
+ 
 
 DROP SEQUENCE IF EXISTS `sequence_uploadbyuser`;
 CREATE SEQUENCE `sequence_uploadbyuser` start with 0 minvalue 0 maxvalue 9223372036854775806 increment by 1 nocache nocycle ENGINE=InnoDB;
 DO SETVAL(`sequence_uploadbyuser`, 0, 0);
-
---
--- Table structure for table `DATABASECHANGELOG`
---
 
 DROP TABLE IF EXISTS `DATABASECHANGELOG`;
 CREATE TABLE `DATABASECHANGELOG` (
@@ -32,10 +22,6 @@ CREATE TABLE `DATABASECHANGELOG` (
   `DEPLOYMENT_ID` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Table structure for table `DATABASECHANGELOGLOCK`
---
-
 DROP TABLE IF EXISTS `DATABASECHANGELOGLOCK`;
 CREATE TABLE `DATABASECHANGELOGLOCK` (
   `ID` int(11) NOT NULL,
@@ -45,10 +31,6 @@ CREATE TABLE `DATABASECHANGELOGLOCK` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Table structure for table `uploadbyuser`
---
-
 DROP TABLE IF EXISTS `uploadbyuser`;
 CREATE TABLE `uploadbyuser` (
   `id` bigint(21) NOT NULL,
@@ -57,5 +39,4 @@ CREATE TABLE `uploadbyuser` (
   `create_date` datetime NOT NULL DEFAULT utc_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
 

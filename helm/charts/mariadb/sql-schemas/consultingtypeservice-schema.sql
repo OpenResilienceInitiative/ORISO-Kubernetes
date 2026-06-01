@@ -1,34 +1,16 @@
---
--- ------------------------------------------------------
-
-
---
--- Sequence structure for `sequence_topic`
---
+ 
 
 DROP SEQUENCE IF EXISTS `sequence_topic`;
 CREATE SEQUENCE `sequence_topic` start with 0 minvalue 0 maxvalue 9223372036854775806 increment by 1 nocache nocycle ENGINE=InnoDB;
-DO SETVAL(`sequence_topic`, 0, 0);
-
---
--- Sequence structure for `sequence_topic_group`
---
+DO SETVAL(`sequence_topic`, 16, 0);
 
 DROP SEQUENCE IF EXISTS `sequence_topic_group`;
 CREATE SEQUENCE `sequence_topic_group` start with 0 minvalue 0 maxvalue 9223372036854775806 increment by 1 nocache nocycle ENGINE=InnoDB;
 DO SETVAL(`sequence_topic_group`, 0, 0);
 
---
--- Sequence structure for `sequence_topic_group_x_topic`
---
-
 DROP SEQUENCE IF EXISTS `sequence_topic_group_x_topic`;
 CREATE SEQUENCE `sequence_topic_group_x_topic` start with 0 minvalue 0 maxvalue 9223372036854775806 increment by 1 cache 10 nocycle ENGINE=InnoDB;
 DO SETVAL(`sequence_topic_group_x_topic`, 0, 0);
-
---
--- Table structure for table `DATABASECHANGELOG`
---
 
 DROP TABLE IF EXISTS `DATABASECHANGELOG`;
 CREATE TABLE `DATABASECHANGELOG` (
@@ -48,10 +30,6 @@ CREATE TABLE `DATABASECHANGELOG` (
   `DEPLOYMENT_ID` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Table structure for table `DATABASECHANGELOGLOCK`
---
-
 DROP TABLE IF EXISTS `DATABASECHANGELOGLOCK`;
 CREATE TABLE `DATABASECHANGELOGLOCK` (
   `ID` int(11) NOT NULL,
@@ -60,10 +38,6 @@ CREATE TABLE `DATABASECHANGELOGLOCK` (
   `LOCKEDBY` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Table structure for table `topic`
---
 
 DROP TABLE IF EXISTS `topic`;
 CREATE TABLE `topic` (
@@ -88,10 +62,6 @@ CREATE TABLE `topic` (
   UNIQUE KEY `unique_name` (`name`,`tenant_id`) USING HASH
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
---
--- Table structure for table `topic_group`
---
-
 DROP TABLE IF EXISTS `topic_group`;
 CREATE TABLE `topic_group` (
   `id` bigint(21) NOT NULL,
@@ -100,10 +70,6 @@ CREATE TABLE `topic_group` (
   `update_date` datetime NOT NULL DEFAULT utc_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
---
--- Table structure for table `topic_group_x_topic`
---
 
 DROP TABLE IF EXISTS `topic_group_x_topic`;
 CREATE TABLE `topic_group_x_topic` (
@@ -116,5 +82,4 @@ CREATE TABLE `topic_group_x_topic` (
   CONSTRAINT `fk_group` FOREIGN KEY (`group_id`) REFERENCES `topic_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_topic` FOREIGN KEY (`topic_id`) REFERENCES `topic` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
 

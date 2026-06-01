@@ -1,18 +1,8 @@
---
--- ------------------------------------------------------
-
-
---
--- Sequence structure for `sequence_tenant`
---
+ 
 
 DROP SEQUENCE IF EXISTS `sequence_tenant`;
 CREATE SEQUENCE `sequence_tenant` start with 1 minvalue 0 maxvalue 9223372036854775806 increment by 1 nocache nocycle ENGINE=InnoDB;
-DO SETVAL(`sequence_tenant`, 1, 0);
-
---
--- Table structure for table `DATABASECHANGELOG`
---
+DO SETVAL(`sequence_tenant`, 28, 0);
 
 DROP TABLE IF EXISTS `DATABASECHANGELOG`;
 CREATE TABLE `DATABASECHANGELOG` (
@@ -32,10 +22,6 @@ CREATE TABLE `DATABASECHANGELOG` (
   `DEPLOYMENT_ID` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Table structure for table `DATABASECHANGELOGLOCK`
---
-
 DROP TABLE IF EXISTS `DATABASECHANGELOGLOCK`;
 CREATE TABLE `DATABASECHANGELOGLOCK` (
   `ID` int(11) NOT NULL,
@@ -44,10 +30,6 @@ CREATE TABLE `DATABASECHANGELOGLOCK` (
   `LOCKEDBY` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Table structure for table `tenant`
---
 
 DROP TABLE IF EXISTS `tenant`;
 CREATE TABLE `tenant` (
@@ -71,5 +53,4 @@ CREATE TABLE `tenant` (
   `theming_association_logo` longtext DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
 

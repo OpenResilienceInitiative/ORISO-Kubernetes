@@ -1,42 +1,20 @@
---
--- ------------------------------------------------------
-
-
---
--- Sequence structure for `sequence_agency`
---
+ 
 
 DROP SEQUENCE IF EXISTS `sequence_agency`;
 CREATE SEQUENCE `sequence_agency` start with 0 minvalue 0 maxvalue 9223372036854775806 increment by 1 cache 10 nocycle ENGINE=InnoDB;
-DO SETVAL(`sequence_agency`, 160, 0);
-
---
--- Sequence structure for `sequence_agency_postcode_range`
---
+DO SETVAL(`sequence_agency`, 270, 0);
 
 DROP SEQUENCE IF EXISTS `sequence_agency_postcode_range`;
 CREATE SEQUENCE `sequence_agency_postcode_range` start with 0 minvalue 0 maxvalue 9223372036854775806 increment by 1 cache 10 nocycle ENGINE=InnoDB;
-DO SETVAL(`sequence_agency_postcode_range`, 130, 0);
-
---
--- Sequence structure for `sequence_agency_topic`
---
+DO SETVAL(`sequence_agency_postcode_range`, 280, 0);
 
 DROP SEQUENCE IF EXISTS `sequence_agency_topic`;
 CREATE SEQUENCE `sequence_agency_topic` start with 0 minvalue 0 maxvalue 9223372036854775806 increment by 1 cache 10 nocycle ENGINE=InnoDB;
-DO SETVAL(`sequence_agency_topic`, 230, 0);
-
---
--- Sequence structure for `sequence_diocese`
---
+DO SETVAL(`sequence_agency_topic`, 400, 0);
 
 DROP SEQUENCE IF EXISTS `sequence_diocese`;
 CREATE SEQUENCE `sequence_diocese` start with 0 minvalue 0 maxvalue 9223372036854775806 increment by 1 nocache nocycle ENGINE=InnoDB;
 DO SETVAL(`sequence_diocese`, 0, 0);
-
---
--- Table structure for table `DATABASECHANGELOG`
---
 
 DROP TABLE IF EXISTS `DATABASECHANGELOG`;
 CREATE TABLE `DATABASECHANGELOG` (
@@ -56,10 +34,6 @@ CREATE TABLE `DATABASECHANGELOG` (
   `DEPLOYMENT_ID` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Table structure for table `DATABASECHANGELOGLOCK`
---
-
 DROP TABLE IF EXISTS `DATABASECHANGELOGLOCK`;
 CREATE TABLE `DATABASECHANGELOGLOCK` (
   `ID` int(11) NOT NULL,
@@ -68,10 +42,6 @@ CREATE TABLE `DATABASECHANGELOGLOCK` (
   `LOCKEDBY` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Table structure for table `agency`
---
 
 DROP TABLE IF EXISTS `agency`;
 CREATE TABLE `agency` (
@@ -105,10 +75,9 @@ CREATE TABLE `agency` (
   PRIMARY KEY (`id`),
   KEY `diocese_id` (`diocese_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
---
--- Table structure for table `agency_postcode_range`
---
+DELIMITER ;;
+  ;;
+DELIMITER ;
 
 DROP TABLE IF EXISTS `agency_postcode_range`;
 CREATE TABLE `agency_postcode_range` (
@@ -123,10 +92,9 @@ CREATE TABLE `agency_postcode_range` (
   KEY `agency_id` (`agency_id`),
   CONSTRAINT `agency_postcode_range_ibfk_1` FOREIGN KEY (`agency_id`) REFERENCES `agency` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
---
--- Table structure for table `agency_topic`
---
+DELIMITER ;;
+  ;;
+DELIMITER ;
 
 DROP TABLE IF EXISTS `agency_topic`;
 CREATE TABLE `agency_topic` (
@@ -139,10 +107,9 @@ CREATE TABLE `agency_topic` (
   KEY `agency_id` (`agency_id`),
   CONSTRAINT `agency_topic_ibfk_1` FOREIGN KEY (`agency_id`) REFERENCES `agency` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
---
--- Table structure for table `diocese`
---
+DELIMITER ;;
+  ;;
+DELIMITER ;
 
 DROP TABLE IF EXISTS `diocese`;
 CREATE TABLE `diocese` (
@@ -153,5 +120,7 @@ CREATE TABLE `diocese` (
   `update_date` datetime NOT NULL DEFAULT utc_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
+DELIMITER ;;
+  ;;
+DELIMITER ;
 
