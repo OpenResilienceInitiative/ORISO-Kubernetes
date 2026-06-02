@@ -8,6 +8,7 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: 'true'
   name: element-call-room-compat-ingress
 spec:
+  ingressClassName: nginx
   rules:
   - host: '{{ .Values.global.domainName }}'
     http:

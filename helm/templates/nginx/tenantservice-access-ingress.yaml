@@ -8,6 +8,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
   name: tenantservice-access-ingress
 spec:
+  ingressClassName: nginx
   rules:
   - host: '{{ .Values.global.domainName }}'
     http:

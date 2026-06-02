@@ -9,6 +9,7 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: 'true'
   name: agencyservice-rewrite-ingress
 spec:
+  ingressClassName: nginx
   rules:
   - host: '{{ .Values.global.domainName }}'
     http:

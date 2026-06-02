@@ -13,6 +13,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
   name: livekit-jwt-ingress
 spec:
+  ingressClassName: nginx
   rules:
   - host: '{{ .Values.global.domainName }}'
     http:

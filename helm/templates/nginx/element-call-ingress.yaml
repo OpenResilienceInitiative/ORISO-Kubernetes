@@ -12,6 +12,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: 'false'
   name: element-call-ingress
 spec:
+  ingressClassName: nginx
   rules:
   - host: acme{{ .Values.global.domainName }}
     http:
