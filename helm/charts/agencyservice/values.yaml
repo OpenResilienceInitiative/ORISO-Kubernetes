@@ -79,15 +79,15 @@ keycloak:
   jwt:
     # External URL for JWT validation (managed cluster requirement)
     # Uses global.keycloak.jwt values if available, otherwise defaults below
-    issuerUri: "https://auth.oriso-dev.site/realms/online-beratung"
-    jwkSetUri: "https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs"
+    issuerUri: "https://auth.oriso.org/realms/online-beratung"
+    jwkSetUri: "https://auth.oriso.org/realms/online-beratung/protocol/openid-connect/certs"
 
 # Matrix Synapse Configuration
 # Uses global.matrix values if available, otherwise defaults below
 matrix:
   apiUrl: "http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008"
   registrationSharedSecret: "caritas-registration-secret-2025"
-  serverName: "oriso-dev.site"  # Standardized to match global.matrix.serverName
+  serverName: "oriso.org"  # Standardized to match global.matrix.serverName
   adminUsername: "caritas_admin"
   adminPassword: "@CaritasAdmin2025!"
 

@@ -46,8 +46,8 @@ service:
 env:
   # URLs will be set from global.domains in deployment template
   # Defaults below (will be overridden by global values)
-  REACT_APP_API_URL: "https://api.oriso-dev.site"
-  REACT_APP_MATRIX_URL: "https://matrix.oriso-dev.site"
-  REACT_APP_KEYCLOAK_URL: "https://auth.oriso-dev.site"
-  VITE_API_URL: "https://api.oriso-dev.site"
+  REACT_APP_API_URL: "https://api.oriso.org"
+  REACT_APP_MATRIX_URL: "https://matrix.oriso.org"
+  REACT_APP_KEYCLOAK_URL: "https://auth.oriso.org"
+  VITE_API_URL: "https://api.oriso.org"
 

@@ -163,21 +163,21 @@ items:
         containers:
         - env:
           - name: REACT_APP_API_URL
-            value: https://api.oriso-dev.site
+            value: https://api.oriso.org
           - name: REACT_APP_KEYCLOAK_URL
-            value: https://auth.oriso-dev.site
+            value: https://auth.oriso.org
           - name: REACT_APP_MATRIX_URL
-            value: https://matrix.oriso-dev.site
+            value: https://matrix.oriso.org
           - name: VITE_API_URL
-            value: https://api.oriso-dev.site
+            value: https://api.oriso.org
           - name: REACT_APP_API_URL
-            value: https://api.oriso-dev.site
+            value: https://api.oriso.org
           - name: REACT_APP_MATRIX_URL
-            value: https://matrix.oriso-dev.site
+            value: https://matrix.oriso.org
           - name: REACT_APP_KEYCLOAK_URL
-            value: https://auth.oriso-dev.site
+            value: https://auth.oriso.org
           - name: VITE_API_URL
-            value: https://api.oriso-dev.site
+            value: https://api.oriso.org
           image: caritas-admin:latest
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -587,37 +587,37 @@ items:
           - name: PORT
             value: "80"
           - name: REACT_APP_API_URL
-            value: https://api.oriso-dev.site
+            value: https://api.oriso.org
           - name: REACT_APP_ELEMENT_CALL_URL
-            value: https://call.oriso-dev.site
+            value: https://call.oriso.org
           - name: REACT_APP_KEYCLOAK_URL
-            value: https://auth.oriso-dev.site
+            value: https://auth.oriso.org
           - name: REACT_APP_LIVEKIT_URL
-            value: https://livekit.oriso-dev.site
+            value: https://livekit.oriso.org
           - name: REACT_APP_MATRIX_HOMESERVER_URL
-            value: https://matrix.oriso-dev.site
+            value: https://matrix.oriso.org
           - name: REACT_APP_MATRIX_URL
-            value: https://matrix.oriso-dev.site
+            value: https://matrix.oriso.org
           - name: VITE_API_URL
-            value: https://api.oriso-dev.site
+            value: https://api.oriso.org
           - name: VITE_MATRIX_HOMESERVER_URL
-            value: https://matrix.oriso-dev.site
+            value: https://matrix.oriso.org
           - name: REACT_APP_API_URL
-            value: https://api.oriso-dev.site
+            value: https://api.oriso.org
           - name: REACT_APP_MATRIX_URL
-            value: https://matrix.oriso-dev.site
+            value: https://matrix.oriso.org
           - name: REACT_APP_ELEMENT_CALL_URL
-            value: https://call.oriso-dev.site
+            value: https://call.oriso.org
           - name: REACT_APP_LIVEKIT_URL
-            value: https://livekit.oriso-dev.site
+            value: https://livekit.oriso.org
           - name: REACT_APP_KEYCLOAK_URL
-            value: https://auth.oriso-dev.site
+            value: https://auth.oriso.org
           - name: VITE_API_URL
-            value: https://api.oriso-dev.site
+            value: https://api.oriso.org
           - name: REACT_APP_MATRIX_HOMESERVER_URL
-            value: https://matrix.oriso-dev.site
+            value: https://matrix.oriso.org
           - name: VITE_MATRIX_HOMESERVER_URL
-            value: https://matrix.oriso-dev.site
+            value: https://matrix.oriso.org
           image: caritas-frontend:latest
           imagePullPolicy: Never
           livenessProbe:
@@ -803,7 +803,7 @@ items:
           - name: KC_PROXY
             value: edge
           - name: KC_HOSTNAME
-            value: auth.oriso-dev.site
+            value: auth.oriso.org
           - name: KC_HOSTNAME_STRICT_HTTPS
             value: "true"
           - name: KC_HTTP_ENABLED
@@ -1025,7 +1025,7 @@ items:
         containers:
         - env:
           - name: SYNAPSE_SERVER_NAME
-            value: oriso-dev.site
+            value: oriso.org
           - name: SYNAPSE_REPORT_STATS
             value: "no"
           - name: SYNAPSE_ENABLE_AUTHENTICATED_MEDIA

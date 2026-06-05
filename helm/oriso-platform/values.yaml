@@ -7,36 +7,36 @@
 global:
   namespace: "caritas"
   domains:
-    api: "api.oriso-dev.site"
-    app: "app.oriso-dev.site"
-    admin: "admin.oriso-dev.site"
-    auth: "auth.oriso-dev.site"
-    matrix: "matrix.oriso-dev.site"
-    element: "element.oriso-dev.site"
-    call: "call.oriso-dev.site"
-    livekit: "livekit.oriso-dev.site"
-    health: "health.oriso-dev.site"
-    status: "status.oriso-dev.site"
-    redis: "redis.oriso-dev.site"
-    signoz: "signoz.oriso-dev.site"
-    storybook: "storybook.oriso-dev.site"
+    api: "api.oriso.org"
+    app: "app.oriso.org"
+    admin: "admin.oriso.org"
+    auth: "auth.oriso.org"
+    matrix: "matrix.oriso.org"
+    element: "element.oriso.org"
+    call: "call.oriso.org"
+    livekit: "livekit.oriso.org"
+    health: "health.oriso.org"
+    status: "status.oriso.org"
+    redis: "redis.oriso.org"
+    signoz: "signoz.oriso.org"
+    storybook: "storybook.oriso.org"
   keycloak:
     internalUrl: "http://oriso-platform-keycloak.caritas.svc.cluster.local:8080"
-    externalUrl: "https://auth.oriso-dev.site"
+    externalUrl: "https://auth.oriso.org"
     realm: "online-beratung"
     jwt:
-      issuerUri: "https://auth.oriso-dev.site/realms/online-beratung"
-      jwkSetUri: "https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs"
+      issuerUri: "https://auth.oriso.org/realms/online-beratung"
+      jwkSetUri: "https://auth.oriso.org/realms/online-beratung/protocol/openid-connect/certs"
   matrix:
-    serverName: "oriso-dev.site"
+    serverName: "oriso.org"
     internalUrl: "http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008"
-    externalUrl: "https://matrix.oriso-dev.site"
+    externalUrl: "https://matrix.oriso.org"
     registrationSharedSecret: "caritas-registration-secret-2025"
   cors:
     allowedOrigins:
-      - "https://app.oriso-dev.site"
-      - "https://admin.oriso-dev.site"
-      - "https://api.oriso-dev.site"
+      - "https://app.oriso.org"
+      - "https://admin.oriso.org"
+      - "https://api.oriso.org"
   databases:
     mariadb:
       host: "oriso-platform-mariadb.caritas.svc.cluster.local"
@@ -109,7 +109,7 @@ userservice:
     secure: "false"
     user: ""
     password: ""
-    from: "ORISO <notifications@oriso-dev.site>"
+    from: "ORISO <notifications@oriso.org>"
 agencyservice:
   enabled: true
   features:

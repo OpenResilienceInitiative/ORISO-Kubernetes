@@ -18,7 +18,7 @@ service:
 # Matrix Configuration
 matrix:
   # Server name (uses global.matrix.serverName if available)
-  serverName: "oriso-dev.site"
+  serverName: "oriso.org"
   reportStats: "no"
   enableAuthenticatedMedia: "false"
 

@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: app.oriso-dev.site
+  - host: app.oriso.org
     http:
       paths:
       - path: /
@@ -22,7 +22,7 @@ spec:
               number: 80
   tls:
   - hosts:
-    - app.oriso-dev.site
+    - app.oriso.org
     secretName: app-oriso-site-tls
 
 

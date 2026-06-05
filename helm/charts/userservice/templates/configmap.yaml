@@ -143,7 +143,7 @@ data:
     {{- if and .Values.global .Values.global.domains .Values.global.domains.app }}
     registration.cors.allowed.origins=https://{{ .Values.global.domains.app }}
     {{- else }}
-    registration.cors.allowed.origins=https://app.oriso-dev.site
+    registration.cors.allowed.origins=https://app.oriso.org
     {{- end }}
     registration.cors.allowed.paths=/service/users/askers/new,/service/users/consultants/languages
     

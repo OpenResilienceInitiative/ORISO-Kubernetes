@@ -38,10 +38,10 @@ Complete Kubernetes-native Ingress configuration for API gateway functionality.
    ```
 
 5. **DNS Records** (point to Ingress Controller IP)
-   - `api.oriso-dev.site` → Ingress Controller IP
-   - `app.oriso-dev.site` → Ingress Controller IP
-   - `admin.oriso-dev.site` → Ingress Controller IP
-   - `auth.oriso-dev.site` → Ingress Controller IP
+   - `api.oriso.org` → Ingress Controller IP
+   - `app.oriso.org` → Ingress Controller IP
+   - `admin.oriso.org` → Ingress Controller IP
+   - `auth.oriso.org` → Ingress Controller IP
    - And other subdomains as needed
 
 ## 🚀 Quick Start
@@ -75,9 +75,9 @@ kubectl get certificate -n caritas
 
 ## 📁 File Structure
 
-### API Ingress (api.oriso-dev.site)
+### API Ingress (api.oriso.org)
 
-- `00-keycloak-auth-domain-ingress.yaml` - Keycloak on auth.oriso-dev.site
+- `00-keycloak-auth-domain-ingress.yaml` - Keycloak on auth.oriso.org
 - `01-keycloak-ingress.yaml` - Keycloak authentication routes
 - `02-userservice-ingress.yaml` - UserService routes (5 Ingress resources)
 - `03-agencyservice-ingress.yaml` - AgencyService routes (4 Ingress resources)
@@ -91,16 +91,16 @@ kubectl get certificate -n caritas
 
 ### Subdomain Ingress (Separate Domains)
 
-- `13-frontend-ingress.yaml` - Frontend (app.oriso-dev.site)
-- `14-admin-ingress.yaml` - Admin Panel (admin.oriso-dev.site)
-- `15-health-dashboard-ingress.yaml` - Health Dashboard (health.oriso-dev.site)
-- `16-element-ingress.yaml` - Element.io (element.oriso-dev.site)
-- `17-element-call-ingress.yaml` - Element Call (call.oriso-dev.site)
-- `18-livekit-ingress.yaml` - LiveKit WebRTC (livekit.oriso-dev.site)
-- `19-redis-commander-ingress.yaml` - Redis Commander (redis.oriso-dev.site)
-- `20-signoz-ingress.yaml` - SigNoz Observability (signoz.oriso-dev.site)
-- `21-status-page-ingress.yaml` - Status Page (status.oriso-dev.site)
-- `22-storybook-ingress.yaml` - Storybook UI Dev (storybook.oriso-dev.site)
+- `13-frontend-ingress.yaml` - Frontend (app.oriso.org)
+- `14-admin-ingress.yaml` - Admin Panel (admin.oriso.org)
+- `15-health-dashboard-ingress.yaml` - Health Dashboard (health.oriso.org)
+- `16-element-ingress.yaml` - Element.io (element.oriso.org)
+- `17-element-call-ingress.yaml` - Element Call (call.oriso.org)
+- `18-livekit-ingress.yaml` - LiveKit WebRTC (livekit.oriso.org)
+- `19-redis-commander-ingress.yaml` - Redis Commander (redis.oriso.org)
+- `20-signoz-ingress.yaml` - SigNoz Observability (signoz.oriso.org)
+- `21-status-page-ingress.yaml` - Status Page (status.oriso.org)
+- `22-storybook-ingress.yaml` - Storybook UI Dev (storybook.oriso.org)
 
 **Total:** 22 YAML files containing 33 Ingress resources
 
@@ -154,7 +154,7 @@ annotations:
 spec:
   tls:
   - hosts:
-    - api.oriso-dev.site
+    - api.oriso.org
     secretName: api-oriso-dev-site-tls
 ```
 
@@ -166,13 +166,13 @@ Certificates are automatically issued and renewed by cert-manager.
 
 ```bash
 # Test Keycloak
-curl -I https://api.oriso-dev.site/auth/realms/online-beratung/.well-known/openid-configuration
+curl -I https://api.oriso.org/auth/realms/online-beratung/.well-known/openid-configuration
 
 # Test UserService
-curl -I https://api.oriso-dev.site/service/users/data
+curl -I https://api.oriso.org/service/users/data
 
 # Test AgencyService (public endpoint)
-curl https://api.oriso-dev.site/service/agencies/190
+curl https://api.oriso.org/service/agencies/190
 ```
 
 ### Verify Ingress Status
@@ -223,8 +223,8 @@ kubectl get certificate -n caritas
 
 2. **Test OPTIONS request:**
    ```bash
-   curl -X OPTIONS https://api.oriso-dev.site/<path> \
-     -H "Origin: https://app.oriso-dev.site" \
+   curl -X OPTIONS https://api.oriso.org/<path> \
+     -H "Origin: https://app.oriso.org" \
      -H "Access-Control-Request-Method: GET" \
      -v
    ```
@@ -253,14 +253,14 @@ kubectl get certificate -n caritas
 - No public internet routing for internal traffic
 
 **❌ Incorrect (Public URLs - should be avoided):**
-- `https://api.oriso-dev.site/service/*` (only for external clients)
+- `https://api.oriso.org/service/*` (only for external clients)
 
 ### Domain Configuration
 
 All Ingress resources use:
-- **API Domain:** `api.oriso-dev.site`
-- **Auth Domain:** `auth.oriso-dev.site`
-- **Matrix Domain:** `matrix.oriso-dev.site`
+- **API Domain:** `api.oriso.org`
+- **Auth Domain:** `auth.oriso.org`
+- **Matrix Domain:** `matrix.oriso.org`
 
 To change domains, update the `host` field in each Ingress resource's `rules` section.
 

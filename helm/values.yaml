@@ -9,26 +9,26 @@ global:
   # Domain Configuration - All external domains
   # These are used by Frontend, Admin, and Ingress resources
   domains:
-    api: "api.oriso-dev.site"           # Backend API gateway
-    app: "app.oriso-dev.site"            # Main frontend application
-    admin: "admin.oriso-dev.site"        # Admin panel
-    auth: "auth.oriso-dev.site"          # Keycloak authentication
-    matrix: "matrix.oriso-dev.site"       # Matrix client API
-    element: "element.oriso-dev.site"    # Element Matrix client UI
-    call: "call.oriso-dev.site"          # Element Call for video
-    livekit: "livekit.oriso-dev.site"    # LiveKit WebRTC server
-    health: "health.oriso-dev.site"      # Health monitoring dashboard
-    status: "status.oriso-dev.site"      # System status page
-    redis: "redis.oriso-dev.site"        # Redis Commander UI
-    signoz: "signoz.oriso-dev.site"      # SigNoz observability
-    storybook: "storybook.oriso-dev.site" # UI component development
+    api: "api.oriso.org"           # Backend API gateway
+    app: "app.oriso.org"            # Main frontend application
+    admin: "admin.oriso.org"        # Admin panel
+    auth: "auth.oriso.org"          # Keycloak authentication
+    matrix: "matrix.oriso.org"       # Matrix client API
+    element: "element.oriso.org"    # Element Matrix client UI
+    call: "call.oriso.org"          # Element Call for video
+    livekit: "livekit.oriso.org"    # LiveKit WebRTC server
+    health: "health.oriso.org"      # Health monitoring dashboard
+    status: "status.oriso.org"      # System status page
+    redis: "redis.oriso.org"        # Redis Commander UI
+    signoz: "signoz.oriso.org"      # SigNoz observability
+    storybook: "storybook.oriso.org" # UI component development
   
   # Keycloak Configuration
   keycloak:
     # Internal Kubernetes DNS (for service-to-service communication)
     internalUrl: "http://oriso-platform-keycloak.caritas.svc.cluster.local:8080"
     # External URL (for JWT validation - must match token issuer)
-    externalUrl: "https://auth.oriso-dev.site"
+    externalUrl: "https://auth.oriso.org"
     realm: "online-beratung"
     # Admin credentials (should be in Secrets, but defaults here)
     admin:
@@ -36,26 +36,26 @@ global:
       # Password should be in Secret
     # JWT validation URLs (external for managed clusters)
     jwt:
-      issuerUri: "https://auth.oriso-dev.site/realms/online-beratung"
-      jwkSetUri: "https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs"
+      issuerUri: "https://auth.oriso.org/realms/online-beratung"
+      jwkSetUri: "https://auth.oriso.org/realms/online-beratung/protocol/openid-connect/certs"
   
   # Matrix Synapse Configuration
   matrix:
     # Server name (standardized across all services)
-    serverName: "oriso-dev.site"
+    serverName: "oriso.org"
     # Internal Kubernetes DNS
     internalUrl: "http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008"
     # External URL
-    externalUrl: "https://matrix.oriso-dev.site"
+    externalUrl: "https://matrix.oriso.org"
     # Registration secret (should be in Secret)
     registrationSharedSecret: "caritas-registration-secret-2025"
   
   # CORS Configuration
   cors:
     allowedOrigins:
-      - "https://app.oriso-dev.site"
-      - "https://admin.oriso-dev.site"
-      - "https://api.oriso-dev.site"
+      - "https://app.oriso.org"
+      - "https://admin.oriso.org"
+      - "https://api.oriso.org"
     allowedMethods:
       - "GET"
       - "POST"

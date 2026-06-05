@@ -38,7 +38,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: api.oriso-dev.site
+  - host: api.oriso.org
     http:
       paths:
       # Matrix Media API - direct proxy to Matrix Synapse (no rewrite)
@@ -66,5 +66,5 @@ spec:
               number: 8008
   tls:
   - hosts:
-    - api.oriso-dev.site
+    - api.oriso.org
     secretName: api-oriso-dev-site-tls

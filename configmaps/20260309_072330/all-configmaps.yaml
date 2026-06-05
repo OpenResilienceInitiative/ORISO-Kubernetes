@@ -515,8 +515,8 @@ items:
     uid: e3a70ddf-daa9-4a65-a923-76165882c96a
 - apiVersion: v1
   data:
-    config.json: '{"default_server_config": {"m.homeserver": {"base_url": "https://matrix.oriso-dev.site",
-      "server_name": "oriso-dev.site"}}, "livekit": {"livekit_service_url": "https://livekit.oriso-dev.site/livekit/jwt"},
+    config.json: '{"default_server_config": {"m.homeserver": {"base_url": "https://matrix.oriso.org",
+      "server_name": "oriso.org"}}, "livekit": {"livekit_service_url": "https://livekit.oriso.org/livekit/jwt"},
       "features": {"feature_use_device_session_member_events": true}, "ssla": "https://static.element.io/legal/element-software-and-services-license-agreement-uk-1.pdf",
       "matrix_rtc_session": {"wait_for_key_rotation_ms": 3000, "membership_event_expiry_ms":
       180000000, "delayed_leave_event_delay_ms": 18000, "delayed_leave_event_restart_ms":
@@ -525,7 +525,7 @@ items:
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"v1","data":{"config.json":"{\"default_server_config\": {\"m.homeserver\": {\"base_url\": \"https://matrix.oriso-dev.site\", \"server_name\": \"91.99.183.160\"}}, \"livekit\": {\"livekit_service_url\": \"https://livekit.oriso-dev.site/livekit/jwt\"}, \"features\": {\"feature_use_device_session_member_events\": true}, \"ssla\": \"https://static.element.io/legal/element-software-and-services-license-agreement-uk-1.pdf\", \"matrix_rtc_session\": {\"wait_for_key_rotation_ms\": 3000, \"membership_event_expiry_ms\": 180000000, \"delayed_leave_event_delay_ms\": 18000, \"delayed_leave_event_restart_ms\": 4000, \"network_error_retry_ms\": 100}}"},"kind":"ConfigMap","metadata":{"annotations":{},"creationTimestamp":"2025-12-20T21:21:21Z","name":"element-call-config","namespace":"caritas","resourceVersion":"701818","uid":"2125b1d6-559d-4eaf-b8a5-9a2ff91e2251"}}
+        {"apiVersion":"v1","data":{"config.json":"{\"default_server_config\": {\"m.homeserver\": {\"base_url\": \"https://matrix.oriso.org\", \"server_name\": \"91.99.183.160\"}}, \"livekit\": {\"livekit_service_url\": \"https://livekit.oriso.org/livekit/jwt\"}, \"features\": {\"feature_use_device_session_member_events\": true}, \"ssla\": \"https://static.element.io/legal/element-software-and-services-license-agreement-uk-1.pdf\", \"matrix_rtc_session\": {\"wait_for_key_rotation_ms\": 3000, \"membership_event_expiry_ms\": 180000000, \"delayed_leave_event_delay_ms\": 18000, \"delayed_leave_event_restart_ms\": 4000, \"network_error_retry_ms\": 100}}"},"kind":"ConfigMap","metadata":{"annotations":{},"creationTimestamp":"2025-12-20T21:21:21Z","name":"element-call-config","namespace":"caritas","resourceVersion":"701818","uid":"2125b1d6-559d-4eaf-b8a5-9a2ff91e2251"}}
     creationTimestamp: "2025-12-20T21:21:21Z"
     name: element-call-config
     namespace: caritas
@@ -615,7 +615,7 @@ items:
       report_stats: false
       enable_registration: true
       enable_registration_without_verification: true
-      public_baseurl: "https://matrix.oriso-dev.site"
+      public_baseurl: "https://matrix.oriso.org"
 
       suppress_key_validation_warnings: true
       trusted_key_servers:
@@ -686,7 +686,7 @@ items:
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"v1","data":{"homeserver.yaml":"server_name: \"91.99.183.160\"\npid_file: /data/homeserver.pid\n\nlisteners:\n  - port: 8008\n    tls: false\n    type: http\n    x_forwarded: true\n    bind_addresses: [\"0.0.0.0\"]\n    resources:\n      - names: [client, federation]\n        compress: false\n\ndatabase:\n  name: sqlite3\n  args:\n    database: /data/homeserver.db\n\nredis:\n  enabled: true\n  host: redis\n  port: 6379\n  password: caritas123\n  dbid: 0\n\ncaches:\n  global_factor: 1.0\n  per_cache_factors:\n    get_users_in_room: 10.0\n    get_remote_users_in_room: 10.0\n\nmedia_store_path: /data/media_store\n\n# Disable authenticated media requirement\nenable_authenticated_media: false\nmatrix_synapse_enable_authenticated_media: false\n\nregistration_shared_secret: \"caritas-registration-secret-2025\"\nreport_stats: false\nenable_registration: true\nenable_registration_without_verification: true\npublic_baseurl: \"https://matrix.oriso-dev.site\"\n\nsuppress_key_validation_warnings: true\ntrusted_key_servers:\n  - server_name: \"matrix.org\"\n    accept_keys_insecurely: true\n\n# TURN/STUN configuration for WebRTC calls\nturn_uris:\n  - \"stun:stun.l.google.com:19302\"\n  - \"stun:stun1.l.google.com:19302\"\nturn_allow_guests: true\n\n# Rate limiting - set to 100000 to effectively never hit limits\nrc_message:\n  per_second: 100000\n  burst_count: 100000\n\nrc_registration:\n  per_second: 100000\n  burst_count: 100000\n\nrc_login:\n  address:\n    per_second: 100000\n    burst_count: 100000\n  account:\n    per_second: 100000\n    burst_count: 100000\n  failed_attempts:\n    per_second: 100000\n    burst_count: 100000\n\nrc_admin_redaction:\n  per_second: 100000\n  burst_count: 100000\n\nrc_joins:\n  local:\n    per_second: 100000\n    burst_count: 100000\n  remote:\n    per_second: 100000\n    burst_count: 100000\n\nrc_3pid_validation:\n  per_second: 100000\n  burst_count: 100000\n\nrc_invites:\n  per_room:\n    per_second: 100000\n    burst_count: 100000\n  per_user:\n    per_second: 100000\n    burst_count: 100000\n\n# Exempt internal network from rate limiting\nexempt_from_ratelimiting:\n  - \"10.42.0.0/16\"\n  - \"91.99.183.160\"\n  - \"127.0.0.1\"\n\n# Enable Sliding Sync (Matrix 2.0) for INSTANT real-time synchronization\nexperimental_features:\n  msc3575_enabled: true\n  msc3575_for_workers: true\n"},"kind":"ConfigMap","metadata":{"annotations":{},"creationTimestamp":"2025-12-20T00:56:05Z","name":"matrix-homeserver-oidc","namespace":"caritas","resourceVersion":"702741","uid":"32808119-c439-4ae3-8913-2621b897bf91"}}
+        {"apiVersion":"v1","data":{"homeserver.yaml":"server_name: \"91.99.183.160\"\npid_file: /data/homeserver.pid\n\nlisteners:\n  - port: 8008\n    tls: false\n    type: http\n    x_forwarded: true\n    bind_addresses: [\"0.0.0.0\"]\n    resources:\n      - names: [client, federation]\n        compress: false\n\ndatabase:\n  name: sqlite3\n  args:\n    database: /data/homeserver.db\n\nredis:\n  enabled: true\n  host: redis\n  port: 6379\n  password: caritas123\n  dbid: 0\n\ncaches:\n  global_factor: 1.0\n  per_cache_factors:\n    get_users_in_room: 10.0\n    get_remote_users_in_room: 10.0\n\nmedia_store_path: /data/media_store\n\n# Disable authenticated media requirement\nenable_authenticated_media: false\nmatrix_synapse_enable_authenticated_media: false\n\nregistration_shared_secret: \"caritas-registration-secret-2025\"\nreport_stats: false\nenable_registration: true\nenable_registration_without_verification: true\npublic_baseurl: \"https://matrix.oriso.org\"\n\nsuppress_key_validation_warnings: true\ntrusted_key_servers:\n  - server_name: \"matrix.org\"\n    accept_keys_insecurely: true\n\n# TURN/STUN configuration for WebRTC calls\nturn_uris:\n  - \"stun:stun.l.google.com:19302\"\n  - \"stun:stun1.l.google.com:19302\"\nturn_allow_guests: true\n\n# Rate limiting - set to 100000 to effectively never hit limits\nrc_message:\n  per_second: 100000\n  burst_count: 100000\n\nrc_registration:\n  per_second: 100000\n  burst_count: 100000\n\nrc_login:\n  address:\n    per_second: 100000\n    burst_count: 100000\n  account:\n    per_second: 100000\n    burst_count: 100000\n  failed_attempts:\n    per_second: 100000\n    burst_count: 100000\n\nrc_admin_redaction:\n  per_second: 100000\n  burst_count: 100000\n\nrc_joins:\n  local:\n    per_second: 100000\n    burst_count: 100000\n  remote:\n    per_second: 100000\n    burst_count: 100000\n\nrc_3pid_validation:\n  per_second: 100000\n  burst_count: 100000\n\nrc_invites:\n  per_room:\n    per_second: 100000\n    burst_count: 100000\n  per_user:\n    per_second: 100000\n    burst_count: 100000\n\n# Exempt internal network from rate limiting\nexempt_from_ratelimiting:\n  - \"10.42.0.0/16\"\n  - \"91.99.183.160\"\n  - \"127.0.0.1\"\n\n# Enable Sliding Sync (Matrix 2.0) for INSTANT real-time synchronization\nexperimental_features:\n  msc3575_enabled: true\n  msc3575_for_workers: true\n"},"kind":"ConfigMap","metadata":{"annotations":{},"creationTimestamp":"2025-12-20T00:56:05Z","name":"matrix-homeserver-oidc","namespace":"caritas","resourceVersion":"702741","uid":"32808119-c439-4ae3-8913-2621b897bf91"}}
     creationTimestamp: "2025-12-20T00:56:05Z"
     name: matrix-homeserver-oidc
     namespace: caritas
@@ -1185,7 +1185,7 @@ items:
     KEYCLOAK_REALM: online-beratung
     LIVE_SERVICE_API_URL: ""
     MATRIX_API_URL: http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008
-    MATRIX_SERVER_NAME: oriso-dev.site
+    MATRIX_SERVER_NAME: oriso.org
     MULTITENANCY_ENABLED: "true"
     ROCKET_CHAT_BASE_URL: http://oriso-platform-rocketchat.caritas.svc.cluster.local:3000/api/v1
     ROCKET_CHAT_MONGO_URL: mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false
@@ -1193,8 +1193,8 @@ items:
     SPRING_DATASOURCE_URL: jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/agencyservice
     SPRING_LIQUIBASE_ENABLED: "false"
     SPRING_PROFILES_ACTIVE: local
-    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.oriso-dev.site/realms/online-beratung
-    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.oriso.org/realms/online-beratung
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: https://auth.oriso.org/realms/online-beratung/protocol/openid-connect/certs
     TENANT_SERVICE_API_URL: http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081
     USER_ADMIN_SERVICE_API_URL: http://oriso-platform-userservice.caritas.svc.cluster.local:8082
   kind: ConfigMap
@@ -1226,8 +1226,8 @@ items:
     SPRING_RABBITMQ_PASSWORD: admin
     SPRING_RABBITMQ_PORT: "5672"
     SPRING_RABBITMQ_USERNAME: admin
-    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.oriso-dev.site/realms/online-beratung
-    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.oriso.org/realms/online-beratung
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: https://auth.oriso.org/realms/online-beratung/protocol/openid-connect/certs
     TENANT_SERVICE_API_URL: http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081
   kind: ConfigMap
   metadata:
@@ -1359,8 +1359,8 @@ items:
     SPRING_RABBITMQ_PASSWORD: admin
     SPRING_RABBITMQ_PORT: "5672"
     SPRING_RABBITMQ_USERNAME: admin
-    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.oriso-dev.site/realms/online-beratung
-    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.oriso.org/realms/online-beratung
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: https://auth.oriso.org/realms/online-beratung/protocol/openid-connect/certs
     USER_SERVICE_API_URL: http://oriso-platform-userservice.caritas.svc.cluster.local:8082
   kind: ConfigMap
   metadata:
@@ -1388,10 +1388,10 @@ items:
     KEYCLOAK_REALM: online-beratung
     MATRIX_API_URL: http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008
     MATRIX_MIGRATION_ENABLED: "true"
-    MATRIX_SERVER_NAME: oriso-dev.site
+    MATRIX_SERVER_NAME: oriso.org
     ROCKET_CHAT_BASE_URL: http://oriso-platform-rocketchat.caritas.svc.cluster.local:3000/api/v1
     ROCKET_CHAT_MONGO_URL: mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false
-    SMTP_FROM: ORISO <notifications@oriso-dev.site>
+    SMTP_FROM: ORISO <notifications@oriso.org>
     SMTP_HOST: smtp.titan.email
     SMTP_PORT: "587"
     SMTP_SECURE: "false"
@@ -1403,8 +1403,8 @@ items:
     SPRING_RABBITMQ_PASSWORD: admin
     SPRING_RABBITMQ_PORT: "5672"
     SPRING_RABBITMQ_USERNAME: admin
-    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.oriso-dev.site/realms/online-beratung
-    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.oriso.org/realms/online-beratung
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: https://auth.oriso.org/realms/online-beratung/protocol/openid-connect/certs
     TENANT_SERVICE_API_URL: http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081
     application.properties: |
       # ---------------- General ----------------
@@ -1419,8 +1419,8 @@ items:
 
       # ---------------- Server ----------------
       server.port=8082
-      server.host=https://api.oriso-dev.site
-      app.base.url=https://api.oriso-dev.site
+      server.host=https://api.oriso.org
+      app.base.url=https://api.oriso.org
 
       # Tomcat thread pool - Scaled for 5000 concurrent users
       server.tomcat.threads.max=1000
@@ -1441,13 +1441,13 @@ items:
       # ---------------- Keycloak ----------------
       keycloak.auth-server-url=http://oriso-platform-keycloak.caritas.svc.cluster.local:8080
       keycloak.realm=online-beratung
-      spring.security.oauth2.resourceserver.jwt.issuer-uri=https://auth.oriso-dev.site/realms/online-beratung
-      spring.security.oauth2.resourceserver.jwt.jwk-set-uri=https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs
+      spring.security.oauth2.resourceserver.jwt.issuer-uri=https://auth.oriso.org/realms/online-beratung
+      spring.security.oauth2.resourceserver.jwt.jwk-set-uri=https://auth.oriso.org/realms/online-beratung/protocol/openid-connect/certs
       identity.openid-connect-url=http://oriso-platform-keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect
 
       # ---------------- Matrix ----------------
       matrix.apiUrl=http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008
-      matrix.serverName=oriso-dev.site
+      matrix.serverName=oriso.org
       matrix.migrationEnabled=true
       matrix.registrationSharedSecret=caritas-registration-secret-2025
 
@@ -1476,10 +1476,10 @@ items:
       smtp.secure=false
       smtp.user=${SMTP_USER:}
       smtp.password=${SMTP_PASSWORD:}
-      smtp.from=ORISO <notifications@oriso-dev.site>
+      smtp.from=ORISO <notifications@oriso.org>
 
       # ---------------- CORS ----------------
-      registration.cors.allowed.origins=https://app.oriso-dev.site
+      registration.cors.allowed.origins=https://app.oriso.org
       registration.cors.allowed.paths=/service/users/askers/new,/service/users/consultants/languages
 
       # ---------------- Other Configuration ----------------
@@ -1538,7 +1538,7 @@ items:
     KEYCLOAK_REALM: online-beratung
     MATRIX_API_URL: http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008
     MATRIX_MIGRATION_ENABLED: "true"
-    MATRIX_SERVER_NAME: oriso-dev.site
+    MATRIX_SERVER_NAME: oriso.org
     ROCKET_CHAT_BASE_URL: http://oriso-platform-rocketchat.caritas.svc.cluster.local:3000/api/v1
     ROCKET_CHAT_MONGO_URL: mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false
     SPRING_DATA_MONGODB_URI: mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/userservice
@@ -1549,8 +1549,8 @@ items:
     SPRING_RABBITMQ_PASSWORD: admin
     SPRING_RABBITMQ_PORT: "5672"
     SPRING_RABBITMQ_USERNAME: admin
-    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.oriso-dev.site/realms/online-beratung
-    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://auth.oriso.org/realms/online-beratung
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: https://auth.oriso.org/realms/online-beratung/protocol/openid-connect/certs
     TENANT_SERVICE_API_URL: http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081
     application.properties: |
       # ---------------- General ----------------
@@ -1587,13 +1587,13 @@ items:
       # ---------------- Keycloak ----------------
       keycloak.auth-server-url=http://oriso-platform-keycloak.caritas.svc.cluster.local:8080
       keycloak.realm=online-beratung
-      spring.security.oauth2.resourceserver.jwt.issuer-uri=https://auth.oriso-dev.site/realms/online-beratung
-      spring.security.oauth2.resourceserver.jwt.jwk-set-uri=https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs
+      spring.security.oauth2.resourceserver.jwt.issuer-uri=https://auth.oriso.org/realms/online-beratung
+      spring.security.oauth2.resourceserver.jwt.jwk-set-uri=https://auth.oriso.org/realms/online-beratung/protocol/openid-connect/certs
       identity.openid-connect-url=http://oriso-platform-keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect
 
       # ---------------- Matrix ----------------
       matrix.apiUrl=http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008
-      matrix.serverName=oriso-dev.site
+      matrix.serverName=oriso.org
       matrix.migrationEnabled=true
       matrix.registrationSharedSecret=caritas-registration-secret-2025
 
@@ -1617,7 +1617,7 @@ items:
       agency.admin.service.api.url=${app.base.url}
 
       # ---------------- CORS ----------------
-      registration.cors.allowed.origins=https://app.oriso-dev.site
+      registration.cors.allowed.origins=https://app.oriso.org
       registration.cors.allowed.paths=/service/users/askers/new,/service/users/consultants/languages
 
       # ---------------- Other Configuration ----------------
@@ -1628,7 +1628,7 @@ items:
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"v1","data":{"AGENCY_SERVICE_API_URL":"http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084","CONSULTING_TYPE_SERVICE_API_URL":"http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083","IDENTITY_OPENID_CONNECT_URL":"http://oriso-platform-keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect","KEYCLOAK_AUTH_SERVER_URL":"http://oriso-platform-keycloak.caritas.svc.cluster.local:8080","KEYCLOAK_REALM":"online-beratung","MATRIX_API_URL":"http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008","MATRIX_MIGRATION_ENABLED":"true","MATRIX_SERVER_NAME":"oriso-dev.site","ROCKET_CHAT_BASE_URL":"http://oriso-platform-rocketchat.caritas.svc.cluster.local:3000/api/v1","ROCKET_CHAT_MONGO_URL":"mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false","SPRING_DATASOURCE_URL":"jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/userservice","SPRING_DATA_MONGODB_URI":"mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/userservice","SPRING_LIQUIBASE_ENABLED":"false","SPRING_PROFILES_ACTIVE":"prod","SPRING_RABBITMQ_HOST":"oriso-platform-rabbitmq.caritas.svc.cluster.local","SPRING_RABBITMQ_PASSWORD":"admin","SPRING_RABBITMQ_PORT":"5672","SPRING_RABBITMQ_USERNAME":"admin","SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI":"https://auth.oriso-dev.site/realms/online-beratung","SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI":"https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs","TENANT_SERVICE_API_URL":"http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081","application.properties":"# ---------------- General ----------------\nspring.application.name=user-service\nspring.profiles.active=prod\nspring.main.allow-bean-definition-overriding=true\nspring.jpa.open-in-view=true\nspring.jpa.hibernate.ddl-auto=none\nspring.data.jpa.repositories.bootstrap-mode=default\nspring.main.banner-mode=off\nspring.autoconfigure.exclude=org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration\n\n# ---------------- Server ----------------\nserver.port=8082\nserver.host=http://oriso-platform-userservice.caritas.svc.cluster.local:8082\napp.base.url=http://oriso-platform-userservice.caritas.svc.cluster.local:8082\n\n# Tomcat thread pool - Scaled for 5000 concurrent users\nserver.tomcat.threads.max=1000\nserver.tomcat.threads.min-spare=500\nserver.tomcat.max-connections=5000\nserver.tomcat.accept-count=1000\nserver.tomcat.connection-timeout=30000\n\n# ---------------- Database ----------------\nspring.datasource.url=jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/userservice\nspring.datasource.username=userservice\nspring.datasource.password=userservice\nspring.liquibase.enabled=false\n\n# ---------------- MongoDB ----------------\nspring.data.mongodb.uri=mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/userservice\n\n# ---------------- Keycloak ----------------\nkeycloak.auth-server-url=http://oriso-platform-keycloak.caritas.svc.cluster.local:8080\nkeycloak.realm=online-beratung\nspring.security.oauth2.resourceserver.jwt.issuer-uri=https://auth.oriso-dev.site/realms/online-beratung\nspring.security.oauth2.resourceserver.jwt.jwk-set-uri=https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs\nidentity.openid-connect-url=http://oriso-platform-keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect\n\n# ---------------- Matrix ----------------\nmatrix.apiUrl=http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008\nmatrix.serverName=oriso-dev.site\nmatrix.migrationEnabled=true\nmatrix.registrationSharedSecret=caritas-registration-secret-2025\n\n# ---------------- RabbitMQ ----------------\nspring.rabbitmq.host=oriso-platform-rabbitmq.caritas.svc.cluster.local\nspring.rabbitmq.port=5672\nspring.rabbitmq.username=admin\nspring.rabbitmq.password=admin\n\n# ---------------- Rocket.Chat ----------------\nrocket-chat.base-url=http://oriso-platform-rocketchat.caritas.svc.cluster.local:3000/api/v1\nrocket-chat.mongo-url=mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false\nrocket.technical.username=rocket-chat-technical-user\nrocket.technical.password=technical\n\n# ---------------- Service URLs ----------------\ntenant.service.api.url=http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081\nconsulting.type.service.api.url=http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083\nagency.service.api.url=http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084\nagency.service.api.get.agencies=${agency.service.api.url}/\nagency.admin.service.api.url=${app.base.url}\n\n# ---------------- CORS ----------------\nregistration.cors.allowed.origins=https://app.oriso-dev.site\nregistration.cors.allowed.paths=/service/users/askers/new,/service/users/consultants/languages\n\n# ---------------- Other Configuration ----------------\nspring.web.locale=de_DE\nspring.jackson.time-zone=Europe/Berlin\nservice.encryption.appkey=\n"},"kind":"ConfigMap","metadata":{"annotations":{},"labels":{"app":"userservice","app.kubernetes.io/instance":"release-name","app.kubernetes.io/managed-by":"Helm","app.kubernetes.io/name":"userservice","app.kubernetes.io/version":"1.0.0","helm.sh/chart":"userservice-1.0.0"},"name":"release-name-userservice-config","namespace":"caritas"}}
+        {"apiVersion":"v1","data":{"AGENCY_SERVICE_API_URL":"http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084","CONSULTING_TYPE_SERVICE_API_URL":"http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083","IDENTITY_OPENID_CONNECT_URL":"http://oriso-platform-keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect","KEYCLOAK_AUTH_SERVER_URL":"http://oriso-platform-keycloak.caritas.svc.cluster.local:8080","KEYCLOAK_REALM":"online-beratung","MATRIX_API_URL":"http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008","MATRIX_MIGRATION_ENABLED":"true","MATRIX_SERVER_NAME":"oriso.org","ROCKET_CHAT_BASE_URL":"http://oriso-platform-rocketchat.caritas.svc.cluster.local:3000/api/v1","ROCKET_CHAT_MONGO_URL":"mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false","SPRING_DATASOURCE_URL":"jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/userservice","SPRING_DATA_MONGODB_URI":"mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/userservice","SPRING_LIQUIBASE_ENABLED":"false","SPRING_PROFILES_ACTIVE":"prod","SPRING_RABBITMQ_HOST":"oriso-platform-rabbitmq.caritas.svc.cluster.local","SPRING_RABBITMQ_PASSWORD":"admin","SPRING_RABBITMQ_PORT":"5672","SPRING_RABBITMQ_USERNAME":"admin","SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI":"https://auth.oriso.org/realms/online-beratung","SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI":"https://auth.oriso.org/realms/online-beratung/protocol/openid-connect/certs","TENANT_SERVICE_API_URL":"http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081","application.properties":"# ---------------- General ----------------\nspring.application.name=user-service\nspring.profiles.active=prod\nspring.main.allow-bean-definition-overriding=true\nspring.jpa.open-in-view=true\nspring.jpa.hibernate.ddl-auto=none\nspring.data.jpa.repositories.bootstrap-mode=default\nspring.main.banner-mode=off\nspring.autoconfigure.exclude=org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration\n\n# ---------------- Server ----------------\nserver.port=8082\nserver.host=http://oriso-platform-userservice.caritas.svc.cluster.local:8082\napp.base.url=http://oriso-platform-userservice.caritas.svc.cluster.local:8082\n\n# Tomcat thread pool - Scaled for 5000 concurrent users\nserver.tomcat.threads.max=1000\nserver.tomcat.threads.min-spare=500\nserver.tomcat.max-connections=5000\nserver.tomcat.accept-count=1000\nserver.tomcat.connection-timeout=30000\n\n# ---------------- Database ----------------\nspring.datasource.url=jdbc:mariadb://oriso-platform-mariadb.caritas.svc.cluster.local:3306/userservice\nspring.datasource.username=userservice\nspring.datasource.password=userservice\nspring.liquibase.enabled=false\n\n# ---------------- MongoDB ----------------\nspring.data.mongodb.uri=mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/userservice\n\n# ---------------- Keycloak ----------------\nkeycloak.auth-server-url=http://oriso-platform-keycloak.caritas.svc.cluster.local:8080\nkeycloak.realm=online-beratung\nspring.security.oauth2.resourceserver.jwt.issuer-uri=https://auth.oriso.org/realms/online-beratung\nspring.security.oauth2.resourceserver.jwt.jwk-set-uri=https://auth.oriso.org/realms/online-beratung/protocol/openid-connect/certs\nidentity.openid-connect-url=http://oriso-platform-keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect\n\n# ---------------- Matrix ----------------\nmatrix.apiUrl=http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008\nmatrix.serverName=oriso.org\nmatrix.migrationEnabled=true\nmatrix.registrationSharedSecret=caritas-registration-secret-2025\n\n# ---------------- RabbitMQ ----------------\nspring.rabbitmq.host=oriso-platform-rabbitmq.caritas.svc.cluster.local\nspring.rabbitmq.port=5672\nspring.rabbitmq.username=admin\nspring.rabbitmq.password=admin\n\n# ---------------- Rocket.Chat ----------------\nrocket-chat.base-url=http://oriso-platform-rocketchat.caritas.svc.cluster.local:3000/api/v1\nrocket-chat.mongo-url=mongodb://oriso-platform-mongodb.caritas.svc.cluster.local:27017/rocketchat?retryWrites=false\nrocket.technical.username=rocket-chat-technical-user\nrocket.technical.password=technical\n\n# ---------------- Service URLs ----------------\ntenant.service.api.url=http://oriso-platform-tenantservice.caritas.svc.cluster.local:8081\nconsulting.type.service.api.url=http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083\nagency.service.api.url=http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084\nagency.service.api.get.agencies=${agency.service.api.url}/\nagency.admin.service.api.url=${app.base.url}\n\n# ---------------- CORS ----------------\nregistration.cors.allowed.origins=https://app.oriso.org\nregistration.cors.allowed.paths=/service/users/askers/new,/service/users/consultants/languages\n\n# ---------------- Other Configuration ----------------\nspring.web.locale=de_DE\nspring.jackson.time-zone=Europe/Berlin\nservice.encryption.appkey=\n"},"kind":"ConfigMap","metadata":{"annotations":{},"labels":{"app":"userservice","app.kubernetes.io/instance":"release-name","app.kubernetes.io/managed-by":"Helm","app.kubernetes.io/name":"userservice","app.kubernetes.io/version":"1.0.0","helm.sh/chart":"userservice-1.0.0"},"name":"release-name-userservice-config","namespace":"caritas"}}
     creationTimestamp: "2026-01-19T12:16:02Z"
     labels:
       app: userservice
@@ -1643,14 +1643,14 @@ items:
     uid: 8cc8e13c-0149-4b66-83da-7cea2209fabb
 - apiVersion: v1
   data:
-    matrixDomain: oriso-dev.site
+    matrixDomain: oriso.org
     matrixRegistrationSecret: caritas-registration-secret-2025
     namespace: caritas
   kind: ConfigMap
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"v1","data":{"matrixDomain":"oriso-dev.site","matrixRegistrationSecret":"caritas-registration-secret-2025","namespace":"caritas"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"system-users-config","namespace":"caritas"}}
+        {"apiVersion":"v1","data":{"matrixDomain":"oriso.org","matrixRegistrationSecret":"caritas-registration-secret-2025","namespace":"caritas"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"system-users-config","namespace":"caritas"}}
     creationTimestamp: "2025-12-27T06:19:11Z"
     name: system-users-config
     namespace: caritas

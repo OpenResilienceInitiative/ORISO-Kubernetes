@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: storybook.oriso-dev.site
+  - host: storybook.oriso.org
     http:
       paths:
       - path: /
@@ -22,7 +22,7 @@ spec:
               number: 6006
   tls:
   - hosts:
-    - storybook.oriso-dev.site
+    - storybook.oriso.org
     secretName: storybook-oriso-site-tls
 
 

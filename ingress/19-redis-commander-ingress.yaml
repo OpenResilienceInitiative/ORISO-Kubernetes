@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: redis.oriso-dev.site
+  - host: redis.oriso.org
     http:
       paths:
       - path: /
@@ -22,7 +22,7 @@ spec:
               number: 9021
   tls:
   - hosts:
-    - redis.oriso-dev.site
+    - redis.oriso.org
     secretName: redis-oriso-site-tls
 
 

@@ -35,7 +35,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: api.oriso-dev.site
+  - host: api.oriso.org
     http:
       paths:
       - backend:
@@ -47,7 +47,7 @@ spec:
         pathType: Exact
   tls:
   - hosts:
-    - api.oriso-dev.site
+    - api.oriso.org
     secretName: api-oriso-dev-site-tls
 ---
 # Real TenantService Ingress - Numeric tenant IDs: /service/tenant/{id} -> /tenant/{id}
@@ -91,7 +91,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: api.oriso-dev.site
+  - host: api.oriso.org
     http:
       paths:
       # Match /service/tenant/{numeric-id} - e.g., /service/tenant/1, /service/tenant/2
@@ -106,7 +106,7 @@ spec:
         pathType: ImplementationSpecific
   tls:
   - hosts:
-    - api.oriso-dev.site
+    - api.oriso.org
     secretName: api-oriso-dev-site-tls
 ---
 # Real TenantService Ingress - Root public path fallback for single-domain frontend
@@ -145,7 +145,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: api.oriso-dev.site
+  - host: api.oriso.org
     http:
       paths:
       - backend:
@@ -157,7 +157,7 @@ spec:
         pathType: Exact
   tls:
   - hosts:
-    - api.oriso-dev.site
+    - api.oriso.org
     secretName: api-oriso-dev-site-tls
 ---
 # Real TenantService Ingress - Public paths: /service/tenant/public/* -> /tenant/public/*
@@ -199,7 +199,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: api.oriso-dev.site
+  - host: api.oriso.org
     http:
       paths:
       # /service/tenant/public/{subdomain}
@@ -213,7 +213,7 @@ spec:
         pathType: ImplementationSpecific
   tls:
   - hosts:
-    - api.oriso-dev.site
+    - api.oriso.org
     secretName: api-oriso-dev-site-tls
 ---
 # Real TenantService Ingress - Direct paths: /tenant/* -> /tenant/*
@@ -253,7 +253,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: api.oriso-dev.site
+  - host: api.oriso.org
     http:
       paths:
       - backend:
@@ -265,7 +265,7 @@ spec:
         pathType: ImplementationSpecific
   tls:
   - hosts:
-    - api.oriso-dev.site
+    - api.oriso.org
     secretName: api-oriso-dev-site-tls
 ---
 # Real TenantService Ingress - Admin paths: /service/tenantadmin/* -> /tenantadmin/*
@@ -308,7 +308,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: api.oriso-dev.site
+  - host: api.oriso.org
     http:
       paths:
       - backend:
@@ -320,5 +320,5 @@ spec:
         pathType: ImplementationSpecific
   tls:
   - hosts:
-    - api.oriso-dev.site
+    - api.oriso.org
     secretName: api-oriso-dev-site-tls

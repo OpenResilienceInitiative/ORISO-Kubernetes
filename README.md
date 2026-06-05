@@ -141,11 +141,11 @@ kubectl apply -f .
 
 After deployment, access services at:
 
-- **Frontend:** `https://app.oriso-dev.site`
-- **Admin:** `https://admin.oriso-dev.site`
-- **API:** `https://api.oriso-dev.site`
-- **Auth:** `https://auth.oriso-dev.site`
-- **Matrix:** `https://matrix.oriso-dev.site`
+- **Frontend:** `https://app.oriso.org`
+- **Admin:** `https://admin.oriso.org`
+- **API:** `https://api.oriso.org`
+- **Auth:** `https://auth.oriso.org`
+- **Matrix:** `https://matrix.oriso.org`
 
 ## 📝 Notes
 

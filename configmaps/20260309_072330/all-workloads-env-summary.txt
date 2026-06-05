@@ -8,14 +8,14 @@
 
 [Deployment] caritas/oriso-platform-admin :: container=admin
   env:
-    - REACT_APP_API_URL=https://api.oriso-dev.site
-    - REACT_APP_KEYCLOAK_URL=https://auth.oriso-dev.site
-    - REACT_APP_MATRIX_URL=https://matrix.oriso-dev.site
-    - VITE_API_URL=https://api.oriso-dev.site
-    - REACT_APP_API_URL=https://api.oriso-dev.site
-    - REACT_APP_MATRIX_URL=https://matrix.oriso-dev.site
-    - REACT_APP_KEYCLOAK_URL=https://auth.oriso-dev.site
-    - VITE_API_URL=https://api.oriso-dev.site
+    - REACT_APP_API_URL=https://api.oriso.org
+    - REACT_APP_KEYCLOAK_URL=https://auth.oriso.org
+    - REACT_APP_MATRIX_URL=https://matrix.oriso.org
+    - VITE_API_URL=https://api.oriso.org
+    - REACT_APP_API_URL=https://api.oriso.org
+    - REACT_APP_MATRIX_URL=https://matrix.oriso.org
+    - REACT_APP_KEYCLOAK_URL=https://auth.oriso.org
+    - VITE_API_URL=https://api.oriso.org
 
 [Deployment] caritas/oriso-platform-agencyservice :: container=agencyservice
   envFrom:
@@ -34,22 +34,22 @@
   env:
     - NODE_ENV=production
     - PORT=80
-    - REACT_APP_API_URL=https://api.oriso-dev.site
-    - REACT_APP_ELEMENT_CALL_URL=https://call.oriso-dev.site
-    - REACT_APP_KEYCLOAK_URL=https://auth.oriso-dev.site
-    - REACT_APP_LIVEKIT_URL=https://livekit.oriso-dev.site
-    - REACT_APP_MATRIX_HOMESERVER_URL=https://matrix.oriso-dev.site
-    - REACT_APP_MATRIX_URL=https://matrix.oriso-dev.site
-    - VITE_API_URL=https://api.oriso-dev.site
-    - VITE_MATRIX_HOMESERVER_URL=https://matrix.oriso-dev.site
-    - REACT_APP_API_URL=https://api.oriso-dev.site
-    - REACT_APP_MATRIX_URL=https://matrix.oriso-dev.site
-    - REACT_APP_ELEMENT_CALL_URL=https://call.oriso-dev.site
-    - REACT_APP_LIVEKIT_URL=https://livekit.oriso-dev.site
-    - REACT_APP_KEYCLOAK_URL=https://auth.oriso-dev.site
-    - VITE_API_URL=https://api.oriso-dev.site
-    - REACT_APP_MATRIX_HOMESERVER_URL=https://matrix.oriso-dev.site
-    - VITE_MATRIX_HOMESERVER_URL=https://matrix.oriso-dev.site
+    - REACT_APP_API_URL=https://api.oriso.org
+    - REACT_APP_ELEMENT_CALL_URL=https://call.oriso.org
+    - REACT_APP_KEYCLOAK_URL=https://auth.oriso.org
+    - REACT_APP_LIVEKIT_URL=https://livekit.oriso.org
+    - REACT_APP_MATRIX_HOMESERVER_URL=https://matrix.oriso.org
+    - REACT_APP_MATRIX_URL=https://matrix.oriso.org
+    - VITE_API_URL=https://api.oriso.org
+    - VITE_MATRIX_HOMESERVER_URL=https://matrix.oriso.org
+    - REACT_APP_API_URL=https://api.oriso.org
+    - REACT_APP_MATRIX_URL=https://matrix.oriso.org
+    - REACT_APP_ELEMENT_CALL_URL=https://call.oriso.org
+    - REACT_APP_LIVEKIT_URL=https://livekit.oriso.org
+    - REACT_APP_KEYCLOAK_URL=https://auth.oriso.org
+    - VITE_API_URL=https://api.oriso.org
+    - REACT_APP_MATRIX_HOMESERVER_URL=https://matrix.oriso.org
+    - VITE_MATRIX_HOMESERVER_URL=https://matrix.oriso.org
 
 [Deployment] caritas/oriso-platform-health-dashboard :: container=health-dashboard
   env:
@@ -60,7 +60,7 @@
     - KEYCLOAK_ADMIN=admin
     - KEYCLOAK_ADMIN_PASSWORD=admin
     - KC_PROXY=edge
-    - KC_HOSTNAME=auth.oriso-dev.site
+    - KC_HOSTNAME=auth.oriso.org
     - KC_HOSTNAME_STRICT_HTTPS=true
     - KC_HTTP_ENABLED=true
     - KC_SPI_STICKY_SESSION_ENCODER_INFINISPAN_SHOULD_ATTACH_ROUTE=false
@@ -73,7 +73,7 @@
 
 [Deployment] caritas/oriso-platform-matrix-synapse :: container=synapse
   env:
-    - SYNAPSE_SERVER_NAME=oriso-dev.site
+    - SYNAPSE_SERVER_NAME=oriso.org
     - SYNAPSE_REPORT_STATS=no
     - SYNAPSE_ENABLE_AUTHENTICATED_MEDIA=false
 

@@ -27,7 +27,7 @@ keycloak:
     password: "admin"  # Should be in Secret
   
   # Hostname configuration (uses global.domains.auth if available)
-  hostname: "auth.oriso-dev.site"
+  hostname: "auth.oriso.org"
   hostnameStrictHttps: true
   httpEnabled: true
   
@@ -44,7 +44,7 @@ hostNetwork: true
 # Global values (will be passed from parent chart or values.yaml)
 global:
   domains:
-    auth: "auth.oriso-dev.site"
+    auth: "auth.oriso.org"
 
 
 

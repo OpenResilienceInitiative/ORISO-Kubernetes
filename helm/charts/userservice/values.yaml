@@ -47,15 +47,15 @@ keycloak:
     adminPassword: "technical"
   jwt:
     # External URL for JWT validation (managed cluster requirement)
-    issuerUri: "https://auth.oriso-dev.site/realms/online-beratung"
-    jwkSetUri: "https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs"
+    issuerUri: "https://auth.oriso.org/realms/online-beratung"
+    jwkSetUri: "https://auth.oriso.org/realms/online-beratung/protocol/openid-connect/certs"
   identity:
     openIdConnectUrl: "http://oriso-platform-keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect"
 
 # Matrix Configuration - Full DNS FQDN for managed clusters
 matrix:
   apiUrl: "http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008"
-  serverName: "oriso-dev.site"
+  serverName: "oriso.org"
   migrationEnabled: true
   registrationSharedSecret: "caritas-registration-secret-2025"
   adminUsername: "caritas_admin"
@@ -116,5 +116,5 @@ smtp:
   secure: "false"
   user: ""
   password: ""
-  from: "ORISO <notifications@oriso-dev.site>"
+  from: "ORISO <notifications@oriso.org>"
 

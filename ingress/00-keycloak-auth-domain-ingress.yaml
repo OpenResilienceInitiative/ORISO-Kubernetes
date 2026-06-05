@@ -25,7 +25,7 @@ metadata:
       }
       add_header Access-Control-Allow-Origin $http_origin always;
       add_header Access-Control-Allow-Credentials "true" always;
-      proxy_set_header Host auth.oriso-dev.site;
+      proxy_set_header Host auth.oriso.org;
       proxy_set_header X-Forwarded-Host $host;
       proxy_set_header X-Forwarded-Proto $scheme;
       proxy_set_header X-Real-IP $remote_addr;
@@ -45,7 +45,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: auth.oriso-dev.site
+  - host: auth.oriso.org
     http:
       paths:
       # Keycloak runs at root path (no /auth prefix needed)
@@ -58,7 +58,7 @@ spec:
               number: 8080
   tls:
   - hosts:
-    - auth.oriso-dev.site
+    - auth.oriso.org
     secretName: auth-oriso-dev-site-tls
 
 

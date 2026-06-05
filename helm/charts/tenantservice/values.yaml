@@ -54,8 +54,8 @@ keycloak:
   sslRequired: "none"
   jwt:
     # External URL for JWT validation (managed cluster requirement)
-    issuerUri: "https://auth.oriso-dev.site/realms/online-beratung"
-    jwkSetUri: "https://auth.oriso-dev.site/realms/online-beratung/protocol/openid-connect/certs"
+    issuerUri: "https://auth.oriso.org/realms/online-beratung"
+    jwkSetUri: "https://auth.oriso.org/realms/online-beratung/protocol/openid-connect/certs"
 
 # RabbitMQ Configuration - Full DNS FQDN for managed clusters
 rabbitmq:

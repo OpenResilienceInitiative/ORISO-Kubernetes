@@ -16,7 +16,7 @@ metadata:
       \"true\" always;","nginx.ingress.kubernetes.io/cors-allow-credentials":"true","nginx.ingress.kubernetes.io/cors-allow-headers":"Authorization,
       Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With,
       X-WHITELIST-HEADER","nginx.ingress.kubernetes.io/cors-allow-methods":"GET, POST,
-      PUT, PATCH, DELETE, OPTIONS","nginx.ingress.kubernetes.io/cors-allow-origin":"$http_origin","nginx.ingress.kubernetes.io/cors-max-age":"86400","nginx.ingress.kubernetes.io/enable-cors":"true","nginx.ingress.kubernetes.io/ssl-redirect":"true"},"name":"agencyservice-agencies-ingress","namespace":"caritas"},"spec":{"ingressClassName":"nginx","rules":[{"host":"api.oriso-dev.site","http":{"paths":[{"backend":{"service":{"name":"agencyservice","port":{"number":8084}}},"path":"/service/agencies","pathType":"Exact"},{"backend":{"service":{"name":"agencyservice","port":{"number":8084}}},"path":"/service/agencies(/|$)(.*)","pathType":"ImplementationSpecific"}]}}],"tls":[{"hosts":["api.oriso-dev.site"],"secretName":"api-oriso-dev-site-tls"}]}}
+      PUT, PATCH, DELETE, OPTIONS","nginx.ingress.kubernetes.io/cors-allow-origin":"$http_origin","nginx.ingress.kubernetes.io/cors-max-age":"86400","nginx.ingress.kubernetes.io/enable-cors":"true","nginx.ingress.kubernetes.io/ssl-redirect":"true"},"name":"agencyservice-agencies-ingress","namespace":"caritas"},"spec":{"ingressClassName":"nginx","rules":[{"host":"api.oriso.org","http":{"paths":[{"backend":{"service":{"name":"agencyservice","port":{"number":8084}}},"path":"/service/agencies","pathType":"Exact"},{"backend":{"service":{"name":"agencyservice","port":{"number":8084}}},"path":"/service/agencies(/|$)(.*)","pathType":"ImplementationSpecific"}]}}],"tls":[{"hosts":["api.oriso.org"],"secretName":"api-oriso-dev-site-tls"}]}}
 
       '
     nginx.ingress.kubernetes.io/configuration-snippet: "if ($request_method = OPTIONS)\
@@ -46,7 +46,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: api.oriso-dev.site
+  - host: api.oriso.org
     http:
       paths:
       - backend:
@@ -65,7 +65,7 @@ spec:
         pathType: ImplementationSpecific
   tls:
   - hosts:
-    - api.oriso-dev.site
+    - api.oriso.org
     secretName: api-oriso-dev-site-tls
 ---
 apiVersion: networking.k8s.io/v1
@@ -86,7 +86,7 @@ metadata:
       \"true\" always;","nginx.ingress.kubernetes.io/cors-allow-credentials":"true","nginx.ingress.kubernetes.io/cors-allow-headers":"Authorization,
       Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With,
       X-WHITELIST-HEADER","nginx.ingress.kubernetes.io/cors-allow-methods":"GET, POST,
-      PUT, PATCH, DELETE, OPTIONS","nginx.ingress.kubernetes.io/cors-allow-origin":"$http_origin","nginx.ingress.kubernetes.io/cors-max-age":"86400","nginx.ingress.kubernetes.io/enable-cors":"true","nginx.ingress.kubernetes.io/rewrite-target":"/agencyadmin/$2","nginx.ingress.kubernetes.io/ssl-redirect":"true","nginx.ingress.kubernetes.io/use-regex":"true"},"name":"agencyservice-agencyadmin-ingress","namespace":"caritas"},"spec":{"ingressClassName":"nginx","rules":[{"host":"api.oriso-dev.site","http":{"paths":[{"backend":{"service":{"name":"agencyservice","port":{"number":8084}}},"path":"/service/agencyadmin(/|$)(.*)","pathType":"ImplementationSpecific"}]}}],"tls":[{"hosts":["api.oriso-dev.site"],"secretName":"api-oriso-dev-site-tls"}]}}
+      PUT, PATCH, DELETE, OPTIONS","nginx.ingress.kubernetes.io/cors-allow-origin":"$http_origin","nginx.ingress.kubernetes.io/cors-max-age":"86400","nginx.ingress.kubernetes.io/enable-cors":"true","nginx.ingress.kubernetes.io/rewrite-target":"/agencyadmin/$2","nginx.ingress.kubernetes.io/ssl-redirect":"true","nginx.ingress.kubernetes.io/use-regex":"true"},"name":"agencyservice-agencyadmin-ingress","namespace":"caritas"},"spec":{"ingressClassName":"nginx","rules":[{"host":"api.oriso.org","http":{"paths":[{"backend":{"service":{"name":"agencyservice","port":{"number":8084}}},"path":"/service/agencyadmin(/|$)(.*)","pathType":"ImplementationSpecific"}]}}],"tls":[{"hosts":["api.oriso.org"],"secretName":"api-oriso-dev-site-tls"}]}}
 
       '
     nginx.ingress.kubernetes.io/configuration-snippet: "if ($request_method = OPTIONS)\
@@ -116,7 +116,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: api.oriso-dev.site
+  - host: api.oriso.org
     http:
       paths:
       - backend:
@@ -128,7 +128,7 @@ spec:
         pathType: ImplementationSpecific
   tls:
   - hosts:
-    - api.oriso-dev.site
+    - api.oriso.org
     secretName: api-oriso-dev-site-tls
 ---
 apiVersion: networking.k8s.io/v1
@@ -149,7 +149,7 @@ metadata:
       \"true\" always;","nginx.ingress.kubernetes.io/cors-allow-credentials":"true","nginx.ingress.kubernetes.io/cors-allow-headers":"Authorization,
       Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, x-csrf-token, X-Requested-With,
       X-WHITELIST-HEADER","nginx.ingress.kubernetes.io/cors-allow-methods":"GET, POST,
-      PUT, PATCH, DELETE, OPTIONS","nginx.ingress.kubernetes.io/cors-allow-origin":"$http_origin","nginx.ingress.kubernetes.io/cors-max-age":"86400","nginx.ingress.kubernetes.io/enable-cors":"true","nginx.ingress.kubernetes.io/ssl-redirect":"true","nginx.ingress.kubernetes.io/use-regex":"true"},"name":"agencyservice-appointmentservice-ingress","namespace":"caritas"},"spec":{"ingressClassName":"nginx","rules":[{"host":"api.oriso-dev.site","http":{"paths":[{"backend":{"service":{"name":"agencyservice","port":{"number":8084}}},"path":"/service/appointmentservice(/|$)(.*)","pathType":"ImplementationSpecific"}]}}],"tls":[{"hosts":["api.oriso-dev.site"],"secretName":"api-oriso-dev-site-tls"}]}}
+      PUT, PATCH, DELETE, OPTIONS","nginx.ingress.kubernetes.io/cors-allow-origin":"$http_origin","nginx.ingress.kubernetes.io/cors-max-age":"86400","nginx.ingress.kubernetes.io/enable-cors":"true","nginx.ingress.kubernetes.io/ssl-redirect":"true","nginx.ingress.kubernetes.io/use-regex":"true"},"name":"agencyservice-appointmentservice-ingress","namespace":"caritas"},"spec":{"ingressClassName":"nginx","rules":[{"host":"api.oriso.org","http":{"paths":[{"backend":{"service":{"name":"agencyservice","port":{"number":8084}}},"path":"/service/appointmentservice(/|$)(.*)","pathType":"ImplementationSpecific"}]}}],"tls":[{"hosts":["api.oriso.org"],"secretName":"api-oriso-dev-site-tls"}]}}
 
       '
     nginx.ingress.kubernetes.io/configuration-snippet: "if ($request_method = OPTIONS)\
@@ -178,7 +178,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: api.oriso-dev.site
+  - host: api.oriso.org
     http:
       paths:
       - backend:
@@ -190,7 +190,7 @@ spec:
         pathType: ImplementationSpecific
   tls:
   - hosts:
-    - api.oriso-dev.site
+    - api.oriso.org
     secretName: api-oriso-dev-site-tls
 ---
 apiVersion: networking.k8s.io/v1
@@ -211,7 +211,7 @@ metadata:
       \"true\" always;","nginx.ingress.kubernetes.io/cors-allow-credentials":"true","nginx.ingress.kubernetes.io/cors-allow-headers":"Authorization,
       Content-Type, Cache-Control, Pragma, Expires, X-CSRF-Token, X-Requested-With,
       rcToken, rcUserId, rctoken, rcuserid, X-WHITELIST-HEADER","nginx.ingress.kubernetes.io/cors-allow-methods":"GET,
-      POST, PUT, PATCH, DELETE, OPTIONS","nginx.ingress.kubernetes.io/cors-allow-origin":"$http_origin","nginx.ingress.kubernetes.io/cors-max-age":"86400","nginx.ingress.kubernetes.io/enable-cors":"true","nginx.ingress.kubernetes.io/ssl-redirect":"true","nginx.ingress.kubernetes.io/use-regex":"true"},"name":"agencyservice-topicadmin-ingress","namespace":"caritas"},"spec":{"ingressClassName":"nginx","rules":[{"host":"api.oriso-dev.site","http":{"paths":[{"backend":{"service":{"name":"agencyservice","port":{"number":8084}}},"path":"/service/topicadmin(/|$)(.*)","pathType":"ImplementationSpecific"}]}}],"tls":[{"hosts":["api.oriso-dev.site"],"secretName":"api-oriso-dev-site-tls"}]}}
+      POST, PUT, PATCH, DELETE, OPTIONS","nginx.ingress.kubernetes.io/cors-allow-origin":"$http_origin","nginx.ingress.kubernetes.io/cors-max-age":"86400","nginx.ingress.kubernetes.io/enable-cors":"true","nginx.ingress.kubernetes.io/ssl-redirect":"true","nginx.ingress.kubernetes.io/use-regex":"true"},"name":"agencyservice-topicadmin-ingress","namespace":"caritas"},"spec":{"ingressClassName":"nginx","rules":[{"host":"api.oriso.org","http":{"paths":[{"backend":{"service":{"name":"agencyservice","port":{"number":8084}}},"path":"/service/topicadmin(/|$)(.*)","pathType":"ImplementationSpecific"}]}}],"tls":[{"hosts":["api.oriso.org"],"secretName":"api-oriso-dev-site-tls"}]}}
 
       '
     nginx.ingress.kubernetes.io/configuration-snippet: "if ($request_method = OPTIONS)\
@@ -241,7 +241,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: api.oriso-dev.site
+  - host: api.oriso.org
     http:
       paths:
       - backend:
@@ -253,5 +253,5 @@ spec:
         pathType: ImplementationSpecific
   tls:
   - hosts:
-    - api.oriso-dev.site
+    - api.oriso.org
     secretName: api-oriso-dev-site-tls

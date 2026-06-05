@@ -54,11 +54,11 @@ Complete Helm chart deployment for the ORISO platform.
    ```
 
 7. **DNS Records** (point to Ingress Controller IP)
-   - `api.oriso-dev.site`
-   - `app.oriso-dev.site`
-   - `admin.oriso-dev.site`
-   - `auth.oriso-dev.site`
-   - `matrix.oriso-dev.site`
+   - `api.oriso.org`
+   - `app.oriso.org`
+   - `admin.oriso.org`
+   - `auth.oriso.org`
+   - `matrix.oriso.org`
    - And other subdomains as needed
 
 ## 🚀 Quick Start
