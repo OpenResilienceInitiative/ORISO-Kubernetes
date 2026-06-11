@@ -41,10 +41,17 @@ spec:
           value: "https://{{ .Values.global.domains.api }}"
         - name: REACT_APP_MATRIX_URL
           value: "https://{{ .Values.global.domains.matrix }}"
+        # Canonical name read by the frontend code (kept old name above for
+        # backwards compatibility / other consumers).
         - name: REACT_APP_ELEMENT_CALL_URL
           value: "https://{{ .Values.global.domains.call }}"
+        - name: REACT_APP_ELEMENT_CALL_BASE_URL
+          value: "https://{{ .Values.global.domains.call }}"
+        # LiveKit signalling must be a websocket URL (wss://).
         - name: REACT_APP_LIVEKIT_URL
-          value: "https://{{ .Values.global.domains.livekit }}"
+          value: "wss://{{ .Values.global.domains.livekit }}"
+        - name: REACT_APP_LIVEKIT_WS_URL
+          value: "wss://{{ .Values.global.domains.livekit }}"
         - name: REACT_APP_KEYCLOAK_URL
           value: "https://{{ .Values.global.domains.auth }}"
         - name: VITE_API_URL
