@@ -47,6 +47,13 @@ spec:
           value: "https://{{ .Values.global.domains.auth }}"
         - name: VITE_API_URL
           value: "https://{{ .Values.global.domains.api }}"
+        # End-user app origin for the Theme Builder's sandboxed iframe
+        # preview (generate-runtime-env.js exposes it as APP_URL; without
+        # it the admin falls back to the API origin and the preview 404s).
+        - name: REACT_APP_APP_URL
+          value: "https://{{ .Values.global.domains.app }}"
+        - name: VITE_APP_URL
+          value: "https://{{ .Values.global.domains.app }}"
         {{- end }}
         {{- end }}
         {{- if .Values.resources }}

@@ -7,6 +7,11 @@ metadata:
     # SSL/TLS
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # Theme Builder preview: only the admin panel may embed the app in
+    # an iframe (sandboxed preview); everyone else is blocked.
+    # Requires allow-snippet-annotations on the ingress controller.
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      add_header Content-Security-Policy "frame-ancestors 'self' https://admin.oriso-dev.site" always;
 spec:
   ingressClassName: nginx
   rules:
