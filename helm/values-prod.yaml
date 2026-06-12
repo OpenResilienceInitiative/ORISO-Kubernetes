@@ -1,0 +1,34 @@
+# Production overrides (oriso.org)
+# Usage: helm upgrade ... -f helm/values.yaml -f helm/values-prod.yaml
+
+global:
+  domains:
+    api: "api.oriso.org"
+    app: "app.oriso.org"
+    admin: "admin.oriso.org"
+    auth: "auth.oriso.org"
+    matrix: "matrix.oriso.org"
+    element: "element.oriso.org"
+    call: "call.oriso.org"
+    livekit: "livekit.oriso.org"
+    health: "health.oriso.org"
+    status: "status.oriso.org"
+  keycloak:
+    externalUrl: "https://auth.oriso.org"
+    jwt:
+      issuerUri: "https://auth.oriso.org/realms/online-beratung"
+      jwkSetUri: "https://auth.oriso.org/realms/online-beratung/protocol/openid-connect/certs"
+  matrix:
+    serverName: "oriso.org"
+    externalUrl: "https://matrix.oriso.org"
+  cors:
+    allowedOrigins:
+      - "https://app.oriso.org"
+      - "https://admin.oriso.org"
+      - "https://api.oriso.org"
+      - "https://call.oriso.org"
+
+livekit:
+  tokenService:
+    env:
+      LIVEKIT_URL: "wss://livekit.oriso.org"

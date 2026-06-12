@@ -23,6 +23,17 @@ spec:
         - name: http
           containerPort: {{ .Values.tokenService.service.targetPort }}
           protocol: TCP
+        env:
+        {{- range $key, $value := .Values.tokenService.env }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- if .Values.global }}
+        {{- if .Values.global.domains }}
+        - name: LIVEKIT_URL
+          value: "wss://{{ .Values.global.domains.livekit }}"
+        {{- end }}
+        {{- end }}
         {{- if .Values.resources }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}

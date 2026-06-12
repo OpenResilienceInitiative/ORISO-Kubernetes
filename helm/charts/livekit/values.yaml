@@ -23,6 +23,11 @@ tokenService:
     pullPolicy: Never  # Use local image
   
   replicas: 1
+
+  # Returned in SFU JWT responses as { url, jwt } — must be the public
+  # LiveKit websocket host (wss://), not the JWT service path.
+  env:
+    LIVEKIT_URL: "wss://livekit.oriso-dev.site"
   
   service:
     type: ClusterIP
