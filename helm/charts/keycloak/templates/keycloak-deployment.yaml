@@ -24,6 +24,10 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+          {{- if .Values.keycloakResources }}
+          resources:
+            {{- toYaml .Values.keycloakResources | nindent 12 }}
+          {{- end }}
           command:
             - /opt/keycloak/bin/kc.sh
           args:
@@ -83,6 +87,29 @@ spec:
                 configMapKeyRef:
                   key: ROOT_LOGLEVEL
                   name: keycloak-configmap-env
+          {{- if .Values.keycloakProbes }}
+          startupProbe:
+            httpGet:
+              path: {{ .Values.keycloakProbes.startup.path | default "/health/started" }}
+              port: 8080
+            initialDelaySeconds: {{ .Values.keycloakProbes.startup.initialDelaySeconds | default 10 }}
+            periodSeconds: {{ .Values.keycloakProbes.startup.periodSeconds | default 10 }}
+            failureThreshold: {{ .Values.keycloakProbes.startup.failureThreshold | default 30 }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.keycloakProbes.liveness.path | default "/health/live" }}
+              port: 8080
+            initialDelaySeconds: {{ .Values.keycloakProbes.liveness.initialDelaySeconds | default 60 }}
+            periodSeconds: {{ .Values.keycloakProbes.liveness.periodSeconds | default 30 }}
+            failureThreshold: {{ .Values.keycloakProbes.liveness.failureThreshold | default 3 }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.keycloakProbes.readiness.path | default "/health/ready" }}
+              port: 8080
+            initialDelaySeconds: {{ .Values.keycloakProbes.readiness.initialDelaySeconds | default 30 }}
+            periodSeconds: {{ .Values.keycloakProbes.readiness.periodSeconds | default 10 }}
+            failureThreshold: {{ .Values.keycloakProbes.readiness.failureThreshold | default 3 }}
+          {{- end }}
           lifecycle:
             postStart:
               exec:
