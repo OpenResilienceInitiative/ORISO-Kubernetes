@@ -8,12 +8,23 @@ spec:
     matchLabels:
       app: keycloak
   strategy:
-    type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   template:
     metadata:
       labels:
         app: keycloak
     spec:
+      terminationGracePeriodSeconds: 60
+      {{- if .Values.keycloakSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.keycloakSecurityContext.pod | nindent 8 }}
+      {{- end }}
+      {{- if .Values.keycloakServiceAccount }}
+      serviceAccountName: {{ .Values.keycloakServiceAccount | quote }}
+      {{- end }}
       initContainers:
         - name: wait-for-mariadb
           image: busybox:1.36
@@ -83,6 +94,10 @@ spec:
                 configMapKeyRef:
                   key: ROOT_LOGLEVEL
                   name: keycloak-configmap-env
+          {{- if .Values.keycloakSecurityContext }}
+          securityContext:
+            {{- toYaml .Values.keycloakSecurityContext.container | nindent 12 }}
+          {{- end }}
           lifecycle:
             postStart:
               exec:
