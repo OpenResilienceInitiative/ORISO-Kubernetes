@@ -13,4 +13,7 @@ data:
     KEYCLOAK_LOGLEVEL: {{ .Values.keycloakLogLevel | quote }}
     ROOT_LOGLEVEL: {{ .Values.rootLogLevel | quote }}
     KEYCLOAK_IMPORT: "/data/import"
+    {{- if .Values.global.useKubernetesCache }}
+    KC_CACHE_STACK: kubernetes
+    {{- end }}
 
