@@ -49,6 +49,8 @@ data:
   
   # Spring Profile
   SPRING_PROFILES_ACTIVE: {{ .Values.spring.profiles.active | quote }}
+  SERVER_SHUTDOWN: "graceful"
+  SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE: "30s"
 
   # Feature Flags
   MULTITENANCY_ENABLED: {{ .Values.features.multitenancy.enabled | quote }}
@@ -79,6 +81,8 @@ data:
     server.host=http://oriso-platform-userservice.caritas.svc.cluster.local:8082
     app.base.url=http://oriso-platform-userservice.caritas.svc.cluster.local:8082
     {{- end }}
+    server.shutdown=graceful
+    spring.lifecycle.timeout-per-shutdown-phase=30s
     
     # Tomcat thread pool - Scaled for 5000 concurrent users
     server.tomcat.threads.max=1000
