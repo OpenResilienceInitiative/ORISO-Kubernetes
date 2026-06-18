@@ -94,7 +94,7 @@ spec:
               port: 8080
             initialDelaySeconds: {{ .Values.keycloakProbes.startup.initialDelaySeconds | default 10 }}
             periodSeconds: {{ .Values.keycloakProbes.startup.periodSeconds | default 10 }}
-            failureThreshold: {{ .Values.keycloakProbes.startup.failureThreshold | default 30 }}
+            failureThreshold: {{ .Values.keycloakProbes.startup.failureThreshold | default 60 }}
           livenessProbe:
             httpGet:
               path: {{ .Values.keycloakProbes.liveness.path | default "/health/live" }}
