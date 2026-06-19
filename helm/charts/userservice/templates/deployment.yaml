@@ -16,6 +16,7 @@ spec:
         {{- include "userservice.selectorLabels" . | nindent 8 }}
         tier: backend
     spec:
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       containers:
       - name: userservice
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -30,6 +31,10 @@ spec:
             name: {{ include "userservice.fullname" . }}-config
         - secretRef:
             name: {{ include "userservice.fullname" . }}-secrets
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep {{ .Values.preStopSleepSeconds }}"]
         {{- if .Values.resources.requests }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
