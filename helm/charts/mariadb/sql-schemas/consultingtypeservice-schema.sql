@@ -83,3 +83,9 @@ CREATE TABLE `topic_group_x_topic` (
   CONSTRAINT `fk_topic` FOREIGN KEY (`topic_id`) REFERENCES `topic` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
+
+
+INSERT INTO `topic` VALUES
+                        (1,1,'{\"de\": \"Beratung\", \"en\": \"Counseling\"}','{\"de\": \"Allgemeine Beratung\", \"en\": \"General Counseling\"}','ACTIVE','2025-09-07 09:28:07','2025-09-07 09:28:07','counseling',NULL,NULL,NULL,0,'{\"de\": \"Beratung\", \"en\": \"Counseling\"}','{\"de\": \"Allgemeine Beratung\", \"en\": \"General Counseling\"}','Willkommen zur Beratung','Beratung','counseling'),
+                        (2,1,'{\"de\": \"Suchtberatung\", \"en\": \"Addiction Counseling\"}','{\"de\": \"Beratung bei Suchtproblemen\", \"en\": \"Counseling for addiction problems\"}','ACTIVE','2025-09-07 09:28:07','2025-09-07 09:28:07','addiction',NULL,NULL,NULL,0,'{\"de\": \"Sucht\", \"en\": \"Addiction\"}','{\"de\": \"Suchtberatung\", \"en\": \"Addiction Counseling\"}','Willkommen zur Suchtberatung','Suchtberatung','addiction-counseling'),
+                        (3,1,'{\"de\": \"Familienberatung\", \"en\": \"Family Counseling\"}','{\"de\": \"Beratung für Familien\", \"en\": \"Counseling for families\"}','ACTIVE','2025-09-07 09:28:07','2025-09-07 09:28:07','family',NULL,NULL,NULL,0,'{\"de\": \"Familie\", \"en\": \"Family\"}','{\"de\": \"Familienberatung\", \"en\": \"Family Counseling\"}','Willkommen zur Familienberatung','Familienberatung','family-counseling');

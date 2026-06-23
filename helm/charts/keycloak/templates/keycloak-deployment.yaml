@@ -28,7 +28,6 @@ spec:
             - /opt/keycloak/bin/kc.sh
           args:
             - start
-            - --auto-build
           env:
             - name: KC_DB
               valueFrom:
@@ -67,8 +66,10 @@ spec:
                   name: keycloak-secret-env
             - name: KC_HTTP_RELATIVE_PATH
               value: "/auth"
-            - name: KC_PROXY
-              value: "edge"
+            - name: KC_PROXY_HEADERS
+              value: "xforwarded"
+            - name: KC_HTTP_ENABLED
+              value: "true"
             - name: KC_HOSTNAME
               valueFrom:
                 configMapKeyRef:

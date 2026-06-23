@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: livekit-token-service-configmap-env
+  namespace: {{ .Release.Namespace }}
+data:
+  LIVEKIT_API_KEY: {{ .Values.livekit.api.key | quote }}
+  LIVEKIT_API_SECRET: {{ .Values.livekit.api.secret | quote }}
+  LIVEKIT_URL: "wss://{{ .Values.global.domainName }}/livekit/sfu"

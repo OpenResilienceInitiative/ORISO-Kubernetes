@@ -7,7 +7,7 @@ data:
   CSRF_COOKIE_PROPERTY:  {{ .Values.global.csrfCookieProperty }}
   CSRF_HEADER_PROPERTY: {{ .Values.global.csrfHeaderProperty }}
   SPRING_LIQUIBASE_ENABLED: {{ .Values.global.enableLiquibase | quote }}
-  TENANT_SERVICE_API_URL: "http://tenantservice.{{ .Release.Namespace }}:8080"
+  TENANT_SERVICE_API_URL: "http://tenantservice.{{ .Release.Namespace }}:8081"
   JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
   SPRING_DATASOURCE_URL: "jdbc:mariadb://mariadb.{{ .Release.Namespace }}:3306/consultingtypeservice"
   KEYCLOAK_CORS: "false"
@@ -17,6 +17,7 @@ data:
   KEYCLOAK_RESOURCE: {{ .Values.consultingTypeService.keycloakResource }}
   KEYCLOAKSERVICE_ADMIN_CLIENTID: {{ .Values.global.keycloak.serviceAdminClientId }}
   KEYCLOAKSERVICE_APP_CLIENTID: {{ .Values.global.keycloak.serviceAppClientId }}
+  SETTING_MAIN_TENANT_SUBDOMAIN_FOR_SINGLE_DOMAIN_MULTITENANCY: {{ .Values.global.keycloak.realm}}
   SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: {{ .Values.global.springSecurityOAuth2ResourceserverJWTIssuerURI }}   
 
 {{- if .Values.global.multitenancyWithSingleDomainEnabled }}
