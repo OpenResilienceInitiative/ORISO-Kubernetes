@@ -131,10 +131,6 @@ INSERT INTO agency (
              0, 100, 'FEMALE,MALE,DIVERSE', NOW(), NOW()
          );
 
-UPDATE agency
-SET matrix_user_id='@matrixadm:caritas.local',
-    matrix_password='aW7cF7YSznNUABcwWsHGnFF54EPtpe1hWraOVG0L'
-WHERE id=1;
 -- 3. Create postcode range (so it shows up in registration)
 INSERT INTO `agency` VALUES
                          (237,1,NULL,'Caritas Agency','Description.','12345','City',0,1,0,NULL,0,NULL,NULL,NULL,NULL,'2026-03-13 17:28:02','2026-03-13 17:29:36',NULL,'RELATIVE_COUNSELLING,SELF_COUNSELLING,PARENTAL_COUNSELLING',NULL,NULL,NULL,NULL,'','@agency-237-service:caritas.local','NSDta-DETIWNyvb7tzCQo5Gc'),

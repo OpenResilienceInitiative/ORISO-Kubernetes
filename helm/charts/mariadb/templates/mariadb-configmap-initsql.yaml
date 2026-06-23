@@ -74,6 +74,12 @@ data:
     use userservice;
 {{ .Files.Get "sql-schemas/userservice-schema.sql" | indent 4 }}  
 
-  07agencyservice.sql: | 
+  07agencyservice.sql: |
     use agencyservice;
 {{ .Files.Get "sql-schemas/agencyservice-schema.sql" | indent 4 }}
+  08agencyservice-matrix.sql: |
+    use agencyservice;
+    UPDATE agency
+    SET matrix_user_id='@{{ .Values.matrix.matrixAdminUsername }}:{{ .Values.matrix.matrixServerName }}',
+        matrix_password='{{ .Values.matrix.matrixAdminPassword }}'
+    WHERE id=1;
