@@ -161,6 +161,16 @@ spec:
                 secretKeyRef:
                   key: KEYCLOAKSERVICE_TECHNICAL_USERNAME
                   name: userservice-secret
+            - name: IDENTITY_TECHNICAL_USER_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: IDENTITY_TECHNICAL_USER_USERNAME
+                  name: userservice-secret
+            - name: IDENTITY_TECHNICAL_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: IDENTITY_TECHNICAL_USER_PASSWORD
+                  name: userservice-secret
             - name: KEYCLOAK_CONFIG_APP_CLIENTID
               valueFrom:
                 configMapKeyRef:
