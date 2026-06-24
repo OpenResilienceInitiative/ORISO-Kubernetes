@@ -54,6 +54,12 @@ keycloak:
   identity:
     openIdConnectUrl: "http://oriso-platform-keycloak.caritas.svc.cluster.local:8080/realms/online-beratung/protocol/openid-connect"
 
+# Password is intentionally empty in chart defaults; set it via environment-specific secret values.
+identity:
+  technicalUser:
+    username: "technical"
+    password: ""
+
 # Matrix Configuration - Full DNS FQDN for managed clusters
 matrix:
   apiUrl: "http://oriso-platform-matrix-synapse.caritas.svc.cluster.local:8008"
