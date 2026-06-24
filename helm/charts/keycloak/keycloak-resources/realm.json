@@ -147,6 +147,15 @@
         "attributes": {}
       },
       {
+        "id": "58e130ad-8ba1-4c36-a31e-eeb4c4cea91b",
+        "name": "restricted-agency-admin",
+        "description": "Restricted agency admin role assigned during agency admin creation",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "online-beratung",
+        "attributes": {}
+      },
+      {
         "id": "02b23701-9fc0-43c4-8b87-d804787cc7f2",
         "name": "tenant-admin",
         "description": "",
