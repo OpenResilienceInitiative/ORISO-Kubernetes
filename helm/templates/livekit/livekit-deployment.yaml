@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: livekit
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: livekit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: livekit
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: livekit
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      enableServiceLinks: false
+      restartPolicy: Always
+      containers:
+        - name: livekit
+          image: livekit/livekit-server:latest
+          imagePullPolicy: IfNotPresent
+          args:
+            - --config
+            - /etc/livekit/config.yaml
+          ports:
+            - containerPort: 7880
+              name: http
+              protocol: TCP
+          volumeMounts:
+            - name: livekit-config
+              mountPath: /etc/livekit
+      volumes:
+        - name: livekit-config
+          configMap:
+            name: livekit-config

@@ -1,2 +1,1 @@
-helm install caritas ./ --namespace caritas --create-namespace --wait-for-jobs --timeout 15m
-
+helm upgrade --install caritas ./ --namespace caritas --create-namespace --wait-for-jobs --timeout 15m

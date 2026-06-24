@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/rewrite-target: /internal/$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+  name: agencyservice-internal-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: '{{ .Values.global.domainName }}'
+    http:
+      paths:
+      - backend:
+          service:
+            name: agencyservice
+            port:
+              number: 8080
+        path: /service/internal(/|$)(.*)
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - '{{ .Values.global.domainName }}'
+    secretName: online-beratung-neusta-integrate-de-tls

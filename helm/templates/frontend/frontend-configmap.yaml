@@ -2,13 +2,14 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: frontend-configmap
-data: 
-    PORT: "8080"
-    REACT_APP_API_URL: "{{ .Values.global.domainName }}"
-    REACT_APP_ELEMENT_CALL_URL: "{{ .Values.global.domainName }}"
-    REACT_APP_LIVEKIT_URL: "{{ .Values.global.domains.livekit }}"
-    VITE_API_URL: "{{ .Values.global.domainName }}"
-    VITE_MATRIX_HOMESERVER_URL: "{{ .Values.global.domains.matrix }}"
-    REACT_APP_KEYCLOAK_URL: "{{ .Values.global.external.keycloakURL }}"
-    REACT_APP_MATRIX_HOMESERVER_URL: "{{ .Values.global.domains.matrix }}"
-
+data:
+  PORT: "8080"
+  REACT_APP_API_URL: "https://{{ .Values.global.domainName }}"
+  REACT_APP_ELEMENT_CALL_URL: "https://{{ .Values.global.domainName }}"
+  REACT_APP_LIVEKIT_URL: "wss://{{ .Values.global.domainName }}/livekit/sfu"
+  REACT_APP_LIVEKIT_WS_URL: "wss://{{ .Values.global.domainName }}/livekit/sfu"
+  VITE_API_URL: "https://{{ .Values.global.domainName }}"
+  VITE_MATRIX_HOMESERVER_URL:  "https://{{ .Values.global.domainName }}"
+  REACT_APP_KEYCLOAK_URL: "{{ .Values.global.external.keycloakURL }}"
+  REACT_APP_MATRIX_HOMESERVER_URL:  "https://{{ .Values.global.domainName }}"
+  REACT_APP_KEYCLOAK_REALM: "{{ .Values.global.keycloak.realm }}"

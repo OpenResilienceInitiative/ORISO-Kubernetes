@@ -17,7 +17,7 @@ data:
   SPRING_DATASOURCE_URL: "jdbc:mariadb://mariadb.{{ .Release.Namespace }}:3306/agencyservice"
   SPRING_PROFILES_ACTIVE: {{ .Values.agencyService.springProfilesActive }}
   CONSULTING_TYPE_SERVICE_API_URL: "http://consultingtypeservice.{{ .Release.Namespace }}:8080"
-  TENANT_SERVICE_API_URL: "http://tenantservice.{{ .Release.Namespace }}:8080"
+  TENANT_SERVICE_API_URL: "http://tenantservice.{{ .Release.Namespace }}:8081"
   MULTITENANCY_ENABLED: {{ .Values.global.multitenancyEnabled | quote }}
   FEATURE_TOPICS_ENABLED: {{ .Values.global.featureTopicsEnabled | quote }}
   FEATURE_DEMOGRAPHICS_ENABLED: {{ .Values.global.demographicsEnabled | quote }}

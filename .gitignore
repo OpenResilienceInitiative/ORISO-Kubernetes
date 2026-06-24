@@ -2,3 +2,11 @@ helm/values.yaml
 helm/values.yaml
 helm/out.yaml
 helm/.idea
+helm - Copy
+readonly accounts
+nginx.7z
+services
+admin-kubeconfig.yaml
+values-snippet.yaml
+realm.json
+technical-user-job.yaml

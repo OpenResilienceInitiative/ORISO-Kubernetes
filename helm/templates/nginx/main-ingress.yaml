@@ -146,4 +146,4 @@ spec:
   - hosts:
     - '{{ .Values.global.domainName }}'
     - acme{{ .Values.global.domainName }}
-    secretName: oriso-neusta-integrate-de-tls
+    secretName: online-beratung-neusta-integrate-de-tls

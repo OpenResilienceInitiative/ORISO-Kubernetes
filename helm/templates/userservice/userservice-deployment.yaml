@@ -5,17 +5,26 @@ metadata:
     app: userservice
   name: userservice
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: userservice
   strategy:
-    type: Recreate
+    type: RollingUpdate
   template:
-    metadata:  
+    metadata:
       labels:
         app: userservice
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app: userservice
+              topologyKey: kubernetes.io/hostname
       restartPolicy: Always
       containers:
         - name: userservice
@@ -37,6 +46,21 @@ spec:
                 configMapKeyRef:
                   key: AGENCY_SERVICE_API_URL
                   name: userservice-configmap-env
+            - name: ROCKET_CHAT_MONGO_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: ROCKET_CHAT_MONGO_URL
+                  name: userservice-configmap-env
+            - name: ROCKET_CHAT_BASE_URL
+              value: "http://rocketchat.caritas:3000"
+            - name: ROCKET_TECHNICAL_USERNAME
+              value: "rocket-chat-technical-user"
+            - name: ROCKET_TECHNICAL_PASSWORD
+              value: "W5wIhzuRTxatsHxeT9ECbfY0M1bIoMn4769bWfkl"
+            - name: ROCKET_CHAT_MONGO_USERNAME
+              value: "your_username_here"
+            - name: ROCKET_CHAT_MONGO_PASSWORD
+              value: "your_password_here"
             - name: AGENCY_ADMIN_SERVICE_API_URL
               valueFrom:
                 configMapKeyRef:
@@ -187,46 +211,11 @@ spec:
                 configMapKeyRef:
                   key: MAIL_SERVICE_API_URL
                   name: userservice-configmap-env
-            - name: ROCKET_CHAT_API_URL
-              valueFrom:
-                configMapKeyRef:
-                  key: ROCKET_CHAT_API_URL
-                  name: userservice-configmap-env
             - name: APPOINTMENT_SERVICE_API_URL
               valueFrom:
                 configMapKeyRef:
                   key: APPOINTMENT_SERVICE_API_URL
                   name: userservice-configmap-env
-            - name: ROCKET_CREDENTIALSCHEDULER_CRON
-              valueFrom:
-                configMapKeyRef:
-                  key: ROCKET_CREDENTIALSCHEDULER_CRON
-                  name: userservice-configmap-env
-            - name: ROCKET_SYSTEMUSER_ID
-              valueFrom:
-                configMapKeyRef:
-                  key: ROCKET_SYSTEMUSER_ID
-                  name: userservice-configmap-env
-            - name: ROCKET_SYSTEMUSER_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: ROCKET_SYSTEMUSER_PASSWORD
-                  name: userservice-secret
-            - name: ROCKET_SYSTEMUSER_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  key: ROCKET_SYSTEMUSER_USERNAME
-                  name: userservice-secret
-            - name: ROCKET_TECHNICAL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: ROCKET_TECHNICAL_PASSWORD
-                  name: userservice-secret
-            - name: ROCKET_TECHNICAL_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  key: ROCKET_TECHNICAL_USERNAME
-                  name: userservice-secret
             - name: SERVICE_ENCRYPTION_APPKEY
               valueFrom:
                 secretKeyRef:
@@ -396,23 +385,42 @@ spec:
                 configMapKeyRef:
                   key: SPRING_LIQUIBASE_ENABLED
                   name: userservice-configmap-env
-            - name: ROCKET_CHAT_BASE_URL
-              valueFrom:
-                configMapKeyRef:
-                  key: ROCKET_CHAT_BASE_URL
-                  name: userservice-configmap-env
-            - name: ROCKET_CHAT_MONGO_URL
-              valueFrom:
-                configMapKeyRef:
-                  key: ROCKET_CHAT_MONGO_URL
-                  name: userservice-configmap-env             
             - name: MATRIX_API_URL
               valueFrom:
                 configMapKeyRef:
                   key: MATRIX_API_URL
-                  name: userservice-configmap-env 
+                  name: userservice-configmap-env
+            - name: MATRIX_SERVER_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: MATRIX_SERVER_NAME
+                  name: userservice-configmap-env
+            - name: MATRIX_MIGRATION_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: MATRIX_MIGRATION_ENABLED
+                  name: userservice-configmap-env
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+                  name: userservice-configmap-env
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
+                  name: userservice-configmap-env
+            - name: MATRIX_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: MATRIX_ADMIN_USERNAME
+                  name: userservice-secret
+            - name: MATRIX_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MATRIX_ADMIN_PASSWORD
+                  name: userservice-secret
 
-                  
           ports:
             - containerPort: 8080
           resources: {}

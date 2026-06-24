@@ -36,16 +36,10 @@ data:
   KEYCLOAK_CONFIG_ADMIN_CLIENTID: {{ .Values.global.keycloak.serviceAdminClientId }}
   KEYCLOAK_CONFIG_APP_CLIENTID: {{ .Values.global.keycloak.serviceAppClientId }}
   KEYCLOAKSERVICE_TECHUSER_ID: {{ .Values.global.keycloak.serviceTechUserId }}
-  # Rocket.Chat (dummy values)
-  ROCKET_CHAT_BASE_URL: "http://localhost:3000/api/v1"
-  ROCKET_CHAT_MONGO_URL: "mongodb://localhost:27017/rocketchat?retryWrites=false"
   SESSION_INACTIVE_DELETEWORKFLOW_ENABLED: "false"
 
-  ROCKET_CHAT_API_URL: "http://rocketchat.{{ .Release.Namespace }}:3000/api/v1"
-  ROCKET_SYSTEMUSER_ID: {{ .Values.userService.rocketSystemuserId }}
-  ROCKET_CREDENTIALSCHEDULER_CRON: {{ .Values.userService.rocketCredentialschedulerCron }}
   # Services
-  AGENCY_SERVICE_API_URL: "http://agencyservice.{{ .Release.Namespace }}:8080"
+  AGENCY_SERVICE_API_URL: "https://{{ .Values.global.domainName }}/service"
   AGENCY_ADMIN_SERVICE_API_URL: "http://agencyservice.{{ .Release.Namespace }}:8080"
   MESSAGE_SERVICE_API_URL: "http://messageservice.{{ .Release.Namespace }}:8080"
   MAIL_SERVICE_API_URL: "http://mailservice.{{ .Release.Namespace }}:8080"
@@ -78,17 +72,26 @@ data:
   MULTITENANCY_ENABLED: {{ .Values.global.multitenancyEnabled | quote }}
   FEATURE_TOPICS_ENABLED: {{ .Values.global.topicsEnabled | quote }}
   FEATURE_DEMOGRAPHICS_ENABLED: {{ .Values.global.demographicsEnabled | quote }}
-  TENANT_SERVICE_API_URL: "http://tenantservice.{{ .Release.Namespace }}:8080"
+  TENANT_SERVICE_API_URL: "http://tenantservice.{{ .Release.Namespace }}:8081"
   # 2fa
   TWOFACTORAUTH_USER_ENABLED: "false"
-  TWOFACTORAUTH_CONSULTANT_ENABLED: "true"
-  IDENTITY_OTP_ALLOWED_FOR_USERS: "true"
-  IDENTITY_OTP_ALLOWED_FOR_CONSULTANTS: "true"
-  IDENTITY_OTP_ALLOWED_FOR_SINGLE_TENANT_ADMINS: "true"
-  IDENTITY_OTP_ALLOWED_FOR_TENANT_SUPER_ADMINS: "true"
+  TWOFACTORAUTH_CONSULTANT_ENABLED: "false"
+  IDENTITY_OTP_ALLOWED_FOR_USERS: "false"
+  IDENTITY_OTP_ALLOWED_FOR_CONSULTANTS: "false"
+  IDENTITY_OTP_ALLOWED_FOR_SINGLE_TENANT_ADMINS: "false"
+  IDENTITY_OTP_ALLOWED_FOR_TENANT_SUPER_ADMINS: "false"
   # logstash
   LOGSTASH_HOST: {{ .Values.global.logstashHost }}
   FEATURE_APPOINTMENT_ENABLED: "false"
   FEATURE_MULTITENANCY_WITH_SINGLE_DOMAIN_ENABLED: {{ .Values.global.multitenancyWithSingleDomainEnabled | quote }}
-  MATRIX_API_URL: {{ .Values.matrix.matrixApiUrl }}  
+  MATRIX_API_URL: {{ .Values.matrix.matrixApiUrl }}
+  MATRIX_SERVER_NAME: {{ .Values.matrix.matrixServerName }}
+  MATRIX_MIGRATION_ENABLED: "true"
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: "{{ .Values.global.keycloak.authServerUrl }}/realms/{{ .Values.global.keycloak.realm }}"
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: "{{ .Values.global.keycloak.authServerUrl }}{{ .Values.global.keycloak.openidConnectUrl }}/certs"
 
+
+  ROCKET_CHAT_MONGO_URL: "mongodb://localhost:27017/rocketchat?retryWrites=false"
+  ROCKET_CHAT_API_URL: "http://rocketchat.{{ .Release.Namespace }}:3000/api/v1"
+  ROCKET_SYSTEMUSER_ID: {{ .Values.userService.rocketSystemuserId }}
+  ROCKET_CREDENTIALSCHEDULER_CRON: {{ .Values.userService.rocketCredentialschedulerCron }}

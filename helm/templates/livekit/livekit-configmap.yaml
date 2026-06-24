@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: livekit-config
+  namespace: {{ .Release.Namespace }}
+data:
+  config.yaml: |
+    port: 7880
+    rtc:
+      tcp_port: 7881
+      port_range_start: 50000
+      port_range_end: 50100
+      use_external_ip: true
+    keys:
+      {{ .Values.livekit.api.key }}: {{ .Values.livekit.api.secret }}

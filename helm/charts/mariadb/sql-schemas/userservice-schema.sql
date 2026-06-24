@@ -511,3 +511,28 @@ CREATE TABLE `user_mobile_token` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `user_mobile_token_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+CREATE TABLE `consultant_topic` (
+`id` bigint(21) unsigned NOT NULL,
+`consultant_id` varchar(36) NOT NULL,
+`topic_id` bigint(21) unsigned NOT NULL,
+`create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+`update_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY (`id`),
+UNIQUE KEY `uk_consultant_topic` (`consultant_id`,`topic_id`),
+KEY `consultant_id` (`consultant_id`),
+CONSTRAINT `consultant_topic_ibfk_1`
+    FOREIGN KEY (`consultant_id`)
+        REFERENCES `consultant` (`consultant_id`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+DROP SEQUENCE IF EXISTS `sequence_consultant_topic`;
+
+CREATE SEQUENCE `sequence_consultant_topic`
+    START WITH 0
+    MINVALUE 0
+    MAXVALUE 9223372036854775806
+    INCREMENT BY 1
+    CACHE 10
+NOCYCLE
+ENGINE=InnoDB;

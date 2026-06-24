@@ -7,7 +7,7 @@ metadata:
   labels:
     app: admin
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: admin
@@ -17,6 +17,15 @@ spec:
         app: admin
         tier: frontend
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app: admin
+              topologyKey: kubernetes.io/hostname
       containers:
       - name: admin
         image: {{ .Values.admin.imageName }}:{{ .Values.admin.imageVersion }}     

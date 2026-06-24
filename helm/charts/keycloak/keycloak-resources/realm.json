@@ -573,7 +573,8 @@
         "{{ .Values.global.keycloakAuthServerUrl }}/realms/online-beratung/account/*"
       ],
       "webOrigins": [
-        "https://{{ .Values.global.adminDomainName }}/*"],
+        "https://{{ .Values.global.adminDomainName }}/*"
+      ],
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,
@@ -612,7 +613,8 @@
         "{{ .Values.global.keycloakAuthServerUrl }}/realms/online-beratung/account/*"
       ],
       "webOrigins": [
-        "https://{{ .Values.global.adminDomainName }}/*"],
+        "https://{{ .Values.global.adminDomainName }}/*"
+      ],
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,
@@ -658,7 +660,8 @@
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [],
       "webOrigins": [
-        "https://{{ .Values.global.adminDomainName }}/*"],
+        "https://{{ .Values.global.adminDomainName }}/*"
+      ],
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,
@@ -739,7 +742,7 @@
         "microprofile-jwt"
       ]
     },
-    {    
+    {
       "id": "cd33d226-22b5-4012-af97-c8cda04ddb0c",
       "clientId": "broker",
       "name": "${client_broker}",
@@ -749,7 +752,8 @@
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [],
       "webOrigins": [
-        "https://{{ .Values.global.adminDomainName }}/*"],
+        "https://{{ .Values.global.adminDomainName }}/*"
+      ],
       "notBefore": 0,
       "bearerOnly": true,
       "consentRequired": false,
@@ -779,7 +783,8 @@
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [],
       "webOrigins": [
-        "https://{{ .Values.global.adminDomainName }}/*"],
+        "https://{{ .Values.global.adminDomainName }}/*"
+      ],
       "notBefore": 0,
       "bearerOnly": true,
       "consentRequired": false,
@@ -857,6 +862,65 @@
       "optionalClientScopes": [
         "microprofile-jwt"
       ]
+    },
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "clientId": "user-service",
+      "name": "user-service",
+      "description": "User Service API Client",
+      "rootUrl": "",
+      "adminUrl": "",
+      "baseUrl": "",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "user-service-secret",
+      "redirectUris": [
+        "*"
+      ],
+      "webOrigins": [],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "publicClient": false,
+      "frontchannelLogout": false,
+      "protocol": "openid-connect",
+      "attributes": {
+        "realm_client": "false",
+        "oidc.ciba.grant.enabled": "false",
+        "backchannel.logout.session.required": "true",
+        "post.logout.redirect.uris": "+",
+        "oauth2.device.authorization.grant.enabled": "false",
+        "display.on.consent.screen": "false",
+        "backchannel.logout.revoke.offline.tokens": "false"
+      },
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": true,
+      "nodeReRegistrationTimeout": -1,
+      "protocolMappers": [],
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "roles",
+        "profile",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ],
+      "access": {
+        "view": true,
+        "configure": true,
+        "manage": true
+      }
     }
   ],
   "clientScopes": [
@@ -2227,5 +2291,63 @@
   },
   "clientPolicies": {
     "policies": []
-  }
+  },
+  "users": [
+    {
+      "id": "8294c392-e1e0-405b-ac2f-ba3043cbad3e",
+      "createdTimestamp": 1609459200000,
+      "username": "technical",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "email": "technical@example.com",
+      "credentials": [
+        {
+          "id": "tech-cred-1",
+          "type": "password",
+          "createdDate": 1609459200000,
+          "secretData": "{\"value\":\"qPbdCHYDbC8uElO7dO43u7nbFhhow5xv0nFUHFlS\",\"salt\":\"\",\"additionalParameters\":{}}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": [
+        "default-roles-online-beratung"
+      ],
+      "clientRoles": {
+        "realm-management": [
+          "manage-users",
+          "view-users",
+          "query-users"
+        ]
+      },
+      "notBefore": 0,
+      "groups": []
+    },
+    {
+      "id": "7c5df021-536b-4f42-bb3c-37b1e4d9864d",
+      "createdTimestamp": 1609459200000,
+      "username": "realmadmin",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": false,
+      "firstName": "Realm",
+      "lastName": "Admin",
+      "disableableCredentialTypes": [],
+      "requiredActions": [
+        "UPDATE_PASSWORD"
+      ],
+      "realmRoles": [
+        "default-roles-online-beratung"
+      ],
+      "clientRoles": {
+        "realm-management": [
+          "realm-admin"
+        ]
+      },
+      "notBefore": 0,
+      "groups": []
+    }
+  ]
 }

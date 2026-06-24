@@ -35,11 +35,14 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+          {{- if .Values.keycloakResources }}
+          resources:
+            {{- toYaml .Values.keycloakResources | nindent 12 }}
+          {{- end }}
           command:
             - /opt/keycloak/bin/kc.sh
           args:
             - start
-            - --auto-build
           env:
             - name: KC_DB
               valueFrom:
@@ -78,8 +81,10 @@ spec:
                   name: keycloak-secret-env
             - name: KC_HTTP_RELATIVE_PATH
               value: "/auth"
-            - name: KC_PROXY
-              value: "edge"
+            - name: KC_PROXY_HEADERS
+              value: "xforwarded"
+            - name: KC_HTTP_ENABLED
+              value: "true"
             - name: KC_HOSTNAME
               valueFrom:
                 configMapKeyRef:
@@ -97,6 +102,28 @@ spec:
           {{- if .Values.keycloakSecurityContext }}
           securityContext:
             {{- toYaml .Values.keycloakSecurityContext.container | nindent 12 }}
+          {{- if .Values.keycloakProbes }}
+          startupProbe:
+            httpGet:
+              path: {{ .Values.keycloakProbes.startup.path | default "/health/started" }}
+              port: 8080
+            initialDelaySeconds: {{ .Values.keycloakProbes.startup.initialDelaySeconds | default 10 }}
+            periodSeconds: {{ .Values.keycloakProbes.startup.periodSeconds | default 10 }}
+            failureThreshold: {{ .Values.keycloakProbes.startup.failureThreshold | default 60 }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.keycloakProbes.liveness.path | default "/health/live" }}
+              port: 8080
+            initialDelaySeconds: {{ .Values.keycloakProbes.liveness.initialDelaySeconds | default 60 }}
+            periodSeconds: {{ .Values.keycloakProbes.liveness.periodSeconds | default 30 }}
+            failureThreshold: {{ .Values.keycloakProbes.liveness.failureThreshold | default 3 }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.keycloakProbes.readiness.path | default "/health/ready" }}
+              port: 8080
+            initialDelaySeconds: {{ .Values.keycloakProbes.readiness.initialDelaySeconds | default 30 }}
+            periodSeconds: {{ .Values.keycloakProbes.readiness.periodSeconds | default 10 }}
+            failureThreshold: {{ .Values.keycloakProbes.readiness.failureThreshold | default 3 }}
           {{- end }}
           lifecycle:
             postStart:
