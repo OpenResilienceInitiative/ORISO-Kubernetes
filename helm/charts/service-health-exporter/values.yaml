@@ -6,6 +6,18 @@ image:
   tag: "3.11-slim"
   pullPolicy: IfNotPresent
 
+# Python dependencies pip-installed at container start. Versions are PINNED on
+# purpose: the previous unpinned install pulled a newer OpenTelemetry whose OTLP
+# metric exporter moved out of `opentelemetry.exporter.otlp.proto.http`, which
+# crash-looped this pod. Bump deliberately and only together with the imports in
+# the ConfigMap script.
+pip:
+  packages: |
+    opentelemetry-api==1.43.0
+    opentelemetry-sdk==1.43.0
+    opentelemetry-exporter-otlp-proto-http==1.43.0
+    requests==2.34.2
+
 replicas: 1
 namespace: caritas
 

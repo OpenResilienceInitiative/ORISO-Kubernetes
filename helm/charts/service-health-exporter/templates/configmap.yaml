@@ -18,7 +18,7 @@ data:
     from opentelemetry import metrics
     from opentelemetry.sdk.metrics import MeterProvider
     from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
-    from opentelemetry.exporter.otlp.proto.http import OTLPMetricExporter
+    from opentelemetry.exporter.otlp.proto.http.metric_exporter import OTLPMetricExporter
     from opentelemetry.sdk.resources import Resource
 
     # Get configuration from environment
@@ -29,7 +29,7 @@ data:
 
     # Configure OTEL
     resource = Resource.create({"service.name": "caritas-health-monitor"})
-    exporter = OTLPHTTPMetricExporter(endpoint=OTEL_ENDPOINT)
+    exporter = OTLPMetricExporter(endpoint=OTEL_ENDPOINT)
     reader = PeriodicExportingMetricReader(exporter, export_interval_millis=CHECK_INTERVAL * 1000)
     provider = MeterProvider(resource=resource, metric_readers=[reader])
     metrics.set_meter_provider(provider)
