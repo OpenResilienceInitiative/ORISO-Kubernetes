@@ -94,6 +94,8 @@ services:
     apiUrl: "http://oriso-platform-consultingtypeservice.caritas.svc.cluster.local:8083"
   agencyService:
     apiUrl: "http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084"
+  agencyAdminService:
+    apiUrl: "http://oriso-platform-agencyservice.caritas.svc.cluster.local:8084"
 
 # Spring Profile
 spring:
@@ -119,4 +121,3 @@ smtp:
   user: ""
   password: ""
   from: "ORISO <notifications@oriso-dev.site>"
-

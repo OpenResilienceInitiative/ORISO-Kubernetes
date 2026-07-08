@@ -40,6 +40,7 @@ data:
   TENANT_SERVICE_API_URL: {{ .Values.services.tenantService.apiUrl | quote }}
   CONSULTING_TYPE_SERVICE_API_URL: {{ .Values.services.consultingTypeService.apiUrl | quote }}
   AGENCY_SERVICE_API_URL: {{ .Values.services.agencyService.apiUrl | quote }}
+  AGENCY_ADMIN_SERVICE_API_URL: {{ .Values.services.agencyAdminService.apiUrl | quote }}
   
   # SMTP Configuration
   SMTP_HOST: {{ .Values.smtp.host | quote }}
@@ -133,7 +134,7 @@ data:
     consulting.type.service.api.url={{ .Values.services.consultingTypeService.apiUrl }}
     agency.service.api.url={{ .Values.services.agencyService.apiUrl }}
     agency.service.api.get.agencies=${agency.service.api.url}/
-    agency.admin.service.api.url=${app.base.url}
+    agency.admin.service.api.url={{ .Values.services.agencyAdminService.apiUrl }}
     
     # ---------------- SMTP ----------------
     smtp.host={{ .Values.smtp.host }}
@@ -157,4 +158,3 @@ data:
     multitenancy.enabled={{ .Values.features.multitenancy.enabled }}
     feature.multitenancy.with.single.domain.enabled={{ .Values.features.multitenancy.withSingleDomain.enabled }}
     service.encryption.appkey={{ .Values.encryption.appKey }}
-
