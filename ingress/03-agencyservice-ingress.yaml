@@ -38,7 +38,7 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-origin: $http_origin
     nginx.ingress.kubernetes.io/cors-max-age: '86400'
     nginx.ingress.kubernetes.io/enable-cors: 'true'
-    nginx.ingress.kubernetes.io/rewrite-target: /agencies/$2
+    nginx.ingress.kubernetes.io/rewrite-target: /agencies$1$2
     nginx.ingress.kubernetes.io/use-regex: 'true'
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
   name: agencyservice-agencies-ingress
@@ -49,13 +49,6 @@ spec:
   - host: api.oriso-dev.site
     http:
       paths:
-      - backend:
-          service:
-            name: oriso-platform-agencyservice
-            port:
-              number: 8084
-        path: /service/agencies
-        pathType: Exact
       - backend:
           service:
             name: oriso-platform-agencyservice
