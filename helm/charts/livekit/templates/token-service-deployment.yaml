@@ -1,3 +1,6 @@
+{{- $global := .Values.global | default dict -}}
+{{- $domains := get $global "domains" | default dict -}}
+{{- $livekitDomain := get $domains "livekit" -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,6 +22,9 @@ spec:
       - name: livekit-token-service
         image: "{{ .Values.tokenService.image.repository }}:{{ .Values.tokenService.image.tag }}"
         imagePullPolicy: {{ .Values.tokenService.image.pullPolicy }}
+        env:
+        - name: LIVEKIT_URL
+          value: "wss://{{ required "global.domains.livekit is required for the LiveKit token service URL" $livekitDomain }}"
         ports:
         - name: http
           containerPort: {{ .Values.tokenService.service.targetPort }}
@@ -30,6 +36,3 @@ spec:
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
       terminationGracePeriodSeconds: 30
-
-
-
